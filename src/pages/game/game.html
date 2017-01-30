@@ -3,10 +3,35 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Black Jack</ion-title>
+    <ion-title>Getting Started</ion-title>
   </ion-navbar>
 </ion-header>
 
-<ion-content>
-  
+<ion-content padding>
+  <ion-grid>
+
+    <ion-row class="playerRow" *ngFor="let player of players; let i = index;" center>
+      <ion-col width-100>
+        <ion-row>
+          <ion-col width-100 text-center>
+            {{ player.name }}: <span *ngIf="playerTurnIndex === i || player.turn || player.cardsTotal() == 21">{{ player.cardsTotal() }}</span>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col width-100 text-center>
+            <div class="hand">
+                <div class="myCard" style="float: left;" *ngFor="let card of player.hand; let cardIndex = index;">
+                    <div class="card-details" *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === i || player.turn || player.cardsTotal() == 21">
+                        <p class="card-suit">{{card?.suit}}</p>
+                        <p class="card-value">{{card?.value}}</p>
+                    </div>
+                </div>
+            </div>
+          </ion-col>
+        </ion-row>
+
+      </ion-col>
+    </ion-row>
+
+  </ion-grid>
 </ion-content>

@@ -4,7 +4,7 @@ export class Deck {
     public cards: Card[];
 
     constructor() {
-        
+        this.cards = [];
     }
 
     /**
@@ -12,8 +12,11 @@ export class Deck {
      * suit and value property.
      */
     buildDeck(): void {
-        var suits = ["Hearts", "Diamonds", "Spades", "Clubs"];
-        var cards = ["Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"];
+        if (this.cards.length > 0) {
+            this.cards = [];
+        }
+        let suits = ["Hearts", "Diamonds", "Spades", "Clubs"];
+        let cards = ["Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"];
 
         for(var i = 0; i < suits.length ; i++) {
             var currSuit = suits[i];

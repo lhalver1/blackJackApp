@@ -1,9 +1,9 @@
 export class Card {
-    public suite: string;
+    public suit: string;
     public value: string;
 
-    constructor(suite: string, value: string) {
-        this.suite = suite;
+    constructor(suit: string, value: string) {
+        this.suit = suit;
         this.value = value;
     }
 }
