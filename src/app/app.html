@@ -9,7 +9,7 @@
   <ion-content>
     <ion-list>
       <button ion-item *ngFor="let p of pages" (click)="openPage(p)">
-        {{p.title}}
+        <ion-icon item-left name="{{p.icon}}"></ion-icon> {{p.title}}
       </button>
     </ion-list>
   </ion-content>
