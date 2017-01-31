@@ -1,4 +1,5 @@
-import { Component, ViewChild, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { ShowValuePipe } from '../../pipes/card-value-pipe';
 
 
 @Component({

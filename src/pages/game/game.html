@@ -21,7 +21,8 @@
           <ion-col width-100>
             <div class="hand">
                 <div *ngFor="let card of player.hand; let cardIndex = index;" text-center>
-                    <card [suit]="card.suit" [value]="card.value" style="float: left;" *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === i || player.turn || player.cardsTotal() == 21"></card>
+                    <card style="float: left;" *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === i || player.turn || player.cardsTotal() == 21"
+                      [suit]="card.suit" [value]="card.value"></card>
                 </div>
             </div>
           </ion-col>
