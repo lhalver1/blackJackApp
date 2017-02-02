@@ -37,6 +37,7 @@
                 <div class="card" style="float: left;" [ngClass]="{'notTopCard': cardIndex+1 != player.hand.length}" *ngFor="let card of player.hand; let cardIndex = index;">
                     <card *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === i || player.turn || player.cardsTotal() == 21"
                       [suit]="card.suit" [value]="card.value"></card>
+                    <div class="cardBack" *ngIf="cardIndex+1 != player.hand.length && !player.turn"></div>
                 </div>
             </div>
           </ion-col>

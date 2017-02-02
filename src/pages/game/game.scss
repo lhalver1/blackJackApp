@@ -32,4 +32,13 @@ game-page {
         border-top-right-radius: 0px;
         border-bottom-right-radius: 0px;
     }
+    .cardBack {
+        background: url('../../assets/cardBack.png');
+        background-size: 102px 119px;
+        height: 119px;
+        width: 102px;
+        margin: -5px;
+        border-top-left-radius: 6px;
+        border-bottom-left-radius: 6px;
+    }
 }
