@@ -1,5 +1,35 @@
 game-page {
+    ion-content {
+        background: url('../../assets/background.png');
+        background-position: center center;
+    }
+    .playerName {
+        font-size: large;
+    }
+    .card {
+        background-color: #ffffff;
+        color: #000;
+        border: 1px solid #d3d3d3;
+        border-radius: 6px;
+        height: 121px;
+        width: 102px;
+        padding: 5px;
+        box-shadow: 0 6px 6px -3px rgba(0,0,0,.2), 0 10px 14px 1px rgba(0,0,0,.14), 0 4px 18px 3px rgba(0,0,0,.12);
+    }
     .playerRow{
-        background-color: dodgerblue;
+        // border: 1px solid dodgerblue;
+        margin: 2px 0px;
+        color: #fff;
+    }
+    .hand, .hand>div {
+        display: inline-block;
+    }
+    .notTopCard {
+        width: 29px;
+        border-right-color: transparent;
+        border-top-left-radius: 6px;
+        border-bottom-left-radius: 6px;
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
     }
 }

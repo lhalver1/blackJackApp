@@ -10,24 +10,47 @@
 <ion-content padding>
   <ion-grid>
 
+    <!--<ion-row>
+      <ion-col width-33>
+        <button ion-button block>Deal</button>
+      </ion-col>
+      <ion-col width-33>
+        <button ion-button color="secondary" block>Reshuffle</button>
+      </ion-col>
+      <ion-col width-33>
+        <button ion-button color="danger" block style="float: right;">Quit</button>
+      </ion-col>
+    </ion-row>-->
+
     <ion-row class="playerRow" *ngFor="let player of players; let i = index;" center>
       <ion-col width-100>
         <ion-row>
           <ion-col width-100 text-center>
-            {{ player.name }}: <span *ngIf="playerTurnIndex === i || player.turn || player.cardsTotal() == 21">{{ player.cardsTotal() }}</span>
+            <div class="playerName">
+              {{ player.name }}<span *ngIf="playerTurnIndex === i || player.turn || player.cardsTotal() == 21">: {{ player.cardsTotal() }}</span>
+            </div>
           </ion-col>
         </ion-row>
         <ion-row>
-          <ion-col width-100>
+          <ion-col width-100 text-center>
             <div class="hand">
-                <div *ngFor="let card of player.hand; let cardIndex = index;" text-center>
-                    <card style="float: left;" *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === i || player.turn || player.cardsTotal() == 21"
+                <div class="card" style="float: left;" [ngClass]="{'notTopCard': cardIndex+1 != player.hand.length}" *ngFor="let card of player.hand; let cardIndex = index;">
+                    <card *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === i || player.turn || player.cardsTotal() == 21"
                       [suit]="card.suit" [value]="card.value"></card>
                 </div>
             </div>
           </ion-col>
         </ion-row>
 
+      </ion-col>
+    </ion-row>
+
+    <ion-row baseline>
+      <ion-col width-50>
+        <button ion-button block color="warn">Stay</button>
+      </ion-col>
+      <ion-col width-50>
+        <button ion-button block color="primary">Hit</button>
       </ion-col>
     </ion-row>
 

@@ -1,9 +1,9 @@
 import {Pipe} from '@angular/core';
  
 @Pipe({
-  name: 'shows'
+  name: 'changeDisplay'
 })
-export class ShowValuePipe {
+export class ChangeDisplayPipe {
   transform(value, args) {
     if(value === "Ace") {
         return "A";
@@ -13,6 +13,8 @@ export class ShowValuePipe {
         return "Q";
     } else if(value === "Jack") {
         return "J";
+    } else {
+        return value;
     }
   }
 }

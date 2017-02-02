@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ShowValuePipe } from '../../pipes/card-value-pipe';
+import { ChangeDisplayPipe } from '../../pipes/change-display-pipe';
 
 
 @Component({

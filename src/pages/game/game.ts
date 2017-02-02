@@ -5,6 +5,7 @@ import { NavController, NavParams } from 'ionic-angular';
 import { Player } from '../../models/player';
 import { Card } from '../../models/card';
 import { Deck } from '../../models/deck';
+import { Settings } from '../../models/settings';
 
 
 @Component({
@@ -16,6 +17,7 @@ export class GamePage {
   players: Player[];
   deck: Deck;
   trash: Card[];
+  settings: Settings;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
     // Get the players
@@ -23,6 +25,7 @@ export class GamePage {
       new Player("Dealer", [], false, "CPU", 0, 0),
       new Player("Logan", [], false, "Human", 0, 0)
     ];
+    this.settings = new Settings(2000, false, false);
 
     // Get the deck of cards
     this.deck = new Deck();
@@ -76,6 +79,143 @@ export class GamePage {
           this.players[this.playerTurnIndex].turn = true;
       }
   }
+
+    /**
+     * The next player is a Bot or Dealer, be smart for them.
+     */
+    goBeABot(player: Player) {
+        var total = player.cardsTotal();
+        var bustedPlayers = [];
+        var highestVisibleTotal = -1;
+        var thisPlayersIndex = -1;
+    
+        for (var index = 0; index < this.players.length; index++) {
+            let currPlayer: Player = this.players[index];
+    
+            if (currPlayer != player) {
+                var playersTotal = currPlayer.cardsTotal();
+                if (currPlayer.turn || playersTotal === 21) {
+    
+                    if (playersTotal > 21) {
+                        bustedPlayers.push(currPlayer);
+                    } else if (playersTotal > highestVisibleTotal) {
+                        highestVisibleTotal = playersTotal;
+                    }
+                }
+            } else {
+                thisPlayersIndex = index+1;
+            }
+    
+        }
+    
+        // var remainingPlayersThatHaventBusted = ($scope.players.length-1) - bustedPlayers.length;
+        var playersInfrontOfMeThatHaventBusted = thisPlayersIndex-1 - bustedPlayers.length;
+        var numPlayersBehindMe = this.players.length - thisPlayersIndex;
+        if (total === 21) {
+            setTimeout(() => {
+                this.stay(player);
+            }, this.settings.cpuDecisionTime);
+        } else if(total <= 16 && numPlayersBehindMe > 0 && highestVisibleTotal > total) {
+            setTimeout(() => {
+                this.hit(player);
+            }, this.settings.cpuDecisionTime);
+        } else if(total <= 16 && numPlayersBehindMe === 0 && highestVisibleTotal <= total) {
+            setTimeout(() => {
+                this.stay(player);
+            }, this.settings.cpuDecisionTime);
+        } else if(total > 16 && numPlayersBehindMe > 0 && highestVisibleTotal <= total) {
+            setTimeout(() => {
+                this.stay(player);
+            }, this.settings.cpuDecisionTime);
+        } else if(total > 16 && numPlayersBehindMe === 0 && highestVisibleTotal > total) {
+            setTimeout(() => {
+                this.hit(player);
+            }, this.settings.cpuDecisionTime);
+        } else if(total <= 16 && numPlayersBehindMe > 0 && highestVisibleTotal <= total) {
+            setTimeout(() => {
+                this.hit(player);
+            }, this.settings.cpuDecisionTime);
+        } else if(total <= 16 && numPlayersBehindMe === 0 && highestVisibleTotal > total) {
+            setTimeout(() => {
+                this.hit(player);
+            }, this.settings.cpuDecisionTime);
+        } else if(total > 16 && numPlayersBehindMe > 0 && highestVisibleTotal > total) {
+            setTimeout(() => {
+                this.hit(player);
+            }, this.settings.cpuDecisionTime);
+        } else if(total > 16 && numPlayersBehindMe === 0 && highestVisibleTotal <= total) {
+            setTimeout(() => {
+                this.stay(player);
+            }, this.settings.cpuDecisionTime);
+        }
+    }
+
+  /**
+   * Adds a card to the players hand, if the players hand excedes
+   * 21 then the player ends their turn and loses and the hand.
+   */
+  hit(player: Player) {
+      player.hand.push(this.deck.cards.splice(0, 1)[0]);
+
+      if (player.type === "Human") {
+          if (player.cardsTotal() >= 22) {
+              this.playerTurnIndex += 1;
+
+              //If the next players turn is out of index for players array
+              //Reset it back to the beginning
+              if (this.playerTurnIndex >= this.players.length) {
+
+                  this.endRound();
+
+              } else {
+                  var nextPlayer = this.players[this.playerTurnIndex];
+                  nextPlayer.turn = true;
+                  if (nextPlayer.type == "CPU") {
+                      this.goBeABot(nextPlayer);
+                  }
+              }
+          }
+      } else {
+          this.goBeABot(player);
+      }
+
+  }
+
+    /**
+     * The player has elected to stay with their hand. End
+     * their turn.
+     */
+    stay(player: Player) {
+        this.playerTurnIndex += 1;
+
+        //If the next players turn is out of index for players array
+        //Reset it back to the beginning
+        if (this.playerTurnIndex >= this.players.length) {
+
+            this.endRound();
+
+        } else {
+            let nextPlayer: Player = this.players[this.playerTurnIndex];
+            nextPlayer.turn = true;
+            if(nextPlayer.type == "CPU") {
+                this.goBeABot(nextPlayer);
+            }
+        }
+    }
+
+    /**
+     * The ends the current round by determining a winner and 
+     * then after 4sec dealing out new cards.
+     */
+    endRound() {
+        // this.determineWinner();
+
+        // setTimeout(() => {
+        //     this.winningPlayers.splice(0, this.winningPlayers.length);
+        //     this.dealOutCards();
+        // }, 4000);
+
+    }
 
   /**
    * Goes through the players list and sets the turn flag
