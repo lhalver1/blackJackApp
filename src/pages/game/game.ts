@@ -15,6 +15,7 @@ import { Settings } from '../../models/settings';
 export class GamePage {
   playerTurnIndex: number;
   players: Player[];
+  winningPlayers: Player[];
   deck: Deck;
   trash: Card[];
   settings: Settings;
@@ -25,6 +26,8 @@ export class GamePage {
       new Player("Dealer", [], false, "CPU", 0, 0),
       new Player("Logan", [], false, "Human", 0, 0)
     ];
+    this.winningPlayers = [];
+    this.trash = [];
     this.settings = new Settings(2000, false, false);
 
     // Get the deck of cards
@@ -60,34 +63,34 @@ export class GamePage {
       // If there are 12 or less cards remaining do a reshuffle.
       if (this.deck.cards.length <= 12) {
           this.deck.buildDeck();
-      } else {
-
-          // Pass out cards to each player, each player gets 1 card
-          // then each player gets their 2nd card.
-          for(var x = 0; x < 2 ; x++) {
-              for (var i = 0; i < this.players.length; i++) {
-                  var currPlayer = this.players[i];
-                  var currCard = this.deck.cards.splice(0,1)[0];
-                  currPlayer.hand.push(currCard);
-              }
-          }
-
-          // Reset each players turn so that in the new hand, they will
-          // get a turn. Then set the first players turn to true to start
-          // the hand.
-          this.resetPlayerTurns();
-          this.players[this.playerTurnIndex].turn = true;
       }
+
+        // Pass out cards to each player, each player gets 1 card
+        // then each player gets their 2nd card.
+        for(var x = 0; x < 2 ; x++) {
+            for (var i = 0; i < this.players.length; i++) {
+                var currPlayer = this.players[i];
+                var currCard = this.deck.cards.splice(0,1)[0];
+                currPlayer.hand.push(currCard);
+            }
+        }
+
+        // Reset each players turn so that in the new hand, they will
+        // get a turn. Then set the first players turn to true to start
+        // the hand.
+        this.resetPlayerTurns();
+        this.players[this.playerTurnIndex].turn = true;
   }
 
     /**
      * The next player is a Bot or Dealer, be smart for them.
      */
     goBeABot(player: Player) {
+      debugger;
         var total = player.cardsTotal();
         var bustedPlayers = [];
         var highestVisibleTotal = -1;
-        var thisPlayersIndex = -1;
+        var thisPlayersRealLifeIndex = -1;
     
         for (var index = 0; index < this.players.length; index++) {
             let currPlayer: Player = this.players[index];
@@ -103,49 +106,61 @@ export class GamePage {
                     }
                 }
             } else {
-                thisPlayersIndex = index+1;
+                thisPlayersRealLifeIndex = index+1;
             }
     
         }
+
+        let playersTogoYet = 0;
+        for (var index = this.players.length-1; index < 0; index--) {
+            let currPlayer: Player = this.players[index];
+            if (currPlayer === player ) {
+                break;
+            } else {
+                playersTogoYet += 1;
+            }
+        }
     
         // var remainingPlayersThatHaventBusted = ($scope.players.length-1) - bustedPlayers.length;
-        var playersInfrontOfMeThatHaventBusted = thisPlayersIndex-1 - bustedPlayers.length;
-        var numPlayersBehindMe = this.players.length - thisPlayersIndex;
+        let thisPlayersArrayIndex = thisPlayersRealLifeIndex-1;
+
+        // var playersInfrontOfMeThatHaventBusted = thisPlayersArrayIndex - bustedPlayers.length;
+        var numPlayersBehindMe = this.players.length - thisPlayersArrayIndex;
         if (total === 21) {
             setTimeout(() => {
-                this.stay(player);
+                this.stay();
             }, this.settings.cpuDecisionTime);
-        } else if(total <= 16 && numPlayersBehindMe > 0 && highestVisibleTotal > total) {
+        } else if(total <= 16 && playersTogoYet > 0 && highestVisibleTotal > total) {
             setTimeout(() => {
-                this.hit(player);
+                this.hit();
             }, this.settings.cpuDecisionTime);
-        } else if(total <= 16 && numPlayersBehindMe === 0 && highestVisibleTotal <= total) {
+        } else if(total <= 16 && playersTogoYet === 0 && highestVisibleTotal <= total) {
             setTimeout(() => {
-                this.stay(player);
+                this.stay();
             }, this.settings.cpuDecisionTime);
-        } else if(total > 16 && numPlayersBehindMe > 0 && highestVisibleTotal <= total) {
+        } else if(total > 16 && playersTogoYet > 0 && highestVisibleTotal <= total) {
             setTimeout(() => {
-                this.stay(player);
+                this.stay();
             }, this.settings.cpuDecisionTime);
-        } else if(total > 16 && numPlayersBehindMe === 0 && highestVisibleTotal > total) {
+        } else if(total > 16 && playersTogoYet === 0 && highestVisibleTotal > total) {
             setTimeout(() => {
-                this.hit(player);
+                this.hit();
             }, this.settings.cpuDecisionTime);
-        } else if(total <= 16 && numPlayersBehindMe > 0 && highestVisibleTotal <= total) {
+        } else if(total <= 16 && playersTogoYet > 0 && highestVisibleTotal <= total) {
             setTimeout(() => {
-                this.hit(player);
+                this.hit();
             }, this.settings.cpuDecisionTime);
-        } else if(total <= 16 && numPlayersBehindMe === 0 && highestVisibleTotal > total) {
+        } else if(total <= 16 && playersTogoYet === 0 && highestVisibleTotal > total) {
             setTimeout(() => {
-                this.hit(player);
+                this.hit();
             }, this.settings.cpuDecisionTime);
-        } else if(total > 16 && numPlayersBehindMe > 0 && highestVisibleTotal > total) {
+        } else if(total > 16 && playersTogoYet > 0 && highestVisibleTotal > total) {
             setTimeout(() => {
-                this.hit(player);
+                this.hit();
             }, this.settings.cpuDecisionTime);
-        } else if(total > 16 && numPlayersBehindMe === 0 && highestVisibleTotal <= total) {
+        } else if(total > 16 && playersTogoYet === 0 && highestVisibleTotal <= total) {
             setTimeout(() => {
-                this.stay(player);
+                this.stay();
             }, this.settings.cpuDecisionTime);
         }
     }
@@ -154,16 +169,18 @@ export class GamePage {
    * Adds a card to the players hand, if the players hand excedes
    * 21 then the player ends their turn and loses and the hand.
    */
-  hit(player: Player) {
+  hit() {
+      debugger;
+      let player: Player = this.players[this.playerTurnIndex];
       player.hand.push(this.deck.cards.splice(0, 1)[0]);
 
       if (player.type === "Human") {
           if (player.cardsTotal() >= 22) {
-              this.playerTurnIndex += 1;
+              this.playerTurnIndex -= 1;
 
               //If the next players turn is out of index for players array
               //Reset it back to the beginning
-              if (this.playerTurnIndex >= this.players.length) {
+              if (this.playerTurnIndex < 0) {
 
                   this.endRound();
 
@@ -185,12 +202,13 @@ export class GamePage {
      * The player has elected to stay with their hand. End
      * their turn.
      */
-    stay(player: Player) {
-        this.playerTurnIndex += 1;
+    stay() {
+      debugger;
+        this.playerTurnIndex -= 1;
 
         //If the next players turn is out of index for players array
         //Reset it back to the beginning
-        if (this.playerTurnIndex >= this.players.length) {
+        if (this.playerTurnIndex < 0) {
 
             this.endRound();
 
@@ -208,13 +226,50 @@ export class GamePage {
      * then after 4sec dealing out new cards.
      */
     endRound() {
-        // this.determineWinner();
+        this.determineWinner();
 
-        // setTimeout(() => {
-        //     this.winningPlayers.splice(0, this.winningPlayers.length);
-        //     this.dealOutCards();
-        // }, 4000);
+        setTimeout(() => {
+            this.winningPlayers.splice(0, this.winningPlayers.length);
+            this.dealOutCards();
+        }, 4000);
 
+    }
+
+    /**
+     * This determines the winner for the round.
+     */
+    determineWinner() {
+        this.winningPlayers.splice(0, this.winningPlayers.length);// = [];
+        let highestTotal = -1;
+
+        for (var index = 0; index < this.players.length; index++) {
+            let currPlayer: Player = this.players[index];
+            let currPlayersTotal = currPlayer.cardsTotal();
+
+            if (currPlayersTotal > highestTotal && currPlayersTotal <= 21) {
+                this.winningPlayers.splice(0, this.winningPlayers.length);
+                this.winningPlayers.push(currPlayer);
+                highestTotal = currPlayersTotal;
+            } else if (currPlayersTotal === highestTotal){
+                this.winningPlayers.push(currPlayer);
+            }
+        }
+
+        for (var i = 0; i < this.players.length; i++) {
+            var currPlayer: Player = this.players[i];
+            var isWinner = false;
+
+            for (var j = 0; j < this.winningPlayers.length; j++) {
+                var currWinner = this.winningPlayers[j];
+                if (currWinner == currPlayer) {
+                    currPlayer.wins += 1;
+                    isWinner = true;
+                }
+            }//End winners for
+            if (!isWinner) {
+                currPlayer.losses += 1;
+            }
+        }//End players for
     }
 
   /**

@@ -3,6 +3,13 @@ game-page {
         background: url('../../assets/background.png');
         background-position: center center;
     }
+
+    .winner {
+        background-color: $bs-success;
+        color: #fff;
+        border-radius: 3px;
+    }
+
     .playerName {
         font-size: large;
     }
@@ -25,7 +32,8 @@ game-page {
         display: inline-block;
     }
     .notTopCard {
-        width: 29px;
+        width: 32px;
+        margin-right: -5px;
         border-right-color: transparent;
         border-top-left-radius: 6px;
         border-bottom-left-radius: 6px;

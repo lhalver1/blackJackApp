@@ -21,6 +21,14 @@
         <button ion-button color="danger" block style="float: right;">Quit</button>
       </ion-col>
     </ion-row>-->
+    <ion-row [hidden]="winningPlayers?.length <= 0">
+        <ion-col class="winner" width-100 text-center>
+            <div>Winner<span *ngIf="winningPlayers.length > 1">s</span>: </div>
+            <div class="bg-success" *ngFor="let winner of winningPlayers">
+                {{winner?.name}}
+            </div>
+        </ion-col>
+    </ion-row>
 
     <ion-row class="playerRow" *ngFor="let player of players; let i = index;" center>
       <ion-col width-100>
@@ -37,7 +45,7 @@
                 <div class="card" style="float: left;" [ngClass]="{'notTopCard': cardIndex+1 != player.hand.length}" *ngFor="let card of player.hand; let cardIndex = index;">
                     <card *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === i || player.turn || player.cardsTotal() == 21"
                       [suit]="card.suit" [value]="card.value"></card>
-                    <div class="cardBack" *ngIf="cardIndex+1 != player.hand.length && !player.turn"></div>
+                    <div class="cardBack" *ngIf="cardIndex+1 != player.hand.length && !player.turn && player.cardsTotal() != 21"></div>
                 </div>
             </div>
           </ion-col>
@@ -46,12 +54,12 @@
       </ion-col>
     </ion-row>
 
-    <ion-row baseline>
+    <ion-row baseline [hidden]="players[playerTurnIndex]?.type != 'Human'">
       <ion-col width-50>
-        <button ion-button block color="warn">Stay</button>
+        <button ion-button block color="warn" (click)="stay()">Stay</button>
       </ion-col>
       <ion-col width-50>
-        <button ion-button block color="primary">Hit</button>
+        <button ion-button block color="primary" (click)="hit()">Hit</button>
       </ion-col>
     </ion-row>
 
