@@ -24,7 +24,7 @@
     <div>
       <ion-row>
           <ion-col class="winner" width-100 text-center [@winnerState]="showWinners">
-              <div [@winnerState]="showWinners">Winner<span *ngIf="winningPlayers.length > 1">s</span>: </div>
+              <div>Winner<span *ngIf="winningPlayers.length > 1">s</span>: </div>
               <div class="bg-success" *ngFor="let winner of winningPlayers">
                   {{winner?.name}}
               </div>

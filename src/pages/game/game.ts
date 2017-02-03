@@ -15,16 +15,18 @@ declare let $: any;          //Jquery
     templateUrl: 'game.html',
     animations: [
         trigger('winnerState', [
-            state('hide', style({
+            state('*', style({
                 visibility: 'hidden',
+                overflow: 'hidden',
                 height: 0
             })),
             state('show', style({
                 visibility: 'visible',
+                overflow: 'hidden',
                 height: '*'
             })),
-            transition('hide => show', animate('400ms ease-in')),
-            transition('show => hide', animate('400ms ease-out'))
+            transition('* => show', animate('400ms ease-in')),
+            transition('show => *', animate('400ms ease-out'))
         ])
     ]
 })
