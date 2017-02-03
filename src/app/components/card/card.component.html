@@ -1,7 +1,14 @@
-<div class="card-value">
+<!--<div class="card-value">
     {{value | changeDisplay}}
 </div>
 
 <div class="card-suit">
     <img id="suitImg" src="../../assets/suits/{{suit}}.png" alt="Not Found">
-</div>
+</div>-->
+<div [ngStyle]="{
+    'background-image': 'url(../../assets/cardImages/' +suit+ '/' +value+ '.png)',
+    'height': '94px',
+    'width': '69px',
+    'margin-top': '-1px',
+    'margin-left': '-2px'
+    }"></div>

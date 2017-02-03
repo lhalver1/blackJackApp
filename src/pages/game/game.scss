@@ -19,8 +19,8 @@ game-page {
         border: 1px solid #d3d3d3;
         border-radius: 6px;
         height: 100px;
-        width: 75px;
-        padding: 5px;
+        width: 69px;
+        overflow: hidden;
         box-shadow: 0 6px 6px -3px rgba(0,0,0,.2), 0 10px 14px 1px rgba(0,0,0,.14), 0 4px 18px 3px rgba(0,0,0,.12);
     }
     .playerRow{
@@ -43,7 +43,6 @@ game-page {
         background-size: 102px 119px;
         height: 98px;
         width: 73px;
-        margin: -5px;
         border-top-left-radius: 6px;
         border-bottom-left-radius: 6px;
     }
