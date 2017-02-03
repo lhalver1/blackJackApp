@@ -21,10 +21,10 @@
         <button ion-button color="danger" block style="float: right;">Quit</button>
       </ion-col>
     </ion-row>-->
-    <div [@winnerState]="showWinners">
+    <div>
       <ion-row>
-          <ion-col class="winner" width-100 text-center>
-              <div>Winner<span *ngIf="winningPlayers.length > 1">s</span>: </div>
+          <ion-col class="winner" width-100 text-center [@winnerState]="showWinners">
+              <div [@winnerState]="showWinners">Winner<span *ngIf="winningPlayers.length > 1">s</span>: </div>
               <div class="bg-success" *ngFor="let winner of winningPlayers">
                   {{winner?.name}}
               </div>
