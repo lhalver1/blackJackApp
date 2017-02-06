@@ -27,6 +27,16 @@ declare let $: any;          //Jquery
             })),
             transition('* => show', animate('400ms ease-in')),
             transition('show => *', animate('400ms ease-out'))
+        ]),
+        trigger('slideIn', [
+            state('in', style({transform: 'translateX(0)'})),
+            transition('void => *', [
+              style({transform: 'translateX(100%)'}),
+              animate(400)
+            ])//,
+            // transition('* => void', [
+            //   animate(400, style({transform: 'translateX(-100%)'}))
+            // ])
         ])
     ]
 })
