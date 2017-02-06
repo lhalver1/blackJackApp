@@ -33,10 +33,10 @@ declare let $: any;          //Jquery
             transition('void => yes', [
               style({transform: 'translateX(100%)'}),
               animate(400)
-            ])//,
-            // transition('* => void', [
-            //   animate(400, style({transform: 'translateX(-100%)'}))
-            // ])
+            ]),
+            transition('* => void', [
+              animate(400, style({transform: 'translateX(-100%)'}))
+            ])
         ]),
         trigger('flyIn', [
             state('in', style({transform: 'translateX(0)'})),
@@ -46,14 +46,14 @@ declare let $: any;          //Jquery
                 style({opacity: 1, transform: 'translateX(-15px)',  offset: 0.3}),
                 style({opacity: 1, transform: 'translateX(0)',     offset: 1.0})
               ]))
-            ]),
-            transition('* => void', [
-              animate(500, keyframes([
-                style({opacity: 1, transform: 'translateX(0)',     offset: 0}),
-                style({opacity: 1, transform: 'translateX(15px)', offset: 0.7}),
-                style({opacity: 0, transform: 'translateX(-100%)',  offset: 1.0})
-              ]))
-            ])
+            ])//,
+            // transition('* => void', [
+            //   animate(500, keyframes([
+            //     style({opacity: 1, transform: 'translateX(0)',     offset: 0}),
+            //     style({opacity: 1, transform: 'translateX(15px)', offset: 0.7}),
+            //     style({opacity: 0, transform: 'translateX(-100%)',  offset: 1.0})
+            //   ]))
+            // ])
         ])
     ]
 })

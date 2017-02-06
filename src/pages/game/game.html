@@ -52,11 +52,20 @@
                       [suit]="card.suit" [value]="card.value"></card>
                     <div class="cardBack" *ngIf="cardIndex+1 != player.hand.length && !player.turn && player.cardsTotal() != 21"></div>
                 </div> <br>
-                <div class="hitStayButtonGroup" *ngIf="playerTurnIndex === i && player?.type === 'Human'">
-                  <button class="stayBtn" ion-button round small color="danger" (click)="stay(player)">Stay</button>
-                  <button class="hitBtn" ion-button round small color="primary" (click)="hit(player)">Hit</button>
-                </div>
+                <!--<div class="hitStayButtonGroup" *ngIf="playerTurnIndex === i && player?.type === 'Human'">
+                  <button class="stayBtn" ion-button round block small color="danger" (click)="stay(player)">Stay</button>
+                  <button class="hitBtn" ion-button round block small color="primary" (click)="hit(player)">Hit</button>
+                </div>-->
             </div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row *ngIf="playerTurnIndex === i && player?.type === 'Human'">
+          <ion-col width-25 offset-25>
+            <button class="stayBtn" ion-button block small color="danger" (click)="stay(player)">Stay</button>
+          </ion-col>
+          <ion-col width-25>
+            <button class="hitBtn" ion-button block small color="primary" (click)="hit(player)">Hit</button>
           </ion-col>
         </ion-row>
 
