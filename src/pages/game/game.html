@@ -44,17 +44,17 @@
         <ion-row>
           <ion-col width-100 text-center>
             <div class="hand">
-                <div class="card" style="float: left;"
+                <div class="card"
                   [ngClass]="{'notTopCard': cardIndex+1 != player.hand.length}"
                   *ngFor="let card of player.hand; let cardIndex = index;"
-                  [@slideIn]="true">
+                  [@flyIn]="cardIndex > 1 ? 'yes':'no'">
                     <card *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === i || player.turn || player.cardsTotal() == 21"
                       [suit]="card.suit" [value]="card.value"></card>
                     <div class="cardBack" *ngIf="cardIndex+1 != player.hand.length && !player.turn && player.cardsTotal() != 21"></div>
-                </div>
+                </div> <br>
                 <div class="hitStayButtonGroup" *ngIf="playerTurnIndex === i && player?.type === 'Human'">
-                  <button class="hitBtn" ion-button block color="primary" (click)="hit(player)">Hit</button>
-                  <button class="stayBtn" ion-button block color="warn" (click)="stay(player)">Stay</button>
+                  <button class="stayBtn" ion-button round small color="warn" (click)="stay(player)">Stay</button>
+                  <button class="hitBtn" ion-button round small color="primary" (click)="hit(player)">Hit</button>
                 </div>
             </div>
           </ion-col>
