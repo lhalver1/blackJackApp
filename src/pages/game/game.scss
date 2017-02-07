@@ -1,6 +1,6 @@
 game-page {
     ion-content {
-        background: url('../../assets/background.png');
+        background: url('/assets/img/background.png');
         background-position: center center;
     }
 
@@ -39,7 +39,7 @@ game-page {
         border-bottom-right-radius: 0px;
     }
     .cardBack {
-        background: url('/assets/cardBack.png');
+        background: url('/assets/img/cardBack.png');
         background-size: 102px 119px;
         height: 98px;
         width: 73px;
