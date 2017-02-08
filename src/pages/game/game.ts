@@ -6,7 +6,7 @@ import { NavController, NavParams } from 'ionic-angular';
 import { Player } from '../../models/player';
 import { Card } from '../../models/card';
 import { Deck } from '../../models/deck';
-import { Chip } from '../../models/chip';
+import { Chip } from '../../models/chip'; 
 import { Settings } from '../../models/settings';
 
 declare let $: any;          //Jquery
