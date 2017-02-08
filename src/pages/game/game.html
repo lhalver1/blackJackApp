@@ -1,36 +1,28 @@
-<ion-header>
+<!--<ion-header>
   <ion-navbar>
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>Black Jack</ion-title>
   </ion-navbar>
-</ion-header>
+</ion-header>-->
 
 <ion-content padding>
+  <!--<span class="menuBtn" style="color: white;">
+    <button ion-button outline round menuToggle style="float: left;" color="light">
+      <ion-icon name="menu"></ion-icon>
+    </button>
+  </span>-->
   <ion-grid>
 
-    <!--<ion-row>
-      <ion-col width-33>
-        <button ion-button block>Deal</button>
-      </ion-col>
-      <ion-col width-33>
-        <button ion-button color="secondary" block>Reshuffle</button>
-      </ion-col>
-      <ion-col width-33>
-        <button ion-button color="danger" block style="float: right;">Quit</button>
-      </ion-col>
-    </ion-row>-->
-    <div>
-      <ion-row>
-          <ion-col class="winner" width-100 text-center [@winnerState]="showWinners">
-              <div>Winner<span *ngIf="winningPlayers.length > 1">s</span>: </div>
-              <div class="bg-success" *ngFor="let winner of winningPlayers">
-                  {{winner?.name}}
-              </div>
-          </ion-col>
-      </ion-row>
-    </div>
+    <ion-row>
+        <ion-col class="winner" width-100 text-center [@winnerState]="showWinners">
+            <div>Winner<span *ngIf="winningPlayers.length > 1">s</span>: </div>
+            <div class="bg-success" *ngFor="let winner of winningPlayers">
+                {{winner?.name}}
+            </div>
+        </ion-col>
+    </ion-row>
 
     <ion-row class="playerRow" *ngFor="let player of players; let i = index;" center>
       <ion-col width-100>
@@ -62,10 +54,10 @@
 
         <ion-row *ngIf="playerTurnIndex === i && player?.type === 'Human'">
           <ion-col width-25 offset-25>
-            <button class="stayBtn" ion-button block small color="danger" (click)="stay(player)">Stay</button>
+            <button class="stayBtn" ion-button block color="danger" (click)="stay(player)">Stay</button>
           </ion-col>
           <ion-col width-25>
-            <button class="hitBtn" ion-button block small color="primary" (click)="hit(player)">Hit</button>
+            <button class="hitBtn" ion-button block color="primary" (click)="hit(player)">Hit</button>
           </ion-col>
         </ion-row>
 
