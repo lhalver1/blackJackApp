@@ -3,14 +3,16 @@ import { Card } from './card';
 export class Player {
     public name: string;
     public hand: Card[];
+    public money: number;
     public turn: boolean;
     public type: string;
     public wins: number;
     public losses: number;
 
-    constructor(name: string, hand: Card[], turn: boolean, type: string, wins: number, losses: number) {
+    constructor(name: string, hand: Card[], money: number,turn: boolean, type: string, wins: number, losses: number) {
         this.name = name;
         this.hand = hand;
+        this.money = money;
         this.turn = turn;
         this.type = type;
         this.wins = wins;
@@ -49,5 +51,12 @@ export class Player {
         }
 
         return total;
+    }
+
+    subtractMoney(amount) {
+        this.money -= amount;
+    }
+    addMoney(amount) {
+        this.money += amount;
     }
 }

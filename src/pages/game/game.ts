@@ -6,13 +6,14 @@ import { NavController, NavParams } from 'ionic-angular';
 import { Player } from '../../models/player';
 import { Card } from '../../models/card';
 import { Deck } from '../../models/deck';
+import { Chip } from '../../models/chip';
 import { Settings } from '../../models/settings';
 
 declare let $: any;          //Jquery
 
 @Component({
     selector: 'game-page',
-    templateUrl: 'game.html',
+    templateUrl: 'game2.html',
     animations: [
         trigger('winnerState', [
             state('*', style({
@@ -42,9 +43,26 @@ declare let $: any;          //Jquery
             state('in', style({transform: 'translateX(0)'})),
             transition('void => yes', [
               animate(400, keyframes([
-                style({opacity: 0, transform: 'translateX(100%)', offset: 0}),
-                style({opacity: 1, transform: 'translateX(-15px)',  offset: 0.3}),
-                style({opacity: 1, transform: 'translateX(0)',     offset: 1.0})
+                style({opacity: 0, transform: 'translate(100%, -100%)', offset: 0}),
+                // style({opacity: 1, transform: 'translate(-15px, 15px)',  offset: 0.3}),
+                style({opacity: 1, transform: 'translate(0, 0)',     offset: 1.0})
+              ]))
+            ])//,
+            // transition('* => void', [
+            //   animate(500, keyframes([
+            //     style({opacity: 1, transform: 'translateX(0)',     offset: 0}),
+            //     style({opacity: 1, transform: 'translateX(15px)', offset: 0.7}),
+            //     style({opacity: 0, transform: 'translateX(-100%)',  offset: 1.0})
+            //   ]))
+            // ])
+        ]),
+        trigger('dealerflyIn', [
+            state('in', style({transform: 'translateX(0)'})),
+            transition('void => yes', [
+              animate(400, keyframes([
+                style({opacity: 0, transform: 'translate(100%, 100%)', offset: 0}),
+                // style({opacity: 1, transform: 'translate(-15px, -15px)',  offset: 0.3}),
+                style({opacity: 1, transform: 'translate(0, 0)',     offset: 1.0})
               ]))
             ])//,
             // transition('* => void', [
@@ -58,24 +76,24 @@ declare let $: any;          //Jquery
     ]
 })
 export class GamePage {
-    showWinners: string;
     playerTurnIndex: number;
     players: Player[];
     winningPlayers: Player[];
     deck: Deck;
     trash: Card[];
+    pot: Chip[];
     settings: Settings;
 
     constructor(public navCtrl: NavController, public navParams: NavParams) {
-        this.showWinners = 'hide';
         // Get the players
         this.players = [
-            new Player("Dealer", [], false, "CPU", 0, 0),
-            new Player("Jalen", [], false, "CPU", 0, 0),
-            new Player("Logan", [], false, "Human", 0, 0)
+            new Player("Dealer", [], 2000,false, "CPU", 0, 0),
+            // new Player("Jalen", [], 2000,false, "CPU", 0, 0),
+            new Player("Logan", [], 2000, false, "Human", 0, 0)
         ];
         this.winningPlayers = [];
         this.trash = [];
+        this.pot = [];
         this.settings = new Settings(2000, false, false);
 
         // Get the deck of cards
@@ -274,9 +292,7 @@ export class GamePage {
      */
     endRound() {
         this.determineWinner();
-        this.showWinners = 'show';
         setTimeout(() => {
-            this.showWinners = 'hide';
             this.winningPlayers.splice(0, this.winningPlayers.length);  
             this.dealOutCards();
         }, 4000);
@@ -317,6 +333,23 @@ export class GamePage {
                 currPlayer.losses += 1;
             }
         }//End players for
+    }
+
+    /**
+     * Checks to see if the given player is in the winneingPlayers array,
+     * returns true if they are and false if they aren't.
+     * 
+     * @param  {Player} player - The player to search for in the winningPlayers array
+     * @returns boolean - Was the given player found in the array
+     */
+    isWinner(player: Player): boolean {
+        for (let index = 0; index < this.winningPlayers.length; index++) {
+            let currWinner = this.winningPlayers[index];
+            if (currWinner === player) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
