@@ -83,6 +83,7 @@ export class GamePage {
     trash: Card[];
     pot: Chip[];
     settings: Settings;
+    roundOver: boolean;
 
     constructor(public navCtrl: NavController, public navParams: NavParams) {
         // Get the players
@@ -94,6 +95,7 @@ export class GamePage {
         this.winningPlayers = [];
         this.trash = [];
         this.pot = [];
+        this.roundOver = true;
         this.settings = new Settings(2000, false, false);
 
         // Get the deck of cards
@@ -101,7 +103,7 @@ export class GamePage {
         this.deck.buildDeck()
         this.deck.shuffle();
 
-        this.dealOutCards();
+        // this.dealOutCards();
     }
 
     ngAfterViewInit() {
@@ -113,18 +115,7 @@ export class GamePage {
      * puts the cards in the hands in the trash pile.
      */
     dealOutCards() {
-        // Take each players cards and push them to the trash and then
-        // clear the players hand.
-        for (var i = 0; i < this.players.length; i++) {
-            var currPlayer = this.players[i];
-            if (currPlayer.hand.length > 0) {
-                for (var index = 0; index < currPlayer.hand.length; index++) {
-                    var currCard = currPlayer.hand[index];
-                    this.trash.push(currCard);
-                }
-                currPlayer.hand.splice(0, currPlayer.hand.length);// = [];
-            }
-        }
+        this.roundOver = false;
 
         // If there are 12 or less cards remaining do a reshuffle.
         if (this.deck.cards.length <= 12) {
@@ -287,14 +278,46 @@ export class GamePage {
     }
 
     /**
+     * Places the bet into the pot
+     * 
+     * @param  {number} amount - The amount the user has bet
+     */
+    placeBet(amount: number) {
+        let userChip: Chip = new Chip(amount, this.players[1]);
+        this.players[1].subtractMoney(amount);
+
+        let dealerChip: Chip = new Chip(amount, this.players[0]);
+        this.players[0].subtractMoney(amount);
+
+        this.pot.push(userChip);
+        this.pot.push(dealerChip);
+    }
+
+    /**
      * The ends the current round by determining a winner and 
      * then after 4sec dealing out new cards.
      */
     endRound() {
         this.determineWinner();
         setTimeout(() => {
-            this.winningPlayers.splice(0, this.winningPlayers.length);  
-            this.dealOutCards();
+            this.roundOver = true;
+            this.winningPlayers.splice(0, this.winningPlayers.length);
+            this.pot.splice(0, this.pot.length);
+
+            // Take each players cards and push them to the trash and then
+            // clear the players hand.
+            for (var i = 0; i < this.players.length; i++) {
+                var currPlayer = this.players[i];
+                if (currPlayer.hand.length > 0) {
+                    for (var index = 0; index < currPlayer.hand.length; index++) {
+                        var currCard = currPlayer.hand[index];
+                        this.trash.push(currCard);
+                    }
+                    currPlayer.hand.splice(0, currPlayer.hand.length);// = [];
+                }
+            }
+
+            // this.dealOutCards();
         }, 4000);
     }
 
@@ -320,6 +343,7 @@ export class GamePage {
 
         for (var i = 0; i < this.players.length; i++) {
             var currPlayer: Player = this.players[i];
+            var isUser = false;
             var isWinner = false;
 
             for (var j = 0; j < this.winningPlayers.length; j++) {
@@ -327,12 +351,42 @@ export class GamePage {
                 if (currWinner == currPlayer) {
                     currPlayer.wins += 1;
                     isWinner = true;
+                    break;
                 }
             }//End winners for
             if (!isWinner) {
                 currPlayer.losses += 1;
             }
         }//End players for
+
+        let potTotal = 0;
+        let usersChips = [];
+        let usersChipTotal = 0;
+        let dealersChips =[]
+        let dealersChipTotal = 0;
+        for (var index = 0; index < this.pot.length; index++) {
+            var chip = this.pot[index];
+            potTotal += chip.value;
+            switch (chip.owner) {
+                case this.players[0]:
+                    dealersChips.push(chip);
+                    dealersChipTotal += chip.value;
+                    break;
+                case this.players[1]:
+                    usersChips.push(chip);
+                    usersChipTotal += chip.value;
+                    break;
+            
+                default:
+                    break;
+            }
+        }
+
+        if (this.winningPlayers.length === 1) {
+            this.winningPlayers[0].addMoney(potTotal);
+        } else {
+            this.players[1].addMoney(usersChipTotal);
+        }
     }
 
     /**

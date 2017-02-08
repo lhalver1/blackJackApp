@@ -15,7 +15,7 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   // make WelcomePage the root (or first) page
-  rootPage: any = WelcomePage;
+  rootPage: any = GamePage;
   pages: Array<Page>;
 
   constructor(
