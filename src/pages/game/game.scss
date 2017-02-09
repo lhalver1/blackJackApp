@@ -12,6 +12,10 @@ game-page {
         padding: 0;
         height: 100%;
     }
+    
+    .playerRow.dealerRow { flex: 1; color: #ffffff; /*border: 1px solid yellow;*/ }
+    .potDeckRow { flex: 2; /*border: 2px solid lime;*/ }
+    .playerRow.userRow { flex: 1; color: #fff; /*border: 1px solid magenta;*/ }
 
     .winner {
         background-color: $bs-success;
@@ -68,10 +72,7 @@ game-page {
         overflow: hidden;
         box-shadow: 0 6px 6px -3px rgba(0,0,0,.2), 0 10px 14px 1px rgba(0,0,0,.14), 0 4px 18px 3px rgba(0,0,0,.12);
     }
-    .playerRow {
-        color: #fff;
-        flex: 1;
-    }
+
     .hand, .hand>div {
         display: inline-block;
     }
@@ -120,4 +121,15 @@ game-page {
         height: 50px;
         border-top: 2px solid #ffffff;
     }
+
+    .chipBtn:hover {
+        cursor: pointer;
+    }
+
+
+}
+
+// Toast Classes
+.toastDanger .toast-wrapper {
+    background-color: $bs-danger;
 }

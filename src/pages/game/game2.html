@@ -2,10 +2,10 @@
   <ion-content class="home" padding>
     <ion-grid>
 
-      <ion-row class="playerRow" [ngClass]="{'newWinner': isWinner(players[0])}">
+      <ion-row class="playerRow dealerRow" [ngClass]="{'newWinner': isWinner(players[0])}">
         <ion-col width-100>
 
-          <ion-row>
+          <ion-row id="dealerNameRow">
             <ion-col width-100 text-center>
               <div class="playerName">
                 ${{ players[1].money }} {{ players[0].name }}<span *ngIf="playerTurnIndex === 0 || players[0].turn || players[0].cardsTotal() == 21">: {{ players[0].cardsTotal() }}</span>
@@ -13,13 +13,13 @@
             </ion-col>
           </ion-row>
           
-          <ion-row>
+          <ion-row id="dealerHandRow">
             <ion-col width-100 text-center>
               <div class="hand">
                   <div class="card"
                     [ngClass]="{'notTopCard': cardIndex+1 != players[0].hand.length}"
                     *ngFor="let card of players[0].hand; let cardIndex = index;"
-                    [@dealerflyIn]="cardIndex > 1 ? 'yes':'no'">
+                    [@bottomRightFlyIn]="cardIndex > 1 ? 'yes':'no'">
 
                       <card *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === 0 || players[0].turn || players[0].cardsTotal() == 21"
                         [suit]="card.suit" [value]="card.value"></card>
@@ -27,15 +27,6 @@
                       <div class="cardBack" *ngIf="cardIndex+1 != players[0].hand.length && !players[0].turn && players[0].cardsTotal() != 21"></div>
                   </div>
               </div>
-            </ion-col>
-          </ion-row>
-
-          <ion-row *ngIf="playerTurnIndex === 0 && players[0]?.type === 'Human'">
-            <ion-col width-25 offset-25>
-              <button class="stayBtn" ion-button block color="danger" (click)="stay(players[0])">Stay</button>
-            </ion-col>
-            <ion-col width-25>
-              <button class="hitBtn" ion-button block color="primary" (click)="hit(players[0])" [disabled]="players[0].cardsTotal() === 21 ">Hit</button>
             </ion-col>
           </ion-row>
 
@@ -58,10 +49,10 @@
         </ion-col>
       </ion-row>
 
-      <ion-row class="playerRow" center [ngClass]="{'newWinner': isWinner(players[1])}">
+      <ion-row class="playerRow userRow" bottom [ngClass]="{'newWinner': isWinner(players[1])}">
         <ion-col width-100>
 
-          <ion-row>
+          <ion-row id="userNameRow">
             <ion-col width-100 text-center>
               <div class="playerName">
                 ${{ players[1].money }} {{ players[1].name }}<span *ngIf="playerTurnIndex === 1 || players[1].turn || players[1].cardsTotal() == 21">: {{ players[1].cardsTotal() }}</span>
@@ -69,17 +60,28 @@
             </ion-col>
           </ion-row>
 
-          <ion-row>
-              <button class="dealBtn" ion-button block color="primary" (click)="dealOutCards()" *ngIf="roundOver" [disabled]="pot.length <= 0" >Deal</button>
+          <ion-row id="betDealRow" *ngIf="roundOver">
+            <ion-col width-66>
+              <img class="chipBtn" src="../assets/img/chips/100chip.png" style="width: 50px; height: 50px;" (click)="placeBet(100)">
+              <img class="chipBtn" src="../assets/img/chips/500chip.png" style="width: 50px; height: 50px;" (click)="placeBet(500)">
+              <img class="chipBtn" src="../assets/img/chips/1000chip.png" style="width: 50px; height: 50px;" (click)="placeBet(1000)">
+            </ion-col>
+            <ion-col width-33>
+              <button class="dealBtn" ion-button block round color="primary" (click)="dealOutCards()" [disabled]="pot.length <= 0" >Deal</button>
+            </ion-col>
           </ion-row>
 
-          <ion-row>
+          <!--<ion-row>
+              <button class="dealBtn" ion-button block color="primary" (click)="dealOutCards()" *ngIf="roundOver" [disabled]="pot.length <= 0" >Deal</button>
+          </ion-row>-->
+
+          <ion-row id="userHandRow">
             <ion-col width-100 text-center>
               <div class="hand">
                   <div class="card"
                     [ngClass]="{'notTopCard': cardIndex+1 != players[1].hand.length}"
                     *ngFor="let card of players[1].hand; let cardIndex = index;"
-                    [@flyIn]="cardIndex > 1 ? 'yes':'no'">
+                    [@topRightFlyIn]="cardIndex > 1 ? 'yes':'no'">
 
                       <card *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === 1 || players[1].turn || players[1].cardsTotal() == 21"
                         [suit]="card.suit" [value]="card.value"></card>
@@ -90,25 +92,12 @@
             </ion-col>
           </ion-row>
 
-          <ion-row *ngIf="playerTurnIndex === 1 && players[1]?.type === 'Human'">
+          <ion-row id="hitStayRow" *ngIf="playerTurnIndex === 1 && players[1]?.type === 'Human'">
             <ion-col width-25 offset-25>
-              <button class="stayBtn" ion-button block color="danger" (click)="stay(players[1])">Stay</button>
+              <button class="stayBtn" ion-button block round color="danger" (click)="stay(players[1])">Stay</button>
             </ion-col>
             <ion-col width-25>
-              <button class="hitBtn" ion-button block color="primary" (click)="hit(players[1])" [disabled]="players[1].cardsTotal() === 21 ">Hit</button>
-            </ion-col>
-          </ion-row>
-
-          <ion-row *ngIf="players[1].hand.length === 0">
-            <ion-col>
-              <ion-fab bottom left>
-                <button ion-fab>Bet</button>
-                <ion-fab-list side="top">
-                  <button ion-fab [disabled]="players[1].money <= 100" color="warn" (click)="placeBet(100)">100</button>
-                  <button ion-fab [disabled]="players[1].money <= 500" color="secondary" (click)="placeBet(500)">500</button>
-                  <button ion-fab [disabled]="players[1].money <= 1000" color="primary" (click)="placeBet(1000)">1K</button>
-                </ion-fab-list>
-              </ion-fab>
+              <button class="hitBtn" ion-button block round color="primary" (click)="hit(players[1])" [disabled]="players[1].cardsTotal() === 21 ">Hit</button>
             </ion-col>
           </ion-row>
 

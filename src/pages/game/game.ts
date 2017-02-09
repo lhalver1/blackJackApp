@@ -1,7 +1,7 @@
 import { estimateHeight } from 'ionic-angular/es2015/components/virtual-scroll/virtual-util';
 import { Component, trigger, state, style, transition, animate, group, keyframes } from '@angular/core';
 
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, ToastController } from 'ionic-angular';
 
 import { Player } from '../../models/player';
 import { Card } from '../../models/card';
@@ -29,17 +29,7 @@ declare let $: any;          //Jquery
             transition('* => show', animate('400ms ease-in')),
             transition('show => *', animate('400ms ease-out'))
         ]),
-        trigger('slideIn', [
-            state('in', style({transform: 'translateX(0)'})),
-            transition('void => yes', [
-              style({transform: 'translateX(100%)'}),
-              animate(400)
-            ]),
-            transition('* => void', [
-              animate(400, style({transform: 'translateX(-100%)'}))
-            ])
-        ]),
-        trigger('flyIn', [
+        trigger('topRightFlyIn', [
             state('in', style({transform: 'translateX(0)'})),
             transition('void => yes', [
               animate(400, keyframes([
@@ -56,7 +46,7 @@ declare let $: any;          //Jquery
             //   ]))
             // ])
         ]),
-        trigger('dealerflyIn', [
+        trigger('bottomRightFlyIn', [
             state('in', style({transform: 'translateX(0)'})),
             transition('void => yes', [
               animate(400, keyframes([
@@ -85,7 +75,7 @@ export class GamePage {
     settings: Settings;
     roundOver: boolean;
 
-    constructor(public navCtrl: NavController, public navParams: NavParams) {
+    constructor(public navCtrl: NavController, public navParams: NavParams, private toastCtrl: ToastController) {
         // Get the players
         this.players = [
             new Player("Dealer", [], 2000,false, "CPU", 0, 0),
@@ -283,14 +273,18 @@ export class GamePage {
      * @param  {number} amount - The amount the user has bet
      */
     placeBet(amount: number) {
-        let userChip: Chip = new Chip(amount, this.players[1]);
-        this.players[1].subtractMoney(amount);
-
-        let dealerChip: Chip = new Chip(amount, this.players[0]);
-        this.players[0].subtractMoney(amount);
-
-        this.pot.push(userChip);
-        this.pot.push(dealerChip);
+        if (this.players[1].money >= amount) {
+            let userChip: Chip = new Chip(amount, this.players[1]);
+            this.players[1].subtractMoney(amount);
+    
+            let dealerChip: Chip = new Chip(amount, this.players[0]);
+            this.players[0].subtractMoney(amount);
+    
+            this.pot.push(userChip);
+            this.pot.push(dealerChip); 
+        } else {
+            this.showToast('Not Enough Funds!', 3000, 'bottom', 'toastDanger');
+        }
     }
 
     /**
@@ -417,6 +411,30 @@ export class GamePage {
             var player = this.players[index];
             player.turn = false;
         }
+    }
+
+    /**
+     * Shows a toast with the given message for the given duration and
+     * in the given position.
+     * 
+     * @param  {string} msg - Message in the toast
+     * @param  {number} duration - In milliseconds, the duration of the toast
+     * @param  {string} position - 'top', 'bottom', 'middle' position of the toast on the screen
+     * @returns void
+     */
+    showToast(msg: string, duration: number, position: string, cssClass: string): void {
+        let toast = this.toastCtrl.create({
+        message: msg,
+        duration: duration,
+        position: position,
+        cssClass: cssClass
+      });
+    
+      toast.onDidDismiss(() => {
+        console.log('Dismissed toast');
+      });
+    
+      toast.present();
     }
 
 }// End GamePage
