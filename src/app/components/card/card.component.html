@@ -5,8 +5,18 @@
 <div class="card-suit">
     <img id="suitImg" src="../../assets/suits/{{suit}}.png" alt="Not Found">
 </div>-->
+<!-- 
+    ../../../assets = no
+    ../../assests = no
+    ../assets = No
+    ./../assets = No
+    ./assets = no
+    /assets = no
+    assets = no
+    'background-image': 'url(Ace.png)',
+ -->
 <div [ngStyle]="{
-    'background-image': 'url(assets/img/cardImages/' +suit+ '/' +value+ '.png)',
+    'background-image': 'url(/assets/img/cardImages/' +suit+ '/' +value+ '.png)',
     'height': '94px',
     'width': '69px',
     'margin-top': '-1px',
