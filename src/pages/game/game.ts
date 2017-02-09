@@ -72,6 +72,7 @@ export class GamePage {
     deck: Deck;
     trash: Card[];
     pot: Chip[];
+    potTotal: number;
     settings: Settings;
     roundOver: boolean;
 
@@ -85,6 +86,7 @@ export class GamePage {
         this.winningPlayers = [];
         this.trash = [];
         this.pot = [];
+        this.potTotal = 0;
         this.roundOver = true;
         this.settings = new Settings(2000, false, false);
 
@@ -277,11 +279,11 @@ export class GamePage {
             let userChip: Chip = new Chip(amount, this.players[1]);
             this.players[1].subtractMoney(amount);
     
-            let dealerChip: Chip = new Chip(amount, this.players[0]);
-            this.players[0].subtractMoney(amount);
+            let dealerChip: Chip = new Chip(amount, this.players[0]); // Dealer always matches and never runs out of funds
     
             this.pot.push(userChip);
-            this.pot.push(dealerChip); 
+            this.pot.push(dealerChip);
+            this.potTotal += userChip.value;
         } else {
             this.showToast('Not Enough Funds!', 3000, 'bottom', 'toastDanger');
         }
@@ -297,6 +299,7 @@ export class GamePage {
             this.roundOver = true;
             this.winningPlayers.splice(0, this.winningPlayers.length);
             this.pot.splice(0, this.pot.length);
+            this.potTotal = 0;
 
             // Take each players cards and push them to the trash and then
             // clear the players hand.
@@ -353,21 +356,15 @@ export class GamePage {
             }
         }//End players for
 
-        let potTotal = 0;
-        let usersChips = [];
         let usersChipTotal = 0;
-        let dealersChips =[]
         let dealersChipTotal = 0;
         for (var index = 0; index < this.pot.length; index++) {
             var chip = this.pot[index];
-            potTotal += chip.value;
             switch (chip.owner) {
                 case this.players[0]:
-                    dealersChips.push(chip);
                     dealersChipTotal += chip.value;
                     break;
                 case this.players[1]:
-                    usersChips.push(chip);
                     usersChipTotal += chip.value;
                     break;
             
@@ -377,7 +374,7 @@ export class GamePage {
         }
 
         if (this.winningPlayers.length === 1) {
-            this.winningPlayers[0].addMoney(potTotal);
+            this.winningPlayers[0].addMoney(this.potTotal);
         } else {
             this.players[1].addMoney(usersChipTotal);
         }

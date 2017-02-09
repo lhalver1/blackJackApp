@@ -107,7 +107,7 @@ game-page {
     }
     .deckFirstCard {
         display: inline-block;
-        width: 50px;
+        width: 69px;
         border-top-left-radius: 6px;
         border-bottom-left-radius: 6px;
         border-top-right-radius: 0px;
@@ -121,11 +121,6 @@ game-page {
         height: 50px;
         border-top: 2px solid #ffffff;
     }
-
-    .chipBtn:hover {
-        cursor: pointer;
-    }
-
 
 }
 

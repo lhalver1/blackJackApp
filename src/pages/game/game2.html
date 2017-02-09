@@ -8,7 +8,7 @@
           <ion-row id="dealerNameRow">
             <ion-col width-100 text-center>
               <div class="playerName">
-                ${{ players[1].money }} {{ players[0].name }}<span *ngIf="playerTurnIndex === 0 || players[0].turn || players[0].cardsTotal() == 21">: {{ players[0].cardsTotal() }}</span>
+                {{ players[0].name }}<span *ngIf="playerTurnIndex === 0 || players[0].turn || players[0].cardsTotal() == 21">: {{ players[0].cardsTotal() }}</span>
               </div>
             </ion-col>
           </ion-row>
@@ -35,15 +35,31 @@
 
       <ion-row class="potDeckRow" center>
         <ion-col width-50>
-          
-          <div class="chip" *ngFor="let chip of pot; let i = index">{{ chip.value }}</div>
+
+          <ion-row>
+            <ion-col width-100 center>
+              <span>Pot Total: ${{ potTotal }}</span>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col width-100>
+              <div *ngFor="let chip of pot; let i = index" style="display: inline-block;">
+                <img [src]="'../assets/img/chips/' +chip.value+ 'chip.png'" *ngIf="chip.owner === players[1]" style="width: 20px; height: 20px; display: inline-block;">
+              </div>
+            </ion-col>
+          </ion-row>
 
         </ion-col>
         <ion-col width-50>
           
           <div class="deck" style="display: inline-block;float: right;">
-              <div class="deckcardBack" *ngFor="let card of deck.cards; let i = index; let firstCard = first" style="border: 1px solid #ffffff;"
-                [ngClass]="{'deckFirstCard': firstCard}"></div>
+
+            <div>
+              <div class="deckcardBack" *ngFor="let card of deck.cards; let i = index; let firstCard = first" [hidden]="i > 12"
+                style="border: 1px solid #ffffff;" [ngClass]="{'deckFirstCard': firstCard}"></div>
+            </div>
+          
           </div>
 
         </ion-col>
