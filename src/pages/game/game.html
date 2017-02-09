@@ -15,31 +15,64 @@
     </span>-->
     <ion-grid>
 
-      <ion-row class="playerRow" center *ngFor="let player of players; let i = index;" [ngClass]="{'newWinner': isWinner(player)}">
-        <ion-col width-100>
-          <ion-row>
-            <ion-col width-100 text-center>
-              <div class="playerName">
-                {{ player.name }}<span *ngIf="playerTurnIndex === i || player.turn || player.cardsTotal() == 21">: {{ player.cardsTotal() }}</span>
+    <!--<ion-row>
+      <ion-col width-33>
+        <button ion-button block>Deal</button>
+      </ion-col>
+      <ion-col width-33>
+        <button ion-button color="secondary" block>Reshuffle</button>
+      </ion-col>
+      <ion-col width-33>
+        <button ion-button color="danger" block style="float: right;">Quit</button>
+      </ion-col>
+    </ion-row>-->
+    <div>
+      <ion-row>
+          <ion-col class="winner" width-100 text-center [@winnerState]="showWinners">
+              <div>Winner<span *ngIf="winningPlayers.length > 1">s</span>: </div>
+              <div class="bg-success" *ngFor="let winner of winningPlayers">
+                  {{winner?.name}}
               </div>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col width-100 text-center>
-              <div class="hand">
-                  <div class="card"
-                    [ngClass]="{'notTopCard': cardIndex+1 != player.hand.length}"
-                    *ngFor="let card of player.hand; let cardIndex = index;"
-                    [@flyIn]="cardIndex > 1 ? 'yes':'no'">
+          </ion-col>
+      </ion-row>
+    </div>
 
-                      <card *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === i || player.turn || player.cardsTotal() == 21"
-                        [suit]="card.suit" [value]="card.value"></card>
-
-                      <div class="cardBack" *ngIf="cardIndex+1 != player.hand.length && !player.turn && player.cardsTotal() != 21"></div>
-                  </div>
-              </div>
-            </ion-col>
-          </ion-row>
+    <ion-row class="playerRow" *ngFor="let player of players; let i = index;" center>
+      <ion-col width-100>
+        <ion-row>
+          <ion-col width-100 text-center>
+            <div class="playerName">
+              {{ player.name }}<span *ngIf="playerTurnIndex === i || player.turn || player.cardsTotal() == 21">: {{ player.cardsTotal() }}</span>
+            </div>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col width-100 text-center>
+            <div class="hand">
+                <div class="card"
+                  [ngClass]="{'notTopCard': cardIndex+1 != player.hand.length}"
+                  *ngFor="let card of player.hand; let cardIndex = index;"
+                  [@flyIn]="cardIndex > 1 ? 'yes':'no'">
+                    <!--<card *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === i || player.turn || player.cardsTotal() == 21"
+                      [suit]="card.suit" [value]="card.value"></card>-->
+                      <div *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === i || player.turn || player.cardsTotal() == 21"
+                        [ngStyle]="{
+                          'background-image': 'url(assets/img/cardImages/' +card.suit+ '/' +card.value+ '.png)',
+                          'height': '92px',
+                          'width': '69px',
+                          'margin-top': '-2px',
+                          'margin-left': '-2px'
+                          }">
+                        </div>                    
+			<div class="cardBack" *ngIf="cardIndex+1 != player.hand.length && !player.turn && player.cardsTotal() != 21"></div>
+                </div> <br>
+                <!--<div class="hitStayButtonGroup" *ngIf="playerTurnIndex === i && player?.type === 'Human'">
+                  <button class="stayBtn" ion-button round block small color="danger" (click)="stay(player)">Stay</button>
+                  <button class="hitBtn" ion-button round block small color="primary" (click)="hit(player)">Hit</button>
+                </div>-->
+            </div>
+          </ion-col>
+        </ion-row>
 
           <ion-row *ngIf="playerTurnIndex === i && player?.type === 'Human'">
             <ion-col width-25 offset-25>
