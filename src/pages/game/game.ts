@@ -1,5 +1,4 @@
-import { estimateHeight } from 'ionic-angular/es2015/components/virtual-scroll/virtual-util';
-import { Component, trigger, state, style, transition, animate, group, keyframes } from '@angular/core';
+import { Component, trigger, state, style, transition, animate, keyframes } from '@angular/core';
 
 import { NavController, NavParams, ToastController } from 'ionic-angular';
 
@@ -7,6 +6,7 @@ import { Player } from '../../models/player';
 import { Card } from '../../models/card';
 import { Deck } from '../../models/deck';
 import { Chip } from '../../models/chip'; 
+import { MoneyChange } from '../../models/moneyChange'; 
 import { Settings } from '../../models/settings';
 
 declare let $: any;          //Jquery
@@ -58,6 +58,7 @@ export class GamePage {
     deck: Deck;
     trash: Card[];
     pot: Chip[];
+    playerMoneyChange: MoneyChange;
     potTotal: number;
     settings: Settings;
     roundOver: boolean;
@@ -74,6 +75,7 @@ export class GamePage {
         this.pot = [];
         this.potTotal = 0;
         this.roundOver = true;
+        this.playerMoneyChange = new MoneyChange('up', 0, false)
         this.settings = new Settings(2000, false, false);
 
         // Get the deck of cards
@@ -94,6 +96,7 @@ export class GamePage {
      */
     dealOutCards() {
         this.roundOver = false;
+        this.playerMoneyChange.show = false;
 
         // If there are 12 or less cards remaining do a reshuffle.
         if (this.deck.cards.length <= 12) {
@@ -157,10 +160,10 @@ export class GamePage {
         }
 
         // var remainingPlayersThatHaventBusted = ($scope.players.length-1) - bustedPlayers.length;
-        let thisPlayersArrayIndex = thisPlayersRealLifeIndex - 1;
+        // let thisPlayersArrayIndex = thisPlayersRealLifeIndex - 1;
 
         // var playersInfrontOfMeThatHaventBusted = thisPlayersArrayIndex - bustedPlayers.length;
-        var numPlayersBehindMe = this.players.length - thisPlayersArrayIndex;
+        // var numPlayersBehindMe = this.players.length - thisPlayersArrayIndex;
         if (total === 21) {
             setTimeout(() => {
                 this.stay(player);
@@ -264,6 +267,11 @@ export class GamePage {
         if (this.players[1].money >= amount) {
             let userChip: Chip = new Chip(amount, this.players[1]);
             this.players[1].subtractMoney(amount);
+            this.playerMoneyChange.lose(amount);
+            this.playerMoneyChange.show = true;
+            setTimeout(() => {
+                this.playerMoneyChange.show = false;
+            }, 2000);
     
             let dealerChip: Chip = new Chip(amount, this.players[0]); // Dealer always matches and never runs out of funds
     
@@ -284,6 +292,7 @@ export class GamePage {
         setTimeout(() => {
             this.roundOver = true;
             this.winningPlayers.splice(0, this.winningPlayers.length);
+            this.playerMoneyChange.show = false;
 
             // Take each players cards and push them to the trash and then
             // clear the players hand.
@@ -324,7 +333,6 @@ export class GamePage {
 
         for (var i = 0; i < this.players.length; i++) {
             var currPlayer: Player = this.players[i];
-            var isUser = false;
             var isWinner = false;
 
             for (var j = 0; j < this.winningPlayers.length; j++) {
@@ -357,15 +365,28 @@ export class GamePage {
             }
         }
 
+        let weHaveAWinner = false;
         if (this.winningPlayers.length === 1) {
             if (this.winningPlayers[0].type === 'Human' && this.winningPlayers[0].hand.length === 2 && this.winningPlayers[0].cardsTotal() == 21) {
                 this.winningPlayers[0].addMoney(this.potTotal + (this.potTotal/4)); // User gets 50% bonus on their bet for getting BlackJack! potTotal/2 = User bet, potTotal/4 = 50% User bet
+                this.playerMoneyChange.gain(this.potTotal + (this.potTotal/4));
+                weHaveAWinner = true;
             } else {
                 this.winningPlayers[0].addMoney(this.potTotal);
+                if (this.winningPlayers[0].type === 'Human') {
+                    this.playerMoneyChange.gain(this.potTotal);
+                    weHaveAWinner = true;
+                }
             }
         } else {
             // It was a push since the dealer and user both won
             this.players[1].addMoney(usersChipTotal);
+            this.playerMoneyChange.gain(usersChipTotal);
+            weHaveAWinner = true;
+        }
+
+        if (weHaveAWinner) {
+            this.playerMoneyChange.show = true;
         }
         this.pot.splice(0, this.pot.length);
         this.potTotal = 0;

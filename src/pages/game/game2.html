@@ -34,7 +34,7 @@
       </ion-row>
 
       <ion-row class="potDeckRow" center>
-        <ion-col width-50>
+        <ion-col text-center width-50>
 
           <ion-row>
             <ion-col width-100 center>
@@ -68,6 +68,17 @@
       <ion-row class="playerRow userRow" bottom [ngClass]="{'newWinner': isWinner(players[1])}">
         <ion-col width-100>
 
+          <ion-row>
+            <ion-col width-100 text-center>
+              <div>
+                <div *ngIf="playerMoneyChange.show" [ngClass]="{'winMoneyFade': playerMoneyChange.direction === 'up', 'loseMoneyFade': playerMoneyChange.direction === 'down'}">
+                  <span *ngIf="playerMoneyChange.direction === 'up'">+</span>
+                  <span *ngIf="playerMoneyChange.direction === 'down'">-</span>
+                  ${{ playerMoneyChange.amount }}
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
           <ion-row id="userNameRow">
             <ion-col width-100 text-center>
               <div class="playerName">
@@ -91,7 +102,7 @@
               <button class="dealBtn" ion-button block color="primary" (click)="dealOutCards()" *ngIf="roundOver" [disabled]="pot.length <= 0" >Deal</button>
           </ion-row>-->
 
-          <ion-row id="userHandRow">
+          <ion-row id="userHandRow" *ngIf="!roundOver">
             <ion-col width-100 text-center>
               <div class="hand">
                   <div class="card"
@@ -108,7 +119,7 @@
             </ion-col>
           </ion-row>
 
-          <ion-row id="hitStayRow" *ngIf="playerTurnIndex === 1 && players[1]?.type === 'Human'">
+          <ion-row id="hitStayRow" *ngIf="!roundOver && playerTurnIndex === 1 && players[1]?.type === 'Human'">
             <ion-col width-25 offset-25>
               <button class="stayBtn" ion-button block round color="danger" (click)="stay(players[1])">Stay</button>
             </ion-col>

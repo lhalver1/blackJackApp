@@ -33,6 +33,11 @@ game-page {
             border-radius: 6px;
             background-color: rgba(26,115,52,0.3);
         }
+        100% {
+            border: 2px solid green;
+            border-radius: 6px;
+            background-color: rgba(26,115,52,0.3);
+        }
     }
 
     .bounce {
@@ -42,17 +47,69 @@ game-page {
         0% {
             transform: translateY(-40px);
         }
-        12% {
+        12%, 32%, 100% {
             transform: translateY(0);
         }
         22% {
             transform: translateY(-16px);
         }
-        32% {
+    }
+
+    .upAndBounce {
+        animation: upAndBounce 1s forwards linear normal;
+    }
+    @keyframes upAndBounce {
+        0%, 20%, 40%, 60%, 80%, 100% {
             transform: translateY(0);
         }
+        30% {
+            transform: translateY(-30px);
+        }
+        50% {
+            transform: translateY(-15px);
+        }
+    }
+
+    .loseMoneyFade {
+        color: $bs-danger;
+        font-weight: 800;
+        font-size: large;
+        transform: translateY(0%);
+        animation: fadeUp 2s forwards linear normal;
+    }
+    .winMoneyFade {
+        color: $bs-success;
+        font-weight: 800;
+        font-size: large;
+        transform: translateY(-40px);
+        animation: fadeDown 2s forwards linear normal;
+    }
+    @keyframes fadeUp {
+        0%, 50% {
+            transform: translateY(0%);
+            opacity: 1;
+        }
+        75% {
+            transform: translateY(-40px);
+            opacity: 0;
+        }
         100% {
-            transform: translateY(0);
+            transform: translateY(-40px);
+            opacity: 0;
+        }
+    }
+    @keyframes fadeDown {
+        0%, 50% {
+            transform: translateY(-40px);
+            opacity: 1;
+        }
+        75% {
+            transform: translateY(0%);
+            opacity: 0;
+        }
+        100% {
+            transform: translateY(0%);
+            opacity: 0;
         }
     }
 
