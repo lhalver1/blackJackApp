@@ -38,14 +38,14 @@
 
           <ion-row>
             <ion-col width-100 center>
-              <span style="color: #ffffff;">Pot Total: ${{ potTotal }}</span>
+              <span style="color: #ffffff;">Pot Total: ${{ potTotal/2 }}</span>
             </ion-col>
           </ion-row>
 
           <ion-row>
             <ion-col width-100>
               <div *ngFor="let chip of pot; let i = index" style="display: inline-block;">
-                <img [src]="'../assets/img/chips/' +chip.value+ 'chip.png'" *ngIf="chip.owner === players[1]" style="width: 20px; height: 20px; display: inline-block;">
+                <img [ngClass]="{ 'bounce': chip === pot[pot.length-2] }" [src]="'../assets/img/chips/' +chip.value+ 'chip.png'" *ngIf="chip.owner === players[1]" style="width: 20px; height: 20px; display: inline-block;">
               </div>
             </ion-col>
           </ion-row>
@@ -53,7 +53,7 @@
         </ion-col>
         <ion-col width-50>
           
-          <div class="deck" style="display: inline-block;float: right;">
+          <div class="deck" style="display: inline-block; float: right;">
 
             <div>
               <div class="deckcardBack" *ngFor="let card of deck.cards; let i = index; let firstCard = first" [hidden]="i > 12"

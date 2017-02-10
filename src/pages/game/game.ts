@@ -37,14 +37,7 @@ declare let $: any;          //Jquery
                 // style({opacity: 1, transform: 'translate(-15px, 15px)',  offset: 0.3}),
                 style({opacity: 1, transform: 'translate(0, 0)',     offset: 1.0})
               ]))
-            ])//,
-            // transition('* => void', [
-            //   animate(500, keyframes([
-            //     style({opacity: 1, transform: 'translateX(0)',     offset: 0}),
-            //     style({opacity: 1, transform: 'translateX(15px)', offset: 0.7}),
-            //     style({opacity: 0, transform: 'translateX(-100%)',  offset: 1.0})
-            //   ]))
-            // ])
+            ])
         ]),
         trigger('bottomRightFlyIn', [
             state('in', style({transform: 'translateX(0)'})),
@@ -54,14 +47,7 @@ declare let $: any;          //Jquery
                 // style({opacity: 1, transform: 'translate(-15px, -15px)',  offset: 0.3}),
                 style({opacity: 1, transform: 'translate(0, 0)',     offset: 1.0})
               ]))
-            ])//,
-            // transition('* => void', [
-            //   animate(500, keyframes([
-            //     style({opacity: 1, transform: 'translateX(0)',     offset: 0}),
-            //     style({opacity: 1, transform: 'translateX(15px)', offset: 0.7}),
-            //     style({opacity: 0, transform: 'translateX(-100%)',  offset: 1.0})
-            //   ]))
-            // ])
+            ])
         ])
     ]
 })
@@ -283,7 +269,7 @@ export class GamePage {
     
             this.pot.push(userChip);
             this.pot.push(dealerChip);
-            this.potTotal += userChip.value;
+            this.potTotal += userChip.value * 2;
         } else {
             this.showToast('Not Enough Funds!', 3000, 'bottom', 'toastDanger');
         }
@@ -298,8 +284,6 @@ export class GamePage {
         setTimeout(() => {
             this.roundOver = true;
             this.winningPlayers.splice(0, this.winningPlayers.length);
-            this.pot.splice(0, this.pot.length);
-            this.potTotal = 0;
 
             // Take each players cards and push them to the trash and then
             // clear the players hand.
@@ -374,10 +358,17 @@ export class GamePage {
         }
 
         if (this.winningPlayers.length === 1) {
-            this.winningPlayers[0].addMoney(this.potTotal);
+            if (this.winningPlayers[0].type === 'Human' && this.winningPlayers[0].hand.length === 2 && this.winningPlayers[0].cardsTotal() == 21) {
+                this.winningPlayers[0].addMoney(this.potTotal + (this.potTotal/4)); // User gets 50% bonus on their bet for getting BlackJack! potTotal/2 = User bet, potTotal/4 = 50% User bet
+            } else {
+                this.winningPlayers[0].addMoney(this.potTotal);
+            }
         } else {
+            // It was a push since the dealer and user both won
             this.players[1].addMoney(usersChipTotal);
         }
+        this.pot.splice(0, this.pot.length);
+        this.potTotal = 0;
     }
 
     /**

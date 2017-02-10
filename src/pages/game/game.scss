@@ -1,6 +1,6 @@
 game-page {
     ion-content.home {
-        background: url('/assets/img/tableBackground.png');
+        background: url('../assets/img/tableBackground.png');
         background-position: center center;
         // background-size: 100% 100%;
     }
@@ -16,48 +16,6 @@ game-page {
     .playerRow.dealerRow { flex: 1; color: #ffffff; /*border: 1px solid yellow;*/ }
     .potDeckRow { flex: 2; /*border: 2px solid lime;*/ }
     .playerRow.userRow { flex: 1; color: #fff; /*border: 1px solid magenta;*/ }
-
-    .winner {
-        background-color: $bs-success;
-        color: #fff;
-        border-radius: 3px;
-    }
-
-    .newWinner {
-        border: 2px solid green;
-        border-radius: 6px;
-        background-color: rgba(26,115,52,0.3);
-
-        animation: flash 4s forwards linear normal;
-    }
-    @keyframes flash {
-        0% {
-            border: 2px solid green;
-            border-radius: 6px;
-            background-color: rgba(26,115,52,0.3);
-        }
-        4% {
-            border: 2px solid transparent;
-            border-radius: 6px;
-            background-color: transparent;
-        }
-        8% {
-            border: 2px solid green;
-            border-radius: 6px;
-            background-color: rgba(26,115,52,0.3);
-        }
-        12% {
-            border: 2px solid transparent;
-            border-radius: 6px;
-            background-color: transparent;
-        }
-
-        16% {
-            border: 2px solid green;
-            border-radius: 6px;
-            background-color: rgba(26,115,52,0.3);
-        }
-    }
 
     .playerName {
         font-size: large;
@@ -94,7 +52,7 @@ game-page {
         border-bottom-left-radius: 6px;
     }
     .deckcardBack {
-        background: url('/assets/img/cardBack.png');
+        background: url('../assets/img/cardBack.png');
         background-size: 102px 119px;
         height: 100px;
         width: 6px;

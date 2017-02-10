@@ -1,0 +1,59 @@
+game-page {
+    .newWinner {
+        border: 2px solid green;
+        border-radius: 6px;
+        background-color: rgba(26,115,52,0.3);
+
+        animation: flash 4s forwards linear normal;
+    }
+    @keyframes flash {
+        0% {
+            border: 2px solid green;
+            border-radius: 6px;
+            background-color: rgba(26,115,52,0.3);
+        }
+        4% {
+            border: 2px solid transparent;
+            border-radius: 6px;
+            background-color: transparent;
+        }
+        8% {
+            border: 2px solid green;
+            border-radius: 6px;
+            background-color: rgba(26,115,52,0.3);
+        }
+        12% {
+            border: 2px solid transparent;
+            border-radius: 6px;
+            background-color: transparent;
+        }
+
+        16% {
+            border: 2px solid green;
+            border-radius: 6px;
+            background-color: rgba(26,115,52,0.3);
+        }
+    }
+
+    .bounce {
+        animation: bounce 1s forwards linear normal;
+    }
+    @keyframes bounce {
+        0% {
+            transform: translateY(-40px);
+        }
+        12% {
+            transform: translateY(0);
+        }
+        22% {
+            transform: translateY(-16px);
+        }
+        32% {
+            transform: translateY(0);
+        }
+        100% {
+            transform: translateY(0);
+        }
+    }
+
+}
