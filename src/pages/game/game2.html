@@ -21,8 +21,17 @@
                     *ngFor="let card of players[0].hand; let cardIndex = index;"
                     [@bottomRightFlyIn]="cardIndex > 1 ? 'yes':'no'">
 
-                      <card *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === 0 || players[0].turn || players[0].cardsTotal() == 21"
-                        [suit]="card.suit" [value]="card.value"></card>
+                      <!--<card *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === 0 || players[0].turn || players[0].cardsTotal() == 21"
+                        [suit]="card.suit" [value]="card.value"></card>-->
+                      <div *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === i || players[0].turn || players[0].cardsTotal() == 21"
+                        [ngStyle]="{
+                          'background-image': 'url(assets/img/cardImages/' +card.suit.toLowerCase()+ '/' +card.value+ '.png)',
+                          'height': '92px',
+                          'width': '69px',
+                          'margin-top': '-2px',
+                          'margin-left': '-2px'
+                          }">
+                        </div> 
 
                       <div class="cardBack" *ngIf="cardIndex+1 != players[0].hand.length && !players[0].turn && players[0].cardsTotal() != 21"></div>
                   </div>
@@ -45,7 +54,7 @@
           <ion-row>
             <ion-col width-100>
               <div *ngFor="let chip of pot; let i = index" style="display: inline-block;">
-                <img [ngClass]="{ 'bounce': chip === pot[pot.length-2] }" [src]="'../assets/img/chips/' +chip.value+ 'chip.png'" *ngIf="chip.owner === players[1]" style="width: 20px; height: 20px; display: inline-block;">
+                <img [ngClass]="{ 'bounce': chip === pot[pot.length-2] }" [src]="'assets/img/chips/' +chip.value+ 'chip.png'" *ngIf="chip.owner === players[1]" style="width: 20px; height: 20px; display: inline-block;">
               </div>
             </ion-col>
           </ion-row>
@@ -89,9 +98,9 @@
 
           <ion-row id="betDealRow" *ngIf="roundOver">
             <ion-col width-66>
-              <img class="chipBtn" src="../assets/img/chips/100chip.png" style="width: 50px; height: 50px;" (click)="placeBet(100)">
-              <img class="chipBtn" src="../assets/img/chips/500chip.png" style="width: 50px; height: 50px;" (click)="placeBet(500)">
-              <img class="chipBtn" src="../assets/img/chips/1000chip.png" style="width: 50px; height: 50px;" (click)="placeBet(1000)">
+              <img class="chipBtn" src="assets/img/chips/100chip.png" style="width: 50px; height: 50px;" (click)="placeBet(100)">
+              <img class="chipBtn" src="assets/img/chips/500chip.png" style="width: 50px; height: 50px;" (click)="placeBet(500)">
+              <img class="chipBtn" src="assets/img/chips/1000chip.png" style="width: 50px; height: 50px;" (click)="placeBet(1000)">
             </ion-col>
             <ion-col width-33>
               <button class="dealBtn" ion-button block round color="primary" (click)="dealOutCards()" [disabled]="pot.length <= 0" >Deal</button>
@@ -110,8 +119,17 @@
                     *ngFor="let card of players[1].hand; let cardIndex = index;"
                     [@topRightFlyIn]="cardIndex > 1 ? 'yes':'no'">
 
-                      <card *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === 1 || players[1].turn || players[1].cardsTotal() == 21"
-                        [suit]="card.suit" [value]="card.value"></card>
+                      <!--<card *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === 1 || players[1].turn || players[1].cardsTotal() == 21"
+                        [suit]="card.suit" [value]="card.value"></card>-->
+                      <div *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === i || players[1].turn || players[1].cardsTotal() == 21"
+                        [ngStyle]="{
+                          'background-image': 'url(assets/img/cardImages/' +card.suit.toLowerCase()+ '/' +card.value+ '.png)',
+                          'height': '92px',
+                          'width': '69px',
+                          'margin-top': '-2px',
+                          'margin-left': '-2px'
+                          }">
+                        </div> 
 
                       <div class="cardBack" *ngIf="cardIndex+1 != players[1].hand.length && !players[1].turn && players[1].cardsTotal() != 21"></div>
                   </div>
