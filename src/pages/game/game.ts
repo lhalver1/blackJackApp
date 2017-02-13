@@ -34,10 +34,10 @@ declare let $: any;          //Jquery
                 transform: 'scale(1.2)'
             })),
             state('false', style({
-                transform: 'scale(1)'
+                transform: 'scale(1) translateY(0px)',
             })),
             transition('void => 1', animate('100ms 0.3s ease-in-out')),
-            transition('1 => 0', animate('200ms 0.5s ease-in-out'))
+            transition('1 => 0', animate('200ms ease-in-out'))
         ]),
         trigger('topRightFlyIn', [
             state('in', style({transform: 'translateX(0)'})),
