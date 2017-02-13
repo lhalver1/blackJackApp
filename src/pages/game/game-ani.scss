@@ -75,40 +75,40 @@ game-page {
         font-weight: 800;
         font-size: large;
         transform: translateY(0%);
-        animation: fadeUp 2s forwards linear normal;
+        animation: fadeDown 2s forwards linear normal;
     }
     .winMoneyFade {
         color: $bs-success;
         font-weight: 800;
         font-size: large;
         transform: translateY(-40px);
-        animation: fadeDown 2s forwards linear normal;
+        animation: fadeUp 2s forwards linear normal;
     }
     @keyframes fadeUp {
         0%, 50% {
-            transform: translateY(0%);
+            transform: translateY(40px);
             opacity: 1;
         }
         75% {
-            transform: translateY(-40px);
+            transform: translateY(0%);
             opacity: 0;
         }
         100% {
-            transform: translateY(-40px);
+            transform: translateY(0%);
             opacity: 0;
         }
     }
     @keyframes fadeDown {
         0%, 50% {
-            transform: translateY(-40px);
+            transform: translateY(0);
             opacity: 1;
         }
         75% {
-            transform: translateY(0%);
+            transform: translateY(40px);
             opacity: 0;
         }
         100% {
-            transform: translateY(0%);
+            transform: translateY(40px);
             opacity: 0;
         }
     }

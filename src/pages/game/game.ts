@@ -29,6 +29,16 @@ declare let $: any;          //Jquery
             transition('* => show', animate('400ms ease-in')),
             transition('show => *', animate('400ms ease-out'))
         ]),
+        trigger('growShrink', [
+            state('true', style({
+                transform: 'scale(1.2)'
+            })),
+            state('false', style({
+                transform: 'scale(1)'
+            })),
+            transition('void => 1', animate('200ms 0.3s ease-in-out')),
+            transition('1 => 0', animate('200ms ease-in-out'))
+        ]),
         trigger('topRightFlyIn', [
             state('in', style({transform: 'translateX(0)'})),
             transition('void => yes', [
@@ -307,6 +317,8 @@ export class GamePage {
                 }
             }
 
+            this.resetPlayerTurns();
+
             // this.dealOutCards();
         }, 4000);
     }
@@ -444,6 +456,64 @@ export class GamePage {
       });
     
       toast.present();
+    }
+
+    calcCardRotation(cardIndex, numCards) {
+        switch (numCards) {
+            case 2:
+                if (cardIndex === 0) {
+                    return 'rotate(-5deg)';
+                } else {
+                    return 'rotate(5deg)';
+                }
+            case 3:
+                if (cardIndex === 0) {
+                    return 'rotate(-5deg)';
+                } else if(cardIndex === 1) {
+                    return 'rotate(0deg)';
+                } else {
+                    return 'rotate(5deg)';
+                }
+            case 4:
+                if (cardIndex === 0) {
+                    return 'rotate(-5deg)';
+                } else if(cardIndex === 1) {
+                    return 'rotate(0deg)';
+                } else if(cardIndex === 2) {
+                    return 'rotate(5deg)';
+                } else {
+                    return 'rotate(10deg)';
+                }
+            case 5:
+                if (cardIndex === 0) {
+                    return 'rotate(-10deg)';
+                } else if(cardIndex === 1) {
+                    return 'rotate(-5deg)';
+                } else if(cardIndex === 2) {
+                    return 'rotate(0deg)';
+                } else if(cardIndex === 3){
+                    return 'rotate(5deg)';
+                } else {
+                    return 'rotate(10deg)';
+                }
+            case 6:
+                if (cardIndex === 0) {
+                    return 'rotate(-10deg)';
+                } else if(cardIndex === 1) {
+                    return 'rotate(-5deg)';
+                } else if(cardIndex === 2) {
+                    return 'rotate(0deg)';
+                } else if(cardIndex === 3) {
+                    return 'rotate(5deg)';
+                } else if(cardIndex === 4) {
+                    return 'rotate(10deg)';
+                } else {
+                    return 'rotate(15deg)';
+                }
+        
+            default:
+                break;
+        }
     }
 
 }// End GamePage

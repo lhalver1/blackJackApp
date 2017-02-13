@@ -13,13 +13,28 @@ game-page {
         height: 100%;
     }
     
-    .playerRow.dealerRow { flex: 1; color: #ffffff; /*border: 1px solid yellow;*/ }
-    .potDeckRow { flex: 2; /*border: 2px solid lime;*/ }
-    .playerRow.userRow { flex: 1; color: #fff; /*border: 1px solid magenta;*/ }
+    #headerRow { flex: 1; color: #ffffff; /*border: 1px solid dodgerblue;*/ }
+    .playerRow.dealerRow { flex: 5; color: #ffffff; /*border: 1px solid yellow;*/ }
+    .potDeckRow { flex: 5; /*border: 1px solid lime;*/ }
+    .playerRow.userRow { flex: 5; color: #fff; /*border: 1px solid magenta;*/ }
 
     .playerName {
         font-size: large;
     }
+    #playersMoney { font-size: large; }
+    #playerCardTotal { 
+        border: 1px solid white;
+        color: white;
+        background-color: black;
+        padding: 5px;
+        font-size: large;
+        width: 35px;
+        margin-left: auto;
+        margin-right: auto;
+        transform: translate(0px);
+        box-shadow: 0 6px 6px -3px rgba(0,0,0,.2), 0 10px 14px 1px rgba(0,0,0,.14), 0 4px 18px 3px rgba(0,0,0,.12); /* md-whiteframe 10dp */
+     }
+
     .card {
         background-color: #ffffff;
         color: #000;
@@ -27,8 +42,12 @@ game-page {
         border-radius: 6px;
         height: 94px;
         width: 69px;
+        margin-left: -50px;
         overflow: hidden;
         box-shadow: 0 6px 6px -3px rgba(0,0,0,.2), 0 10px 14px 1px rgba(0,0,0,.14), 0 4px 18px 3px rgba(0,0,0,.12);
+    }
+    .bottomCard {
+        margin-left: 0px;
     }
 
     .hand, .hand>div {
