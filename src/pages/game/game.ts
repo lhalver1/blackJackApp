@@ -36,8 +36,8 @@ declare let $: any;          //Jquery
             state('false', style({
                 transform: 'scale(1)'
             })),
-            transition('void => 1', animate('200ms 0.3s ease-in-out')),
-            transition('1 => 0', animate('200ms ease-in-out'))
+            transition('void => 1', animate('100ms 0.3s ease-in-out')),
+            transition('1 => 0', animate('200ms 0.5s ease-in-out'))
         ]),
         trigger('topRightFlyIn', [
             state('in', style({transform: 'translateX(0)'})),
@@ -58,7 +58,17 @@ declare let $: any;          //Jquery
                 style({opacity: 1, transform: 'translate(0, 0)',     offset: 1.0})
               ]))
             ])
-        ])
+        ]),
+        trigger('enterFromBottom', [
+            state('in', style({transform: 'translateY(0)'})),
+            transition('void => *', [
+              style({transform: 'translateY(100%)'}),
+              animate(100)
+            ]),
+            transition('* => void', [
+              animate(100, style({transform: 'translateY(100%)'}))
+            ])
+          ])
     ]
 })
 export class GamePage {
@@ -77,7 +87,6 @@ export class GamePage {
         // Get the players
         this.players = [
             new Player("Dealer", [], 2000,false, "CPU", 0, 0),
-            // new Player("Jalen", [], 2000,false, "CPU", 0, 0),
             new Player("Logan", [], 2000, false, "Human", 0, 0)
         ];
         this.winningPlayers = [];
@@ -116,7 +125,7 @@ export class GamePage {
         // Pass out cards to each player, each player gets 1 card
         // then each player gets their 2nd card.
         for (var x = 0; x < 2; x++) {
-            for (var i = 0; i < this.players.length; i++) {
+            for (var i = this.players.length - 1; i >= 0; i--) {
                 var currPlayer = this.players[i];
                 var currCard = this.deck.cards.splice(0, 1)[0];
                 currPlayer.hand.push(currCard);
