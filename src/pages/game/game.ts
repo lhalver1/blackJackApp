@@ -31,13 +31,14 @@ declare let $: any;          //Jquery
         ]),
         trigger('growShrink', [
             state('true', style({
-                transform: 'scale(1.2)'
+                transform: 'scale(1.3)'
             })),
             state('false', style({
                 transform: 'scale(1) translateY(0px)',
             })),
-            transition('void => 1', animate('100ms 0.3s ease-in-out')),
-            transition('1 => 0', animate('200ms ease-in-out'))
+            transition('void => 1', animate('100ms 0.7s ease-in-out')),
+            transition('0 => 1', animate('200ms 0.7s ease-in-out')),
+            transition('1 => 0', animate('200ms 400ms ease-in-out'))
         ]),
         trigger('topRightFlyIn', [
             state('in', style({transform: 'translateX(0)'})),
@@ -66,7 +67,7 @@ declare let $: any;          //Jquery
               animate(100)
             ]),
             transition('* => void', [
-              animate(100, style({transform: 'translateY(100%)'}))
+              animate('100ms 400ms', style({transform: 'translateY(100%)'}))
             ])
           ])
     ]
@@ -284,6 +285,7 @@ export class GamePage {
      */
     placeBet(amount: number) {
         if (this.players[1].money >= amount) {
+            this.playerMoneyChange.show = false;
             let userChip: Chip = new Chip(amount, this.players[1]);
             this.players[1].subtractMoney(amount);
             this.playerMoneyChange.lose(amount);

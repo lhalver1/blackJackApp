@@ -55,7 +55,7 @@
             </ion-col>
           </ion-row>
 
-          <ion-row *ngIf="!roundOver && playerTurnIndex === 0 || players[0].turn || players[0].cardsTotal() == 21" style="margin-top: -26px;">
+          <ion-row [@growShrink]="playerTurnIndex === 0" *ngIf="!roundOver && playerTurnIndex === 0 || players[0].turn || players[0].cardsTotal() == 21" style="margin-top: -26px;">
             <ion-col width-100 text-center>
               <div id="playerCardTotal"><span>{{ players[0].cardsTotal() }}</span></div>
             </ion-col>
@@ -65,21 +65,22 @@
       </ion-row>
 
       <ion-row class="potDeckRow" center>
-        <ion-col text-center width-50>
+        <ion-col text-center width-100>
 
           <ion-row>
-            <ion-col width-50>
+
+            <ion-col width-100>
               <div [ngClass]="{'notBottomChip': i > 0 }" *ngFor="let chip of pot; let i = index">
                 <img [ngClass]="{ 'bounce': chip === pot[pot.length-2] }" [src]="'assets/img/chips/' +chip.value+ 'chip.png'" *ngIf="chip.owner === players[1]" style="width: 30px; height: 30px;">
               </div>
+              <br>
+              <div style="color: #ffffff;float: right;">${{ potTotal/2 }}</div>
             </ion-col>
-            <ion-col width-50>
-              <div style="color: #ffffff; float: left;">${{ potTotal/2 }}</div>
-            </ion-col>
+
           </ion-row>
 
         </ion-col>
-        <ion-col width-50>
+        <!--<ion-col width-0>
           
           <div class="deck" style="display: inline-block; float: right;">
 
@@ -90,7 +91,7 @@
           
           </div>
 
-        </ion-col>
+        </ion-col>-->
       </ion-row>
 
       <ion-row class="playerRow userRow" bottom [ngClass]="{'newWinner': isWinner(players[1])}">
@@ -134,7 +135,7 @@
             </ion-col>
           </ion-row>
 
-          <ion-row *ngIf="!roundOver && playerTurnIndex === 1 || players[1].turn" style="margin-top: -26px;">
+          <ion-row [@growShrink]="playerTurnIndex === 1" *ngIf="!roundOver && playerTurnIndex === 1 || players[1].turn" style="margin-top: -26px;">
             <ion-col width-100 text-center>
               <div id="playerCardTotal"><span>{{ players[1].cardsTotal() }}</span></div>
             </ion-col>
