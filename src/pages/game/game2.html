@@ -42,6 +42,7 @@
                       <div *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === i || players[0].turn || players[0].cardsTotal() == 21"
                         [ngStyle]="{
                           'background-image': 'url(assets/img/cardImages/' +card.suit.toLowerCase()+ '/' +card.value+ '.png)',
+                          'background-size': '71px 93px',
                           'height': '92px',
                           'width': '69px',
                           'margin-top': '-2px',
@@ -122,6 +123,7 @@
                       <div *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === i || players[1].turn || players[1].cardsTotal() == 21"
                         [ngStyle]="{
                           'background-image': 'url(assets/img/cardImages/' +card.suit.toLowerCase()+ '/' +card.value+ '.png)',
+                          'background-size': '71px 93px',
                           'height': '92px',
                           'width': '69px',
                           'margin-top': '-2px',
