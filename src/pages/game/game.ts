@@ -64,10 +64,10 @@ declare let $: any;          //Jquery
             state('in', style({transform: 'translateY(0)'})),
             transition('void => *', [
               style({transform: 'translateY(100%)'}),
-              animate(100)
+              animate('500ms cubic-bezier(0.4, 0.0, 0.2, 1);')
             ]),
             transition('* => void', [
-              animate('100ms 400ms', style({transform: 'translateY(100%)'}))
+              animate('500ms 400ms cubic-bezier(0.4, 0.0, 0.2, 1)', style({transform: 'translateY(100%)'}))
             ])
           ])
     ]
