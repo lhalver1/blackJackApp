@@ -67,7 +67,7 @@ declare let $: any;          //Jquery
               animate('500ms cubic-bezier(0.4, 0.0, 0.2, 1);')
             ]),
             transition('* => void', [
-              animate('500ms 400ms cubic-bezier(0.4, 0.0, 0.2, 1)', style({transform: 'translateY(100%)'}))
+              animate('500ms 400ms cubic-bezier(0.4, 0.0, 0.2, 1)', style({transform: 'translateY(100px)'}))
             ])
           ])
     ]
@@ -76,6 +76,7 @@ export class GamePage {
     playerTurnIndex: number;
     players: Player[];
     winningPlayers: Player[];
+    winnerStr: string;
     deck: Deck;
     trash: Card[];
     pot: Chip[];
@@ -91,6 +92,7 @@ export class GamePage {
             new Player("Logan", [], 2000, false, "Human", 0, 0)
         ];
         this.winningPlayers = [];
+        this.winnerStr = "";
         this.trash = [];
         this.pot = [];
         this.potTotal = 0;
@@ -144,7 +146,6 @@ export class GamePage {
      * The next player is a Bot or Dealer, be smart for them.
      */
     goBeABot(player: Player) {
-        // debugger;
         var total = player.cardsTotal();
         var bustedPlayers = [];
         var highestVisibleTotal = -1;
@@ -228,7 +229,6 @@ export class GamePage {
      * 21 then the player ends their turn and loses and the hand.
      */
     hit(player: Player) {
-        // debugger;
         player.hand.push(this.deck.cards.splice(0, 1)[0]);
 
         if (player.type === "Human") {
@@ -260,7 +260,6 @@ export class GamePage {
      * their turn.
      */
     stay(player: Player) {
-        // debugger;
         this.playerTurnIndex -= 1;
 
         //If the next players turn is out of index for players array
@@ -305,6 +304,18 @@ export class GamePage {
     }
 
     /**
+     * Takes the pot total and divids it by 2 because dealer and user both put money in
+     * and then adds it back to the users money and clears the pot.
+     * 
+     * @returns void
+     */
+    cancelBet(): void {
+        this.players[1].addMoney(this.potTotal/2);
+        this.pot.splice(0, this.pot.length);
+        this.potTotal = 0;
+    }
+
+    /**
      * The ends the current round by determining a winner and 
      * then after 4sec dealing out new cards.
      */
@@ -313,7 +324,10 @@ export class GamePage {
         setTimeout(() => {
             this.roundOver = true;
             this.winningPlayers.splice(0, this.winningPlayers.length);
+            this.winnerStr = '';
             this.playerMoneyChange.show = false;
+            this.pot.splice(0, this.pot.length);
+            this.potTotal = 0;
 
             // Take each players cards and push them to the trash and then
             // clear the players hand.
@@ -394,11 +408,15 @@ export class GamePage {
                 this.winningPlayers[0].addMoney(this.potTotal + (this.potTotal/4)); // User gets 50% bonus on their bet for getting BlackJack! potTotal/2 = User bet, potTotal/4 = 50% User bet
                 this.playerMoneyChange.gain(this.potTotal + (this.potTotal/4));
                 weHaveAWinner = true;
+                this.winnerStr = 'userWins';
             } else {
                 this.winningPlayers[0].addMoney(this.potTotal);
                 if (this.winningPlayers[0].type === 'Human') {
                     this.playerMoneyChange.gain(this.potTotal);
                     weHaveAWinner = true;
+                    this.winnerStr = 'userWins';
+                } else {
+                    this.winnerStr = 'dealerWins';
                 }
             }
         } else {
@@ -406,13 +424,12 @@ export class GamePage {
             this.players[1].addMoney(usersChipTotal);
             this.playerMoneyChange.gain(usersChipTotal);
             weHaveAWinner = true;
+            this.winnerStr = 'userWins';
         }
 
         if (weHaveAWinner) {
             this.playerMoneyChange.show = true;
         }
-        this.pot.splice(0, this.pot.length);
-        this.potTotal = 0;
     }
 
     /**
