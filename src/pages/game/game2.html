@@ -67,16 +67,24 @@
       <ion-row class="potDeckRow" center>
         <ion-col text-center width-100>
 
-          <ion-row>
+          <ion-row style="height: 50px;">
 
-            <ion-col width-100>
+            <ion-col width-100 [ngClass]="{'basicFadeUp': winnerStr === 'dealerWins', 'basicFadeDown': winnerStr === 'userWins'}">
               <div [ngClass]="{'notBottomChip': i > 0 }" *ngFor="let chip of pot; let i = index">
-                <img [ngClass]="{ 'bounce': chip === pot[pot.length-2] }" [src]="'assets/img/chips/' +chip.value+ 'chip.png'" *ngIf="chip.owner === players[1]" style="width: 30px; height: 30px;">
+                <img [ngClass]="{ 'bounce': chip === pot[pot.length-2] }" [src]="'assets/img/chips/' +chip.value+ 'chip.png'" *ngIf="chip.owner === players[1]" style="width: 40px; height: 40px;">
               </div>
-              <br>
-              <div style="color: #ffffff;float: right;">${{ potTotal/2 }}</div>
             </ion-col>
 
+          </ion-row>
+          <ion-row *ngIf="pot.length > 0">
+            <ion-col width-100 text-ccenter>
+              <div style="color: #ffffff;">
+                <span class="potTotal" [ngStyle]="{'padding-right': roundOver ? '0px':''}">
+                  ${{ potTotal/2 }}
+                  <span class="cancelBet" (click)="cancelBet()" *ngIf="roundOver">X</span>
+                </span>
+              </div>
+            </ion-col>
           </ion-row>
 
         </ion-col>

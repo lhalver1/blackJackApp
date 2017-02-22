@@ -15,9 +15,9 @@ game-page {
     }
     
     #headerRow { flex: 1; color: #ffffff; /*border: 1px solid dodgerblue;*/ }
-    .playerRow.dealerRow { flex: 5; color: #ffffff; /*border: 1px solid yellow;*/ }
-    .potDeckRow { flex: 5; /*border: 1px solid lime;*/ }
-    .playerRow.userRow { flex: 5; color: #fff; /*border: 1px solid magenta;*/ }
+    .playerRow.dealerRow { flex: 4; color: #ffffff; /*border: 1px solid yellow;*/ }
+    .potDeckRow { flex: 4; /*border: 1px solid lime;*/ }
+    .playerRow.userRow { flex: 4; color: #fff; /*border: 1px solid magenta;*/ }
 
     .playerName {
         font-size: large;
@@ -63,7 +63,25 @@ game-page {
         margin-left: 0px;
     }
     .notBottomChip {
-        margin-top: -40px;
+        margin-top: -50px;
+    }
+    .potTotal {
+        border: 1px solid $bs-info;
+        -webkit-box-shadow: 0px 0px 10px 0px $bs-info;
+        -moz-box-shadow: 0px 0px 10px 0px $bs-info;
+        box-shadow: 0px 0px 10px 0px $bs-info;
+        border-radius: 45px;
+        padding: 2px 9px;
+    }
+    .cancelBet {
+        margin-left: 5px;
+        background-color: $bs-danger;
+        border-radius: 30px;
+        padding: 2px 6px;
+    }
+    
+    .hitBtn, .stayBtn {
+        height: 42px;
     }
 
     .hand, .hand>div {
@@ -118,6 +136,6 @@ game-page {
 }
 
 // Toast Classes
-.toastDanger .toast-wrapper {
-    background-color: $bs-danger;
+.toastDanger .toast-message {
+    color: $bs-danger;
 }
