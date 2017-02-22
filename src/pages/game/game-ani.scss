@@ -113,4 +113,55 @@ game-page {
         }
     }
 
+
+    .top-right-fly-in {
+        transform: translateX(0);
+        animation: topRightFlyIn 500ms cubic-bezier(0.4, 0.0, 0.2, 1) normal;
+    }
+    @keyframes topRightFlyIn {
+        0% {
+            opacity: 0;
+            transform: translate(100%, -100%);
+        }
+        100% {
+            opacity: 1;
+            transform: translate(0, 0);
+        }
+    }
+    .bottom-right-fly-in {
+        transform: translateX(0);
+        animation: bottomRightFlyIn 500ms cubic-bezier(0.4, 0.0, 0.2, 1) normal;
+    }
+    @keyframes bottomRightFlyIn {
+        0% {
+            opacity: 0;
+            transform: translate(100%, 100%);
+        }
+        100% {
+            opacity: 1;
+            transform: translate(0, 0);
+        }
+    }
+
+
+    .hitStay-enter {
+        animation: moveUp 500ms cubic-bezier(0.4, 0.0, 0.2, 1) normal;
+    }
+    @keyframes moveUp {
+        0% {
+            transform: translateY(100%);
+        }
+        100% {
+            transform: translateY(0%);
+        }
+    }
+    @keyframes moveDown {
+        0% {
+            transform: translateY(0%);
+        }
+        100% {
+            transform: translateY(100%);
+        }
+    }
+
 }

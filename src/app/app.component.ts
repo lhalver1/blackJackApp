@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { Platform, MenuController, Nav } from 'ionic-angular';
-import { StatusBar, Splashscreen } from 'ionic-native';
+import { StatusBar, Splashscreen, SQLite } from 'ionic-native';
 
 import { Page } from '../models/page';
 
@@ -36,6 +36,22 @@ export class MyApp {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       StatusBar.styleDefault();
+
+      let db = new SQLite();
+      db.openDatabase({
+        name: "blackJackDB.db",
+        location: "default"
+      }).then(() => {
+          db.executeSql("CREATE TABLE IF NOT EXISTS players (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, money INTEGER)", {}).then((data) => {
+              debugger;
+              console.log("TABLE CREATED: ", data);
+          }, (error) => {
+              console.error("Unable to execute sql", error);
+          })
+      }, (error) => {
+          console.error("Unable to open database", error);
+      });
+
       Splashscreen.hide();
     });
   }

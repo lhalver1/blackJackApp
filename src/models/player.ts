@@ -1,6 +1,7 @@
 import { Card } from './card';
 
 export class Player {
+    public id: number;
     public name: string;
     public hand: Card[];
     public money: number;
@@ -9,7 +10,8 @@ export class Player {
     public wins: number;
     public losses: number;
 
-    constructor(name: string, hand: Card[], money: number,turn: boolean, type: string, wins: number, losses: number) {
+    constructor(id: number, name: string, hand: Card[], money: number,turn: boolean, type: string, wins: number, losses: number) {
+        this.id = id;
         this.name = name;
         this.hand = hand;
         this.money = money;

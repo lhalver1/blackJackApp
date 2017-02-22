@@ -1,7 +1,7 @@
 game-page {
     ion-content.home {
-        background: url('../assets/img/materialBackground.png');
-        // background: url('../assets/img/tableBackground.png');
+        // background: url('../assets/img/materialBackground.png');
+        background: url('../assets/img/tableBackground.png');
         background-position: center center;
         // background-size: 100% 100%;
     }
@@ -55,7 +55,7 @@ game-page {
         border-radius: 6px;
         height: 92px;
         width: 69px;
-        margin-left: -50px;
+        margin-left: -44px;
         overflow: hidden;
         box-shadow: 0 6px 6px -3px rgba(0,0,0,.2), 0 10px 14px 1px rgba(0,0,0,.14), 0 4px 18px 3px rgba(0,0,0,.12);
     }

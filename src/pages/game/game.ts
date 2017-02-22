@@ -1,6 +1,7 @@
 import { Component, trigger, state, style, transition, animate, keyframes } from '@angular/core';
 
-import { NavController, NavParams, ToastController } from 'ionic-angular';
+import { NavController, NavParams, ToastController, Platform } from 'ionic-angular';
+import { SQLite } from "ionic-native";
 
 import { Player } from '../../models/player';
 import { Card } from '../../models/card';
@@ -8,8 +9,6 @@ import { Deck } from '../../models/deck';
 import { Chip } from '../../models/chip'; 
 import { MoneyChange } from '../../models/moneyChange'; 
 import { Settings } from '../../models/settings';
-
-declare let $: any;          //Jquery
 
 @Component({
     selector: 'game-page',
@@ -62,10 +61,10 @@ declare let $: any;          //Jquery
         ]),
         trigger('enterFromBottom', [
             state('in', style({transform: 'translateY(0)'})),
-            transition('void => *', [
-              style({transform: 'translateY(100%)'}),
-              animate('500ms cubic-bezier(0.4, 0.0, 0.2, 1);')
-            ]),
+            // transition('void => *', [
+            //   style({transform: 'translateY(100%)'}),
+            //   animate('500ms cubic-bezier(0.4, 0.0, 0.2, 1);')
+            // ]),
             transition('* => void', [
               animate('500ms 400ms cubic-bezier(0.4, 0.0, 0.2, 1)', style({transform: 'translateY(100%)'}))
             ])
@@ -73,6 +72,7 @@ declare let $: any;          //Jquery
     ]
 })
 export class GamePage {
+    database: SQLite;
     playerTurnIndex: number;
     players: Player[];
     winningPlayers: Player[];
@@ -84,18 +84,26 @@ export class GamePage {
     settings: Settings;
     roundOver: boolean;
 
-    constructor(public navCtrl: NavController, public navParams: NavParams, private toastCtrl: ToastController) {
-        // Get the players
+    constructor(public navCtrl: NavController, public navParams: NavParams, private toastCtrl: ToastController, private platform: Platform) {
         this.players = [
-            new Player("Dealer", [], 2000,false, "CPU", 0, 0),
-            new Player("Logan", [], 2000, false, "Human", 0, 0)
+            new Player(-1, "Dealer", [], 2000, false, "CPU", 0, 0)
         ];
+        this.platform.ready().then(() => {
+            this.database = new SQLite();
+            this.database.openDatabase({name: "blackJackDB.db", location: "default"}).then(() => {
+                debugger;
+                this.getAllPlayers(); //Get the player from the database
+
+            }, (error) => {
+                console.log("ERROR: ", error);
+            });
+        });
         this.winningPlayers = [];
         this.trash = [];
         this.pot = [];
         this.potTotal = 0;
         this.roundOver = true;
-        this.playerMoneyChange = new MoneyChange('up', 0, false)
+        this.playerMoneyChange = new MoneyChange('up', 0, false);
         this.settings = new Settings(2000, false, false);
 
         // Get the deck of cards
@@ -117,6 +125,8 @@ export class GamePage {
     dealOutCards() {
         this.roundOver = false;
         this.playerMoneyChange.show = false;
+
+        this.updatePlayer(this.players[1]); // update the user
 
         // If there are 12 or less cards remaining do a reshuffle.
         if (this.deck.cards.length <= 12) {
@@ -411,6 +421,8 @@ export class GamePage {
         if (weHaveAWinner) {
             this.playerMoneyChange.show = true;
         }
+
+        this.updatePlayer(this.players[1]);
         this.pot.splice(0, this.pot.length);
         this.potTotal = 0;
     }
@@ -525,6 +537,46 @@ export class GamePage {
             default:
                 break;
         }
+    }
+
+    ionViewWillLeave() {
+        this.database.close();
+    }
+
+
+
+    // DATABASE CRUDs
+    getAllPlayers() {
+        this.database.executeSql("SELECT * FROM players", []).then((data) => {
+            if(data.rows.length > 0) {
+                for(var i = 0; i < data.rows.length; i++) {
+                    // this.players.push({firstname: data.rows.item(i).firstname, lastname: data.rows.item(i).lastname});
+                    this.players.push( new Player(data.rows.item(i).id, data.rows.item(i).name, [], data.rows.item(i).money, false, "Human", 0, 0) );
+                }
+            } else {
+                let newPlayer = new Player(-1, "Player", [], 2000, false, "Human", 0, 0);
+                this.addPlayer(newPlayer);
+            }
+        }, (error) => {
+            console.log("ERROR: " + JSON.stringify(error));
+        });
+    }
+
+    addPlayer(player: Player) {
+        this.database.executeSql("INSERT INTO players (name, money) VALUES ('"+ player.name +"', "+ player.money +")", []).then((data) => {
+            console.log("INSERTED: " + JSON.stringify(data));
+        }, (error) => {
+            console.log("ERROR: " + JSON.stringify(error.message));
+        });
+    }
+
+    updatePlayer(player: Player) {
+        debugger;
+        this.database.executeSql("UPDATE players SET name = '"+ player.name +"', money = "+ player.money +" WHERE id = "+ player.id +"", []).then((data) => {
+            console.log("UPDATED: " + JSON.stringify(data));
+        }, (error) => {
+            console.log("ERROR: " + JSON.stringify(error.message));
+        });
     }
 
 }// End GamePage

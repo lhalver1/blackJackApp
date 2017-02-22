@@ -11,7 +11,7 @@
 
       <ion-row id="headerRow">
         <ion-col width-75>
-          <div id="playersMoney">${{ players[1].money }}</div>
+          <div id="playersMoney">${{ players[1]?.money }}</div>
                 <div *ngIf="playerMoneyChange.show" [ngClass]="{'winMoneyFade': playerMoneyChange.direction === 'up', 'loseMoneyFade': playerMoneyChange.direction === 'down'}">
                   <span *ngIf="playerMoneyChange.direction === 'up'">+</span>
                   <span *ngIf="playerMoneyChange.direction === 'down'">-</span>
@@ -19,9 +19,9 @@
                 </div>
         </ion-col>
         <ion-col width-25>
-          <button ion-button clear menuToggle style="float: right; color: white;">
+          <!--<button ion-button clear menuToggle style="float: right; color: white;">
             <ion-icon name="more"></ion-icon>
-          </button>
+          </button>-->
         </ion-col>
       </ion-row>
 
@@ -33,9 +33,8 @@
               <div class="hand" [@growShrink]="playerTurnIndex === 0">
                   <div class="card"
                     [ngStyle]="{'transform': calcCardRotation(cardIndex, players[0].hand.length)}"
-                    [ngClass]="{'bottomCard': cardIndex === 0 }"
-                    *ngFor="let card of players[0].hand; let cardIndex = index;"
-                    [@bottomRightFlyIn]="cardIndex > 1 ? 'yes':'no'">
+                    [ngClass]="{'bottomCard': cardIndex === 0, 'bottom-right-fly-in': cardIndex > 1 }"
+                    *ngFor="let card of players[0].hand; let cardIndex = index;">
 
                       <!--<card *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === 0 || players[0].turn || players[0].cardsTotal() == 21"
                         [suit]="card.suit" [value]="card.value"></card>-->
@@ -113,14 +112,13 @@
             <ion-col width-100 text-center>
               <div class="hand" [@growShrink]="playerTurnIndex === 1">
                   <div class="card"
-                    [ngStyle]="{'transform': calcCardRotation(cardIndex, players[1].hand.length)}"
-                    [ngClass]="{'bottomCard': cardIndex === 0 }"
-                    *ngFor="let card of players[1].hand; let cardIndex = index;"
-                    [@topRightFlyIn]="cardIndex > 1 ? 'yes':'no'">
+                    [ngStyle]="{'transform': calcCardRotation(cardIndex, players[1]?.hand.length)}"
+                    [ngClass]="{'bottomCard': cardIndex === 0, 'top-right-fly-in': cardIndex > 1 }"
+                    *ngFor="let card of players[1]?.hand; let cardIndex = index;">
 
                       <!--<card *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === 1 || players[1].turn || players[1].cardsTotal() == 21"
                         [suit]="card.suit" [value]="card.value"></card>-->
-                      <div *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === i || players[1].turn || players[1].cardsTotal() == 21"
+                      <div *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === i || players[1]?.turn || players[1]?.cardsTotal() == 21"
                         [ngStyle]="{
                           'background-image': 'url(assets/img/cardImages/' +card.suit.toLowerCase()+ '/' +card.value+ '.png)',
                           'background-size': '71px 93px',
@@ -131,24 +129,24 @@
                           }">
                         </div> 
 
-                      <div class="cardBack" *ngIf="cardIndex+1 != players[1].hand.length && !players[1].turn && players[1].cardsTotal() != 21"></div>
+                      <div class="cardBack" *ngIf="cardIndex+1 != players[1]?.hand.length && !players[1]?.turn && players[1]?.cardsTotal() != 21"></div>
                   </div>
               </div>
             </ion-col>
           </ion-row>
 
-          <ion-row [@growShrink]="playerTurnIndex === 1" *ngIf="!roundOver && playerTurnIndex === 1 || players[1].turn" style="margin-top: -26px;">
+          <ion-row [@growShrink]="playerTurnIndex === 1" *ngIf="!roundOver && playerTurnIndex === 1 || players[1]?.turn" style="margin-top: -26px;">
             <ion-col width-100 text-center>
-              <div id="playerCardTotal"><span>{{ players[1].cardsTotal() }}</span></div>
+              <div id="playerCardTotal"><span>{{ players[1]?.cardsTotal() }}</span></div>
             </ion-col>
           </ion-row>
 
-          <ion-row id="hitStayRow" [@enterFromBottom] *ngIf="!roundOver && playerTurnIndex === 1">
+          <ion-row id="hitStayRow" [@enterFromBottom]="!roundOver && playerTurnIndex === 1" [ngClass]="{'hitStay-enter': !roundOver && playerTurnIndex === 1 }" *ngIf="!roundOver && playerTurnIndex === 1">
             <ion-col width-50>
               <button class="stayBtn" ion-button block round color="danger" (click)="stay(players[1])">Stay</button>
             </ion-col>
             <ion-col width-5->
-              <button class="hitBtn" ion-button block round color="primary" (click)="hit(players[1])" [disabled]="players[1].cardsTotal() === 21 ">Hit</button>
+              <button class="hitBtn" ion-button block round color="primary" (click)="hit(players[1])" [disabled]="players[1]?.cardsTotal() === 21 ">Hit</button>
             </ion-col>
           </ion-row>
 
