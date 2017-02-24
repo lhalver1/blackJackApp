@@ -6,7 +6,7 @@
     <ion-title>Black Jack</ion-title>
   </ion-navbar>
 </ion-header>-->
-  <ion-content class="home" padding>
+  <ion-content class="home" padding [ngStyle]="{'background': 'url( ' + settings.getBackgroundPath() + ' )', 'background-position': 'center center' }">
     <ion-grid>
 
       <ion-row id="headerRow">
@@ -40,7 +40,7 @@
                         [suit]="card.suit" [value]="card.value"></card>-->
                       <div *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === i || players[0].turn || players[0].cardsTotal() == 21"
                         [ngStyle]="{
-                          'background-image': 'url(assets/img/cardImages/' +card.suit.toLowerCase()+ '/' +card.value+ '.png)',
+                          'background-image': 'url(' + this.settings.getCardFrontPath() + card.suit.toLowerCase() + '/' +card.value+ '.png)',
                           'background-size': '71px 93px',
                           'height': '92px',
                           'width': '69px',
@@ -128,7 +128,7 @@
                         [suit]="card.suit" [value]="card.value"></card>-->
                       <div *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === i || players[1]?.turn || players[1]?.cardsTotal() == 21"
                         [ngStyle]="{
-                          'background-image': 'url(assets/img/cardImages/' +card.suit.toLowerCase()+ '/' +card.value+ '.png)',
+                          'background-image': 'url(' + this.settings.getCardFrontPath() + card.suit.toLowerCase() + '/' +card.value+ '.png)',
                           'background-size': '71px 93px',
                           'height': '92px',
                           'width': '69px',
@@ -137,7 +137,7 @@
                           }">
                         </div> 
 
-                      <div class="cardBack" *ngIf="cardIndex+1 != players[1]?.hand.length && !players[1]?.turn && players[1]?.cardsTotal() != 21"></div>
+                      <div class="cardBack" [ngStyle]="{ 'background': 'url(' + this.settings.getCardBackPath() + ')' }" *ngIf="cardIndex+1 != players[1]?.hand.length && !players[1]?.turn && players[1]?.cardsTotal() != 21"></div>
                   </div>
               </div>
             </ion-col>

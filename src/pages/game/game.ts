@@ -3,6 +3,8 @@ import { Component, trigger, state, style, transition, animate, keyframes } from
 import { NavController, NavParams, ToastController, Platform } from 'ionic-angular';
 import { SQLite } from "ionic-native";
 
+import { SettingsProvider } from '../../providers/settings-provider';
+
 import { Player } from '../../models/player';
 import { Card } from '../../models/card';
 import { Deck } from '../../models/deck';
@@ -85,7 +87,7 @@ export class GamePage {
     settings: Settings;
     roundOver: boolean;
 
-    constructor(public navCtrl: NavController, public navParams: NavParams, private toastCtrl: ToastController, private platform: Platform) {
+    constructor(public navCtrl: NavController, public navParams: NavParams, private toastCtrl: ToastController, private platform: Platform, public service: SettingsProvider) {
         this.players = [
             new Player(-1, "Dealer", [], 2000, false, "CPU", 0, 0)
         ];
@@ -106,7 +108,7 @@ export class GamePage {
         this.potTotal = 0;
         this.roundOver = true;
         this.playerMoneyChange = new MoneyChange('up', 0, false);
-        this.settings = new Settings(2000, false, false);
+        this.settings = this.service.getSettings();
 
         // Get the deck of cards
         this.deck = new Deck();
@@ -441,7 +443,7 @@ export class GamePage {
             this.playerMoneyChange.show = true;
         }
         
-	this.updatePlayer(this.players[1]);
+        this.updatePlayer(this.players[1]);
     }
 
     /**
@@ -556,17 +558,21 @@ export class GamePage {
         }
     }
 
-    ionViewWillLeave() {
-        this.database.close();
-    }
+    // ionViewWillLeave() {
+    //     if (this.database) {
+    //         this.database.close();
+    //     }
+    // }
 
 
 
     // DATABASE CRUDs
     getAllPlayers() {
+        debugger;
         this.database.executeSql("SELECT * FROM players", []).then((data) => {
             if(data.rows.length > 0) {
                 for(var i = 0; i < data.rows.length; i++) {
+                    debugger;
                     // this.players.push({firstname: data.rows.item(i).firstname, lastname: data.rows.item(i).lastname});
                     this.players.push( new Player(data.rows.item(i).id, data.rows.item(i).name, [], data.rows.item(i).money, false, "Human", 0, 0) );
                 }

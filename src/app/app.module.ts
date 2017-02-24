@@ -1,6 +1,8 @@
 import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 
+import { SettingsProvider } from '../providers/settings-provider';
+
 import { ChangeDisplayPipe } from './pipes/change-display-pipe';
 
 import { MyApp } from './app.component';
@@ -8,6 +10,8 @@ import { CardComponent } from './components/card/card.component';
 import { WelcomePage } from '../pages/welcome/welcome';
 import { ItemDetailsPage } from '../pages/item-details/item-details';
 import { GamePage } from '../pages/game/game';
+import { StorePage } from '../pages/store/store';
+import { SettingsPage } from '../pages/settings/settings';
 
 @NgModule({
   declarations: [
@@ -16,7 +20,9 @@ import { GamePage } from '../pages/game/game';
     CardComponent,
     WelcomePage,
     ItemDetailsPage,
-    GamePage
+    GamePage,
+    StorePage,
+    SettingsPage
   ],
   imports: [
     IonicModule.forRoot(MyApp)
@@ -26,8 +32,10 @@ import { GamePage } from '../pages/game/game';
     MyApp,
     WelcomePage,
     ItemDetailsPage,
-    GamePage
+    GamePage,
+    StorePage,
+    SettingsPage
   ],
-  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}]
+  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}, SettingsProvider]
 })
 export class AppModule {}

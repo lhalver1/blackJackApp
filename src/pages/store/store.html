@@ -1,0 +1,62 @@
+<!--
+  Generated template for the Store page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Store</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <ion-list>
+    <ion-item>
+      <ion-label>Filter</ion-label>
+      <ion-select [(ngModel)]="storeFilter">
+        <ion-option value="all">All</ion-option>
+        <ion-option value="background">Background</ion-option>
+        <ion-option value="cardFront">Card Fronts</ion-option>
+        <ion-option value="cardBack">Card Backs</ion-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+
+
+  <div *ngIf="storeFilter === 'all' || storeFilter === 'background'">
+    <ion-card *ngFor="let background of backgrounds">
+      <img [src]="background.path" style="max-height: 200px;"/>
+      <ion-card-content>
+        <ion-card-title>
+          {{ background.title }} <ion-note>Background</ion-note>
+        </ion-card-title>
+        <p>
+          {{ background.description }}
+        </p>
+      </ion-card-content>
+      <ion-row>
+        <ion-col center text-center>
+          ${{ background.price }}
+        </ion-col>
+        <ion-col>
+          
+        </ion-col>
+        <ion-col>
+          <button ion-button icon-left clear small (click)="buyBackground(background)">
+            <ion-icon name="cash"></ion-icon>
+            <div>Buy</div>
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+  </div>
+
+</ion-content>

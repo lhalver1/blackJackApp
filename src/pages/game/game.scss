@@ -1,10 +1,4 @@
 game-page {
-    ion-content.home {
-        // background: url('../assets/img/materialBackground.png');
-        background: url('../assets/img/tableBackground.png');
-        background-position: center center;
-        // background-size: 100% 100%;
-    }
     scroll-content {
         display: flex;
         flex-direction: column;
@@ -97,7 +91,7 @@ game-page {
         border-bottom-right-radius: 0px;
     }
     .cardBack {
-        background: url('../assets/img/cardBack.png');
+        // background: url('../assets/img/cardBack.png');
         background-size: 102px 119px;
         height: 98px;
         width: 73px;

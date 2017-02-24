@@ -6,6 +6,8 @@ import { Page } from '../models/page';
 
 import { WelcomePage } from '../pages/welcome/welcome';
 import { GamePage } from '../pages/game/game';
+import { StorePage } from '../pages/store/store';
+import { SettingsPage } from '../pages/settings/settings';
 
 
 @Component({
@@ -27,7 +29,9 @@ export class MyApp {
     // set our app's pages
     this.pages = [
       new Page('Welcome', WelcomePage, 'home' ),
-      new Page('Game', GamePage, 'game-controller-b' )
+      new Page('Game', GamePage, 'game-controller-b' ),
+      new Page('Store', StorePage, 'cart'),
+      new Page('Settings', SettingsPage, 'settings')
     ];
   }
 
@@ -36,7 +40,7 @@ export class MyApp {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       StatusBar.styleDefault();
-
+      debugger;
       let db = new SQLite();
       db.openDatabase({
         name: "blackJackDB.db",
@@ -46,9 +50,11 @@ export class MyApp {
               debugger;
               console.log("TABLE CREATED: ", data);
           }, (error) => {
+              debugger;
               console.error("Unable to execute sql", error);
           })
       }, (error) => {
+          debugger;
           console.error("Unable to open database", error);
       });
 
