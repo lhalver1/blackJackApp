@@ -598,11 +598,12 @@ export class GamePage {
 
     hasSplit(player: Player) {
         if (typeof player.hands[0].cards[0] != 'undefined' && typeof player.hands[0].cards[1] != 'undefined') {
-            if (player.hands[0].cards[0].value === player.hands[0].cards[1].value && player.hands.length === 1) {
-                return true;
-            } else {
-                return false;
-            }
+                if (player.hands[0].cards[0].value === player.hands[0].cards[1].value && player.hands.length === 1
+                    && player.hands[0].cards.length === 2) {
+                        return true;
+                } else {
+                        return false;
+                }
         }
         
     }
