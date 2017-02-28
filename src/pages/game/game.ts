@@ -423,7 +423,7 @@ export class GamePage {
         let handsWon = 0;
         let handsPush = 0;
 
-        let dealersTotal = this.players[0].hands[0].handTotal();
+        // let dealersTotal = this.players[0].hands[0].handTotal();
         let playersTotals: number[] = [];
         for (var index = 0; index < this.players[1].hands.length; index++) {
             var currHand = this.players[1].hands[index];
@@ -554,10 +554,15 @@ export class GamePage {
                 }
             }
         } else {
+            let usersBet = this.getPlayersBetInfo().playerBetTotal;
             if (!userSplit || handsPush === 2) {
                 // It was a push since the dealer and user both won
                 this.players[1].addMoney(usersChipTotal);
                 this.playerMoneyChange.gain(usersChipTotal);
+            } else if(userSplit && handsWon === 1 && handsPush === 1) {
+                let betPerHand = usersBet / 2;
+                this.winningPlayers[0].addMoney( (betPerHand) + (betPerHand*2) ); // user gets half their bet back
+                this.playerMoneyChange.gain( (betPerHand) + (betPerHand*2) );
             } else if(handsPush === 1) {
                 this.players[1].addMoney(usersChipTotal / 2);
                 this.playerMoneyChange.gain(usersChipTotal / 2);
