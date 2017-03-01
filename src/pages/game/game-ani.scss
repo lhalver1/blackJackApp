@@ -1,14 +1,23 @@
 game-page {
-    .newWinner {
-        border: 2px solid green;
+    .handWon {
+        border: 2px solid $bs-success;
         border-radius: 6px;
         background-color: rgba(26,115,52,0.3);
+        padding: 10px;
 
-        animation: flash 4s forwards linear normal;
+        animation: flashWinner 4s forwards linear normal;
     }
-    @keyframes flash {
+    .handPush {
+        border: 2px solid $bs-warning; //#f0ad4e
+        border-radius: 6px;
+        background-color: rgba(240,173,78,0.3);
+        padding: 10px;
+
+        animation: flashPush 4s forwards linear normal;
+    }
+    @keyframes flashWinner {
         0% {
-            border: 2px solid green;
+            border: 2px solid $bs-success;
             border-radius: 6px;
             background-color: rgba(26,115,52,0.3);
         }
@@ -18,7 +27,7 @@ game-page {
             background-color: transparent;
         }
         8% {
-            border: 2px solid green;
+            border: 2px solid $bs-success;
             border-radius: 6px;
             background-color: rgba(26,115,52,0.3);
         }
@@ -29,14 +38,47 @@ game-page {
         }
 
         16% {
-            border: 2px solid green;
+            border: 2px solid $bs-success;
             border-radius: 6px;
             background-color: rgba(26,115,52,0.3);
         }
         100% {
-            border: 2px solid green;
+            border: 2px solid $bs-success;
             border-radius: 6px;
             background-color: rgba(26,115,52,0.3);
+        }
+    }
+    @keyframes flashPush {
+        0% {
+            border: 2px solid $bs-warning;
+            border-radius: 6px;
+            background-color: rgba(240,173,78,0.3);
+        }
+        4% {
+            border: 2px solid transparent;
+            border-radius: 6px;
+            background-color: transparent;
+        }
+        8% {
+            border: 2px solid $bs-warning;
+            border-radius: 6px;
+            background-color: rgba(240,173,78,0.3);
+        }
+        12% {
+            border: 2px solid transparent;
+            border-radius: 6px;
+            background-color: transparent;
+        }
+
+        16% {
+            border: 2px solid $bs-warning;
+            border-radius: 6px;
+            background-color: rgba(240,173,78,0.3);
+        }
+        100% {
+            border: 2px solid $bs-warning;
+            border-radius: 6px;
+            background-color: rgba(240,173,78,0.3);
         }
     }
 

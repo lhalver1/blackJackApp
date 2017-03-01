@@ -2,9 +2,14 @@ import { Card } from './card';
 
 export class Hand {
     public cards: Card[];
+    public won: boolean;
+    public push: boolean;
 
     constructor(cards: Card[]) {
         this.cards = cards;
+
+        this.won = false;
+        this.push = false;
     }
 
     /**

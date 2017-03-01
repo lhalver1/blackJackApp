@@ -10,6 +10,7 @@ import { Player } from '../../models/player';
 import { Card } from '../../models/card';
 import { Deck } from '../../models/deck';
 import { Chip } from '../../models/chip'; 
+import { Pot } from '../../models/pot'; 
 import { MoneyChange } from '../../models/moneyChange'; 
 import { Settings } from '../../models/settings';
 
@@ -82,7 +83,7 @@ export class GamePage {
     winnerStr: string;
     deck: Deck;
     trash: Card[];
-    pot: Chip[];
+    pot: Pot;
     playerMoneyChange: MoneyChange;
     potTotal: number;
     settings: Settings;
@@ -106,7 +107,7 @@ export class GamePage {
         this.winningPlayers = [];
         this.winnerStr = "";
         this.trash = [];
-        this.pot = [];
+        this.pot = new Pot();
         this.potTotal = 0;
         this.roundOver = true;
         this.playerMoneyChange = new MoneyChange('up', 0, false);
@@ -317,12 +318,12 @@ export class GamePage {
                     splitBet.push(newChip);
                 }
                 for (var j = 0; j < splitBet.length; j++) {
-                    let currChip: Chip = splitBet.splice(0,1)[0];
+                    let currChip: Chip = splitBet[j];
                     player.bet.push(currChip);
 
-                    this.pot.push(currChip);
-                    this.pot.push(new Chip(currChip.value, this.players[0]));
-                    this.potTotal += currChip.value * 2;
+                    this.pot.addPlayerChip(currChip);
+                    this.pot.addDealerChip(new Chip(currChip.value, this.players[0]));
+                    this.potTotal = this.pot.total;
 
                     player.subtractMoney(currChip.value);
                     this.playerMoneyChange.lose(currChip.value);
@@ -354,9 +355,9 @@ export class GamePage {
     
             let dealerChip: Chip = new Chip(amount, this.players[0]); // Dealer always matches and never runs out of funds
     
-            this.pot.push(userChip);
-            this.pot.push(dealerChip);
-            this.potTotal += userChip.value * 2;
+            this.pot.addPlayerChip(userChip);
+            this.pot.addDealerChip(dealerChip);
+            this.potTotal = this.pot.total;
         } else {
             this.showToast('Not Enough Funds!', 3000, 'bottom', 'toastDanger');
         }
@@ -370,8 +371,8 @@ export class GamePage {
      */
     cancelBet(): void {
         this.players[1].addMoney(this.potTotal/2);
-        this.pot.splice(0, this.pot.length);
-        this.potTotal = 0;
+        this.pot.clearPot();
+        this.potTotal = this.pot.total;
     }
 
     /**
@@ -386,8 +387,8 @@ export class GamePage {
             this.winnerStr = '';
             this.playerMoneyChange.show = false;
             this.players[1].bet.splice(0, this.players[1].bet.length);
-            this.pot.splice(0, this.pot.length);
-            this.potTotal = 0;
+            this.pot.clearPot();
+            this.potTotal = this.pot.total;
 
             // Take each players cards and push them to the trash and then
             // clear the players hand.
@@ -444,11 +445,18 @@ export class GamePage {
                         
                         let currPlayersTotal = currHand.handTotal();
                         if (currPlayersTotal > highestTotal && currPlayersTotal <= 21) {
+                            for (var j = 0; j < this.winningPlayers.length; j++) {
+                                var currWinner = this.winningPlayers[j];
+                                currWinner.hands[0].won = false;
+                                currWinner.hands[0].push = false;
+                            }
                             this.winningPlayers.splice(0, this.winningPlayers.length);
                             this.winningPlayers.push(currPlayer);
+                            currHand.won = true;
                             highestTotal = currPlayersTotal;
                         } else if (currPlayersTotal === highestTotal) {
                             this.winningPlayers.push(currPlayer);
+                            currHand.push = true;
                         }
                     }
             }
@@ -458,10 +466,14 @@ export class GamePage {
                 var currPlayersHand = this.players[1].hands[k];
                 if(currPlayersHand.handTotal() <= 21 && dealerTotal > 21) {
                     handsWon += 1;
+                    currPlayersHand.won = true;
                 } else if (currPlayersHand.handTotal() <= 21 && currPlayersHand.handTotal() > dealerTotal) {
                     handsWon += 1;
+                    currPlayersHand.won = true;
                 } else if( currPlayersHand.handTotal() <= 21 && currPlayersHand.handTotal() === dealerTotal) {
                     handsPush += 1;
+                    this.players[0].hands[0].push = true;
+                    currPlayersHand.push = true;
                 }
             }
             if (handsWon > 0 && handsPush === 0) {
@@ -474,6 +486,7 @@ export class GamePage {
                 this.winningPlayers.push(this.players[1]);
             } else {
                 this.winningPlayers.push(this.players[0]);
+                this.players[0].hands[0].won = true;
             }
         }
         
@@ -495,22 +508,22 @@ export class GamePage {
             }
         }//End players for
 
-        let usersChipTotal = 0;
-        let dealersChipTotal = 0;
-        for (var index = 0; index < this.pot.length; index++) {
-            var chip = this.pot[index];
-            switch (chip.owner) {
-                case this.players[0]:
-                    dealersChipTotal += chip.value;
-                    break;
-                case this.players[1]:
-                    usersChipTotal += chip.value;
-                    break;
+        let usersChipTotal = this.pot.playersBet.total;
+        let dealersChipTotal = this.pot.dealersBet.total;
+        // for (var index = 0; index < this.pot.chips.length; index++) {
+        //     var chip = this.pot[index];
+        //     switch (chip.owner) {
+        //         case this.players[0]:
+        //             dealersChipTotal += chip.value;
+        //             break;
+        //         case this.players[1]:
+        //             usersChipTotal += chip.value;
+        //             break;
             
-                default:
-                    break;
-            }
-        }
+        //         default:
+        //             break;
+        //     }
+        // }
 
         let weHaveAWinner = false;
         if (this.winningPlayers.length === 1) {
@@ -525,7 +538,7 @@ export class GamePage {
                     this.winnerStr = 'userWins';
 
             } else if(userSplit && this.winningPlayers[0].type === 'Human') {
-                let usersBet = this.getPlayersBetInfo().playerBetTotal;
+                let usersBet =  this.pot.playersBet.total; //this.getPlayersBetInfo().playerBetTotal;
                 let betPerHand = usersBet / 2;
                 if ( (handsWon === 1 && handsPush === 0) || (handsPush === 2) ) {
                     this.winningPlayers[0].addMoney(betPerHand * 2);
@@ -554,7 +567,7 @@ export class GamePage {
                 }
             }
         } else {
-            let usersBet = this.getPlayersBetInfo().playerBetTotal;
+            let usersBet = this.pot.playersBet.total; //this.getPlayersBetInfo().playerBetTotal;
             if (!userSplit || handsPush === 2) {
                 // It was a push since the dealer and user both won
                 this.players[1].addMoney(usersChipTotal);
@@ -608,20 +621,20 @@ export class GamePage {
         
     }
 
-    getPlayersBetInfo() {
-        let dataObj = {
-            playerBetTotal: 0,
-            playersChips: []
-        };
-        for (var index = 0; index < this.pot.length; index++) {
-            var currChip = this.pot[index];
-            if (currChip.owner === this.players[1]) {
-                dataObj.playersChips.push(currChip);
-                dataObj.playerBetTotal += currChip.value;
-            }
-        }
-        return dataObj;
-    }
+    // getPlayersBetInfo() {
+    //     let dataObj = {
+    //         playerBetTotal: 0,
+    //         playersChips: []
+    //     };
+    //     for (var index = 0; index < this.pot.length; index++) {
+    //         var currChip = this.pot[index];
+    //         if (currChip.owner === this.players[1]) {
+    //             dataObj.playersChips.push(currChip);
+    //             dataObj.playerBetTotal += currChip.value;
+    //         }
+    //     }
+    //     return dataObj;
+    // }
 
     /**
      * Goes through the players list and sets the turn flag
