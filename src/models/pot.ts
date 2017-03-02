@@ -8,6 +8,15 @@ class PlayerBet {
         this.total = 0;
         this.chips = [];
     }
+
+    getPlayersChipTotal(): number {
+        let total = 0;
+        for (var index = 0; index < this.chips.length; index++) {
+            let currChip = this.chips[index];
+            total += currChip.value;
+        }
+        return total;
+    }
 }
 
 export class Pot {
@@ -47,21 +56,11 @@ export class Pot {
     }
 
     getDealersTotal(): number {
-        let dealersTotal: number = 0;
-        for (var index = 0; index < this.dealersBet.chips.length; index++) {
-            var currDealersChip = this.dealersBet.chips[index];
-            dealersTotal += currDealersChip.value;
-        }
-        return dealersTotal;
+        return this.dealersBet.getPlayersChipTotal();
     }
 
     getPlayersTotal(): number {
-        let playersTotal: number = 0;
-        for (var index = 0; index < this.playersBet.chips.length; index++) {
-            var currPlayersChip = this.playersBet.chips[index];
-            playersTotal += currPlayersChip.value;
-        }
-        return playersTotal;
+        return this.playersBet.getPlayersChipTotal();
     }
 
     getPlayersChipsPerHand(): Chip[] {

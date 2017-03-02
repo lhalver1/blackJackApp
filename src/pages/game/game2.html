@@ -68,30 +68,60 @@
         <ion-col text-center width-100>
 
           <ion-row style="height: 50px;">
-            <ion-col *ngIf="players[1]?.hands?.length <= 1" width-100 [ngClass]="{'basicFadeUp': winnerStr === 'dealerWins', 'basicFadeDown': winnerStr === 'userWins'}" [ngStyle]="{'display': winningPlayers?.length > 0 ? 'inline':'initial'}">
-              <div [ngStyle]="{'display': winningPlayers?.length > 0 ? 'inline':'initial'}" *ngFor="let chip of pot.chips; let i = index">
-                <img [ngClass]="{ 'bounce': chip === pot.chips[pot.chips.length-1] }" [src]="'assets/img/chips/' +chip.value+ 'chip.png'" *ngIf="chip.owner === players[0] && winningPlayers?.length > 0" style="width: 40px; height: 40px;">
+            <ion-col *ngIf="players[1]?.hands?.length <= 1" width-100 [ngClass]="{'basicFadeUp': winnerStr === 'dealerWins', 'basicFadeDown': winnerStr === 'userWins'}" [ngStyle]="{'display': winningPlayers?.length > 0 ? 'inline-block':'inline-block'}">
+              
+              <div id="dealerChips" [ngStyle]="{'display': winningPlayers?.length > 0 ? 'inline-block':'inline-block'}">
+                <div [ngClass]="{'notBottomChip': i > 0 }" *ngFor="let chip of pot.dealersBet.chips; let i = index">
+                  <img [ngClass]="{ 'bounce': chip === pot.chips[pot.chips.length-1] }" [src]="'assets/img/chips/' +chip.value+ 'chip.png'"
+                    *ngIf="chip.owner === players[0] && winningPlayers.length > 0 && !players[1]?.hands[0].push" style="width: 40px; height: 40px;">
+                </div>
               </div>
 
-              <div [ngStyle]="{'display': winningPlayers?.length > 0 ? 'inline':'initial'}">
-                <div [ngClass]="{'notBottomChip': i > 0 }" *ngFor="let chip of pot.chips; let i = index">
+              <div id="userChips" [ngStyle]="{'display': winningPlayers?.length > 0 ? 'inline-block':'inline-block'}">
+                <div [ngClass]="{'notBottomChip': i > 0 }" *ngFor="let chip of pot.playersBet.chips; let i = index">
                   <img [ngClass]="{ 'bounce': chip === pot.chips[pot.chips.length-2] }" [src]="'assets/img/chips/' +chip.value+ 'chip.png'" *ngIf="chip.owner === players[1]" style="width: 40px; height: 40px;">
                 </div>
               </div>
+
             </ion-col>
             
+            <!--Split pot col1-->
             <ion-col *ngIf="players[1]?.hands?.length > 1" width-50 [ngClass]="{'basicFadeUp': winnerStr === 'dealerWins' && players[0]?.hands[0]?.won, 'basicFadeDown': winnerStr === 'userWins' && (players[1]?.hands[0]?.won || players[1]?.hands[0]?.push)}">
-              <div [ngClass]="{'notBottomChip': i > 0 }" *ngFor="let chip of pot.chips; let i = index">
-                <!--<img [ngClass]="{ 'bounce': chip === pot.chips[pot.chips.length-2] }" [src]="'assets/img/chips/' +chip.value+ 'chip.png'" *ngIf="chip.owner === players[0] && i % 4 === 0 && winningPlayers?.length > 0" style="width: 40px; height: 40px;">-->
-                <img [ngClass]="{ 'bounce': chip === pot.chips[pot.chips.length-2] }" [src]="'assets/img/chips/' +chip.value+ 'chip.png'" *ngIf="chip.owner === players[1] && i < pot.chips.length/2" style="width: 40px; height: 40px;">
+              <div id="dealerChips" [ngStyle]="{'display': winningPlayers?.length > 0 ? 'inline-block':'inline-block'}">
+                <div [ngClass]="{'notBottomChip': i > 0 }" *ngFor="let chip of pot.dealersBet.chips; let i = index">
+                  <img [ngClass]="{ 'bounce': chip === pot.chips[pot.chips.length-1] }" [src]="'assets/img/chips/' +chip.value+ 'chip.png'"
+                    *ngIf="chip.owner === players[0] && winningPlayers.length > 0 && i < pot.dealersBet.chips.length/2 && !players[1]?.hands[0].push" style="width: 40px; height: 40px;">
+                </div>
+              </div>
+
+              <div id="userChips" [ngStyle]="{'display': winningPlayers?.length > 0 ? 'inline-block':'inline-block'}">
+                <div [ngClass]="{'notBottomChip': i > 0 }" *ngFor="let chip of pot.playersBet.chips; let i = index">
+                  <!--<img [ngClass]="{ 'bounce': chip === pot.chips[pot.chips.length-2] }" [src]="'assets/img/chips/' +chip.value+ 'chip.png'" *ngIf="chip.owner === players[1]" style="width: 40px; height: 40px;">-->
+                  <img [ngClass]="{ 'bounce': chip === pot.chips[pot.chips.length-2] }" [src]="'assets/img/chips/' +chip.value+ 'chip.png'"
+                    *ngIf="chip.owner === players[1] && i < pot.playersBet.chips.length/2" style="width: 40px; height: 40px;">
+                </div>
               </div>
             </ion-col>
+            <!--End split pot col 1-->
+
+            <!--Split pot col 2-->
             <ion-col *ngIf="players[1]?.hands?.length > 1" width-50 [ngClass]="{'basicFadeUp': winnerStr === 'dealerWins' && players[0]?.hands[0]?.won, 'basicFadeDown': winnerStr === 'userWins' && (players[1]?.hands[1]?.won || players[1]?.hands[1]?.push)}">
-              <div [ngClass]="{'notBottomChip': i > 0 }" *ngFor="let chip of pot.chips; let i = index">
-                <!--<img [ngClass]="{ 'bounce': chip === pot.chips[pot.chips.length-2] }" [src]="'assets/img/chips/' +chip.value+ 'chip.png'" *ngIf="chip.owner === players[0] && i % 4 === 0 && winningPlayers?.length > 0" style="width: 40px; height: 40px;">-->
-                <img [ngClass]="{ 'bounce': chip === pot.chips[pot.chips.length-2] && players[1]?.hands[1]?.cards.length >= 2 }" [src]="'assets/img/chips/' +chip.value+ 'chip.png'" *ngIf="chip.owner === players[1] && players[1]?.hands[1]?.cards.length >= 2 && i < pot.chips.length/2" style="width: 40px; height: 40px;">
+              <div id="dealerChips" [ngStyle]="{'display': winningPlayers?.length > 0 ? 'inline-block':'inline-block'}">
+                <div [ngClass]="{'notBottomChip': i > 0 }" *ngFor="let chip of pot.dealersBet.chips; let i = index">
+                  <img [ngClass]="{ 'bounce': chip === pot.chips[pot.chips.length-1] }" [src]="'assets/img/chips/' +chip.value+ 'chip.png'"
+                    *ngIf="chip.owner === players[0] && winningPlayers.length > 0 && i < pot.dealersBet.chips.length/2 && !players[1]?.hands[1].push" style="width: 40px; height: 40px;">
+                </div>
+              </div>
+
+              <div id="userChips" [ngStyle]="{'display': winningPlayers?.length > 0 ? 'inline-block':'inline-block'}">
+                <div [ngClass]="{'notBottomChip': i > 0 }" *ngFor="let chip of pot.playersBet.chips; let i = index">
+                  <!--<img [ngClass]="{ 'bounce': chip === pot.chips[pot.chips.length-2] }" [src]="'assets/img/chips/' +chip.value+ 'chip.png'" *ngIf="chip.owner === players[1] && i < pot.chips.length/2" style="width: 40px; height: 40px;">-->
+                  <img [ngClass]="{ 'bounce': chip === pot.chips[pot.chips.length-2] && players[1]?.hands[1]?.cards.length >= 2 }" [src]="'assets/img/chips/' +chip.value+ 'chip.png'"
+                    *ngIf="chip.owner === players[1] && players[1]?.hands[1]?.cards.length >= 2 && i < pot.playersBet.chips.length/2" style="width: 40px; height: 40px;">
+                </div>
               </div>
             </ion-col>
+            <!--End split pot col 2-->
             
 
           </ion-row>
@@ -99,7 +129,8 @@
             <ion-col width-100 text-ccenter *ngIf="players[1]?.hands?.length <= 1">
               <div style="color: #ffffff;">
                 <span class="potTotal" [ngStyle]="{'padding-right': roundOver ? '0px':''}">
-                  ${{ pot.playersBet.total }}
+                  <span *ngIf="!winningPlayers.length > 0 || players[1].hands[0].push">${{ pot.getPlayersTotal() }}</span>
+                  <span *ngIf="winningPlayers.length > 0 && !players[1].hands[0].push">${{ pot.getPlayersTotal()*2 }}</span>
                   <span class="cancelBet" (click)="cancelBet()" *ngIf="roundOver">X</span>
                 </span>
               </div>
@@ -107,14 +138,16 @@
             <ion-col width-50 text-ccenter *ngIf="players[1]?.hands?.length > 1">
               <div style="color: #ffffff;">
                 <span class="potTotal" [ngStyle]="{'padding-right': roundOver ? '0px':''}">
-                  ${{ pot.playersBet.total/2 }}
+                  <span *ngIf="!winningPlayers.length > 0 || players[1].hands[0].push">${{ pot.getPlayersTotal()/2 }}</span>
+                  <span *ngIf="winningPlayers.length > 0 && !players[1].hands[0].push">${{ pot.getPlayersTotal() }}</span>
                 </span>
               </div>
             </ion-col>
             <ion-col width-50 text-ccenter *ngIf="players[1]?.hands?.length > 1 && players[1]?.hands[1]?.cards.length >= 2">
               <div style="color: #ffffff;">
                 <span class="potTotal" [ngStyle]="{'padding-right': roundOver ? '0px':''}">
-                  ${{ pot.playersBet.total/2 }}
+                  <span *ngIf="!winningPlayers.length > 0 || players[1].hands[1].push">${{ pot.getPlayersTotal()/2 }}</span>
+                  <span *ngIf="winningPlayers.length > 0 && !players[1]?.hands[1].push">${{ pot.getPlayersTotal() }}</span>
                 </span>
               </div>
             </ion-col>
