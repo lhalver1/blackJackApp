@@ -424,14 +424,6 @@ export class GamePage {
         let handsWon = 0;
         let handsPush = 0;
 
-        // let dealersTotal = this.players[0].hands[0].handTotal();
-        let playersTotals: number[] = [];
-        for (var index = 0; index < this.players[1].hands.length; index++) {
-            var currHand = this.players[1].hands[index];
-            if (currHand.handTotal() <= 21) {
-                playersTotals.push(currHand.handTotal());
-            }
-        }
         if (this.players[1].hands.length === 2) {
             userSplit = true;
         }
@@ -455,6 +447,11 @@ export class GamePage {
                             currHand.won = true;
                             highestTotal = currPlayersTotal;
                         } else if (currPlayersTotal === highestTotal) {
+                            for (var j = 0; j < this.winningPlayers.length; j++) {
+                                var currWinner = this.winningPlayers[j];
+                                currWinner.hands[0].won = false;
+                                currWinner.hands[0].push = true;
+                            }
                             this.winningPlayers.push(currPlayer);
                             currHand.push = true;
                         }
@@ -509,7 +506,7 @@ export class GamePage {
         }//End players for
 
         let usersChipTotal = this.pot.playersBet.total;
-        let dealersChipTotal = this.pot.dealersBet.total;
+        // let dealersChipTotal = this.pot.dealersBet.total;
         // for (var index = 0; index < this.pot.chips.length; index++) {
         //     var chip = this.pot[index];
         //     switch (chip.owner) {
