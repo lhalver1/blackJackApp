@@ -23,6 +23,10 @@ export class Settings {
                 return 'assets/img/background.png'
             case 'materialGreen':
                 return 'assets/img/materialBackground.png'
+            case 'spaceNight':
+                return 'assets/img/space_night.jpg'
+            case 'spacePlanet':
+                return 'assets/img/space_planet.jpg'
         
             default:
                 return 'assets/img/tableBackground.png';
