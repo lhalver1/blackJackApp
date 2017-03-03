@@ -20,6 +20,11 @@
 
   <ion-list>
     <ion-item>
+      <ion-icon name="cash" item-left></ion-icon>
+        Cash
+      <ion-note id="playerCash" item-right>${{ player?.money }}</ion-note>
+    </ion-item>
+    <ion-item>
       <ion-label>Filter</ion-label>
       <ion-select [(ngModel)]="storeFilter">
         <ion-option value="all">All</ion-option>

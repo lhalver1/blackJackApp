@@ -29,7 +29,7 @@ export class MyApp {
 
     // set our app's pages
     this.pages = [
-      new Page('Welcome', WelcomePage, 'home' ),
+      // new Page('Welcome', WelcomePage, 'home' ),
       new Page('Game', GamePage, 'game-controller-b' ),
       new Page('Store', StorePage, 'cart'),
       new Page('Settings', SettingsPage, 'settings')
@@ -81,14 +81,15 @@ export class MyApp {
           console.log("players TABLE CREATED: ", data);
           this.db.executeSql("CREATE TABLE IF NOT EXISTS store(id INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "player_id INTEGER, " + 
-            "materialGreen_back TEXT, " +
-            "pokerGreen_back TEXT, " + 
-            "feltGreen_back, " +
-            "spacePlanet_back, " +
-            "spaceNight_back, " +
-            "redDiamonds_cardBack, " +
-            "material_cardFront, " +
-            "classic_cardFront, " +
+            "greenPoker_back TEXT, " + 
+            "redPoker_back TEXT, " + 
+            "bluePoker_back TEXT, " + 
+            "greenFelt_back TEXT, " +
+            "spaceNight_back TEXT, " +
+            "redDiamonds_cardBack TEXT, " +
+            "material_cardFront TEXT, " +
+            "classic_cardFront TEXT, " +
+            "vegas_chips TEXT, " +
             "FOREIGN KEY(player_id) REFERENCES players(id))", {}).then((data) => {
               debugger;
               console.log("store TABLE CREATED: ", data);

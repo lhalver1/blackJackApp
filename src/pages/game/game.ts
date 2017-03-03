@@ -92,8 +92,7 @@ export class GamePage {
 
     constructor(public navCtrl: NavController, public navParams: NavParams, private toastCtrl: ToastController, private platform: Platform, public service: SettingsProvider) {
         this.players = [
-            new Player(-1, "Dealer", [ new Hand([]) ], 2000, false, "CPU", 0, 0),
-            new Player(-1, "Player", [ new Hand([]) ], 2000, false, "Human", 0, 0)
+            new Player(-1, "Dealer", [ new Hand([]) ], 2000, false, "CPU", 0, 0)
         ];
         this.platform.ready().then(() => {
             this.database = new SQLite();
@@ -744,8 +743,6 @@ export class GamePage {
         this.database.executeSql("SELECT * FROM players", []).then((data) => {
             if(data.rows.length > 0) {
                 for(var i = 0; i < data.rows.length; i++) {
-                    debugger;
-                    // this.players.push({firstname: data.rows.item(i).firstname, lastname: data.rows.item(i).lastname});
                     let newPlayer = new Player(data.rows.item(i).id, data.rows.item(i).name, [], data.rows.item(i).money, false, "Human", 0, 0);
                     this.players.push( newPlayer );
 

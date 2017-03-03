@@ -9,6 +9,10 @@ page-store {
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$backgroundColor1', endColorstr='#c100e8',GradientType=0 );
     }
 
+    #playerCash {
+        color: $bs-success;
+    }
+
     ion-card img {
         width: initial;
         margin-left: auto;
