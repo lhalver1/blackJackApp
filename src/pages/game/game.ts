@@ -77,6 +77,7 @@ import { Settings } from '../../models/settings';
 })
 export class GamePage {
     database: SQLite;
+    loading: boolean;
     playerTurnIndex: number;
     players: Player[];
     winningPlayers: Player[];
@@ -91,19 +92,18 @@ export class GamePage {
 
     constructor(public navCtrl: NavController, public navParams: NavParams, private toastCtrl: ToastController, private platform: Platform, public service: SettingsProvider) {
         this.players = [
-            new Player(-1, "Dealer", [ new Hand([]) ], 2000, false, "CPU", 0, 0),
-            new Player(77, "Player", [ new Hand([]) ], 2000, false, "Human", 0, 0)
+            new Player(-1, "Dealer", [ new Hand([]) ], 2000, false, "CPU", 0, 0)
         ];
-        // this.platform.ready().then(() => {
-        //     this.database = new SQLite();
-        //     this.database.openDatabase({name: "blackJackDB.db", location: "default"}).then(() => {
-        //         debugger;
-        //         this.getAllPlayers(); //Get the player from the database
+        this.platform.ready().then(() => {
+            this.database = new SQLite();
+            this.database.openDatabase({name: "blackJackDB.db", location: "default"}).then(() => {
+                debugger;
+                this.getAllPlayers(); //Get the player from the database
 
-        //     }, (error) => {
-        //         console.log("ERROR: ", error);
-        //     });
-        // });
+            }, (error) => {
+                console.log("ERROR: ", error);
+            });
+        });
         this.winningPlayers = [];
         this.winnerStr = "";
         this.trash = [];
@@ -739,29 +739,66 @@ export class GamePage {
 
     // DATABASE CRUDs
     getAllPlayers() {
-        // debugger;
-        // this.database.executeSql("SELECT * FROM players", []).then((data) => {
-        //     if(data.rows.length > 0) {
-        //         for(var i = 0; i < data.rows.length; i++) {
-        //             debugger;
-        //             // this.players.push({firstname: data.rows.item(i).firstname, lastname: data.rows.item(i).lastname});
-        //             this.players.push( new Player(data.rows.item(i).id, data.rows.item(i).name, [], data.rows.item(i).money, false, "Human", 0, 0) );
-        //         }
-        //     } else {
-        //         let newPlayer = new Player(-1, "Player", [], 2000, false, "Human", 0, 0);
-        //         this.addPlayer(newPlayer);
-        //     }
-        // }, (error) => {
-        //     console.log("ERROR: " + JSON.stringify(error));
-        // });
+        debugger;
+        this.database.executeSql("SELECT * FROM players", []).then((data) => {
+            if(data.rows.length > 0) {
+                for(var i = 0; i < data.rows.length; i++) {
+                    debugger;
+                    // this.players.push({firstname: data.rows.item(i).firstname, lastname: data.rows.item(i).lastname});
+                    let newPlayer = new Player(data.rows.item(i).id, data.rows.item(i).name, [], data.rows.item(i).money, false, "Human", 0, 0);
+                    this.players.push( newPlayer );
+
+                    this.database.executeSql("SELECT * FROM store", []).then((data) => {
+                        let playerIsIn: boolean = false;
+                        if(data.rows.length > 0) {
+                            for(var i = 0; i < data.rows.length; i++) {
+                                debugger;
+                                let playerRowId = data.rows.item(i).player_id;
+                                if (playerRowId === newPlayer.id) {
+                                    // Player is in there do nothing
+                                    playerIsIn = true;
+                                    break;
+                                }
+                            }
+                        } else {
+                            playerIsIn = false;
+                        }
+
+                        if (!playerIsIn) {
+                            this.addStoreRow(newPlayer);
+                        }
+                    }, (error) => {
+                        console.log("ERROR: " + JSON.stringify(error));
+                    });
+                }
+                this.loading = false;
+            } else {
+                let newPlayer = new Player(-1, "Player", [], 2000, false, "Human", 0, 0);
+                this.addPlayer(newPlayer);
+            }
+        }, (error) => {
+            console.log("ERROR: " + JSON.stringify(error));
+        });
     }
 
     addPlayer(player: Player) {
-        // this.database.executeSql("INSERT INTO players (name, money) VALUES ('"+ player.name +"', "+ player.money +")", []).then((data) => {
-        //     console.log("INSERTED: " + JSON.stringify(data));
-        // }, (error) => {
-        //     console.log("ERROR: " + JSON.stringify(error.message));
-        // });
+        this.database.executeSql("INSERT INTO players (name, money) VALUES ('"+ player.name +"', "+ player.money +")", []).then((data) => {
+            console.log("INSERTED into players: " + JSON.stringify(data));
+            this.getAllPlayers();
+        }, (error) => {
+            console.log("ERROR: " + JSON.stringify(error.message));
+        });
+    }
+
+    addStoreRow(player: Player) {
+        this.database.executeSql("INSERT INTO store "+
+            "(player_id, materialGreen_back, pokerGreen_back, feltGreen_back, diamondsRed_cardBack, material_cardFront, classic_cardFront) " + 
+            "VALUES ("+ player.id + ", 'false', 'false', 'true', 'true', 'true', 'false')", []).then((data) => {
+            console.log("INSERTED into store: " + JSON.stringify(data));
+            this.getAllPlayers();
+        }, (error) => {
+            console.log("ERROR: " + JSON.stringify(error.message));
+        });
     }
 
     updatePlayer(player: Player) {

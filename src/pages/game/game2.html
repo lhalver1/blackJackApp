@@ -7,7 +7,10 @@
   </ion-navbar>
 </ion-header>-->
   <ion-content class="home" padding [ngStyle]="{'background': 'url( ' + settings.getBackgroundPath() + ' )', 'background-position': 'center center' }">
-    <ion-grid>
+    <div *ngIf="loading">   
+      <h3>Loading</h3>
+    </div>
+    <ion-grid *ngIf="!loading">
 
       <ion-row id="headerRow">
         <ion-col width-75>

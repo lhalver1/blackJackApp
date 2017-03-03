@@ -17,8 +17,9 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   // make WelcomePage the root (or first) page
-  rootPage: any = GamePage;
+  rootPage: any = WelcomePage;
   pages: Array<Page>;
+  db: SQLite;
 
   constructor(
     public platform: Platform,
@@ -40,18 +41,24 @@ export class MyApp {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       StatusBar.styleDefault();
-      let db = new SQLite();
-      db.openDatabase({
+      this.db = new SQLite();
+      this.db.openDatabase({
         name: "blackJackDB.db",
         location: "default"
       }).then(() => {
-          db.executeSql("CREATE TABLE IF NOT EXISTS players (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, money INTEGER)", {}).then((data) => {
-              debugger;
-              console.log("TABLE CREATED: ", data);
+          debugger;
+          this.db.executeSql("DROP TABLE IF EXISTS players", {}).then((data) => {
+              this.db.executeSql("DROP TABLE IF EXISTS store", {}).then((data) => {
+                this.initTables();
+              }, (error) => {
+                  debugger;
+                  console.error("Unable to execute sql", error);
+              });
           }, (error) => {
               debugger;
               console.error("Unable to execute sql", error);
-          })
+          });
+          
       }, (error) => {
           debugger;
           console.error("Unable to open database", error);
@@ -66,5 +73,32 @@ export class MyApp {
     this.menu.close();
     // navigate to the new page if it is not the current page
     this.nav.setRoot(page.component);
+  }
+
+  initTables() {
+    this.db.executeSql("CREATE TABLE IF NOT EXISTS players (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, money INTEGER)", {}).then((data) => {
+          debugger;
+          console.log("players TABLE CREATED: ", data);
+          this.db.executeSql("CREATE TABLE IF NOT EXISTS store(id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "player_id INTEGER, " + 
+            "materialGreen_back TEXT, " +
+            "pokerGreen_back TEXT, " + 
+            "feltGreen_back, " +
+            "spacePlanet_back, " +
+            "spaceNight_back, " +
+            "diamondsRed_cardBack, " +
+            "material_cardFront, " +
+            "classic_cardFront, " +
+            "FOREIGN KEY(player_id) REFERENCES players(id))", {}).then((data) => {
+              debugger;
+              console.log("store TABLE CREATED: ", data);
+          }, (error) => {
+              debugger;
+              console.error("Unable to execute sql", error);
+          });
+      }, (error) => {
+          debugger;
+          console.error("Unable to execute sql", error);
+      });
   }
 }
