@@ -18,13 +18,15 @@ export class Settings {
     getBackgroundPath() {
         switch (this.selectedBackground) {
             case 'greenPoker':
-                return 'assets/img/tableBackground.png'
+                return 'assets/img/backgrounds/greenPoker.png'
+            case 'redPoker':
+                return 'assets/img/backgrounds/redPoker.png'
+            case 'bluePoker':
+                return 'assets/img/backgrounds/bluePoker.png'
             case 'greenFelt':
-                return 'assets/img/background.png'
-            case 'materialGreen':
-                return 'assets/img/materialBackground.png'
+                return 'assets/img/backgrounds/greenFelt.png'
             case 'spaceNight':
-                return 'assets/img/space_night.jpg'
+                return 'assets/img/backgrounds/space_night.jpg'
             case 'spacePlanet':
                 return 'assets/img/space_planet.jpg'
         
@@ -36,7 +38,7 @@ export class Settings {
     getCardBackPath() {
         switch (this.selectedCardBack) {
             case 'redDiamonds':
-                return 'assets/img/cardBack.png';
+                return 'assets/img/cardBacks/redDiamonds.png';
         
             default:
                 return 'assets/img/cardBack.png';
@@ -46,10 +48,10 @@ export class Settings {
     getCardFrontPath() {
         switch (this.selectedCardFront) {
             case 'material':
-                return 'assets/img/cardImages/';
+                return 'assets/img/cardImages/material/';
         
             default:
-                return 'assets/img/cardImages/';
+                return 'assets/img/cardImages/material/';
         }
     }
 }

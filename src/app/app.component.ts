@@ -17,7 +17,7 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   // make WelcomePage the root (or first) page
-  rootPage: any = WelcomePage;
+  rootPage: any = GamePage;
   pages: Array<Page>;
   db: SQLite;
 
@@ -52,11 +52,11 @@ export class MyApp {
                 this.initTables();
               }, (error) => {
                   debugger;
-                  console.error("Unable to execute sql", error);
+                  console.error("Unable to execute sql DROP TABLE IF EXISTS store", error);
               });
           }, (error) => {
               debugger;
-              console.error("Unable to execute sql", error);
+              console.error("Unable to execute sql DROP TABLE IF EXISTS players", error);
           });
           
       }, (error) => {
@@ -86,7 +86,7 @@ export class MyApp {
             "feltGreen_back, " +
             "spacePlanet_back, " +
             "spaceNight_back, " +
-            "diamondsRed_cardBack, " +
+            "redDiamonds_cardBack, " +
             "material_cardFront, " +
             "classic_cardFront, " +
             "FOREIGN KEY(player_id) REFERENCES players(id))", {}).then((data) => {
@@ -94,11 +94,11 @@ export class MyApp {
               console.log("store TABLE CREATED: ", data);
           }, (error) => {
               debugger;
-              console.error("Unable to execute sql", error);
+              console.error("Unable to execute sql CREATE TABLE IF NOT EXISTS store", error);
           });
       }, (error) => {
           debugger;
-          console.error("Unable to execute sql", error);
+          console.error("Unable to execute sql CREATE TABLE IF NOT EXISTS players", error);
       });
   }
 }

@@ -9,7 +9,7 @@ export class SettingsProvider {
   settings: Settings;
 
   constructor(public http: Http) {
-    this.settings = new Settings(2000, false, false, 'spacePlanet', 'redDiamonds', 'material');
+    this.settings = new Settings(2000, false, false, 'greenPoker', 'redDiamonds', 'material');
   }
 
   getSettings(): Settings {

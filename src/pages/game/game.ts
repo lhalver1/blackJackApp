@@ -92,7 +92,8 @@ export class GamePage {
 
     constructor(public navCtrl: NavController, public navParams: NavParams, private toastCtrl: ToastController, private platform: Platform, public service: SettingsProvider) {
         this.players = [
-            new Player(-1, "Dealer", [ new Hand([]) ], 2000, false, "CPU", 0, 0)
+            new Player(-1, "Dealer", [ new Hand([]) ], 2000, false, "CPU", 0, 0),
+            new Player(-1, "Player", [ new Hand([]) ], 2000, false, "Human", 0, 0)
         ];
         this.platform.ready().then(() => {
             this.database = new SQLite();
@@ -802,12 +803,11 @@ export class GamePage {
     }
 
     updatePlayer(player: Player) {
-        // debugger;
-        // this.database.executeSql("UPDATE players SET name = '"+ player.name +"', money = "+ player.money +" WHERE id = "+ player.id +"", []).then((data) => {
-        //     console.log("UPDATED: " + JSON.stringify(data));
-        // }, (error) => {
-        //     console.log("ERROR: " + JSON.stringify(error.message));
-        // });
+        this.database.executeSql("UPDATE players SET name = '"+ player.name +"', money = "+ player.money +" WHERE id = "+ player.id +"", []).then((data) => {
+            console.log("UPDATED: " + JSON.stringify(data));
+        }, (error) => {
+            console.log("ERROR: " + JSON.stringify(error.message));
+        });
     }
 
 }// End GamePage
