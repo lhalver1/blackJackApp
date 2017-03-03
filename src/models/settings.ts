@@ -5,14 +5,16 @@ export class Settings {
     public selectedBackground: string;
     public selectedCardBack: string;
     public selectedCardFront: string;
+    public chips: string;
 
-    constructor(time: number, showPercent: boolean, showRecord: boolean, selectedBackground: string, selectedCardBack: string, selectedCardFront: string) {
+    constructor(time: number, showPercent: boolean, showRecord: boolean, selectedBackground: string, selectedCardBack: string, selectedCardFront: string, chips: string) {
         this.cpuDecisionTime = time;
         this.percent = showPercent;
         this.record = showRecord;
         this.selectedBackground = selectedBackground;
         this.selectedCardBack = selectedCardBack;
         this.selectedCardFront = selectedCardFront;
+        this.chips = chips;
     }
 
     getBackgroundPath() {

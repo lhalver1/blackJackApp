@@ -37,69 +37,86 @@ export class MyApp {
   }
 
   initializeApp() {
-    this.platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
-      StatusBar.styleDefault();
-      this.db = new SQLite();
-      this.db.openDatabase({
-        name: "blackJackDB.db",
-        location: "default"
-      }).then(() => {
-          debugger;
-          this.db.executeSql("DROP TABLE IF EXISTS players", {}).then((data) => {
-              this.db.executeSql("DROP TABLE IF EXISTS store", {}).then((data) => {
-                this.initTables();
-              }, (error) => {
-                  debugger;
-                  console.error("Unable to execute sql DROP TABLE IF EXISTS store", error);
-              });
-          }, (error) => {
-              debugger;
-              console.error("Unable to execute sql DROP TABLE IF EXISTS players", error);
-          });
-          
-      }, (error) => {
-          debugger;
-          console.error("Unable to open database", error);
-      });
+      this.platform.ready().then(() => {
+        // Okay, so the platform is ready and our plugins are available.
+        // Here you can do any higher level native things you might need.
+        StatusBar.styleDefault();
+        this.db = new SQLite();
+        this.db.openDatabase({
+          name: "blackJackDB.db",
+          location: "default"
+        }).then(() => {
 
-      Splashscreen.hide();
-    });
-  }
-
-  openPage(page) {
-    // close the menu when clicking a link from the menu
-    this.menu.close();
-    // navigate to the new page if it is not the current page
-    this.nav.setRoot(page.component);
-  }
-
-  initTables() {
-    this.db.executeSql("CREATE TABLE IF NOT EXISTS players (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, money INTEGER)", {}).then((data) => {
-          debugger;
-          console.log("players TABLE CREATED: ", data);
-          this.db.executeSql("CREATE TABLE IF NOT EXISTS store(id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "player_id INTEGER, " + 
-            "greenPoker_back TEXT, " + 
-            "redPoker_back TEXT, " + 
-            "bluePoker_back TEXT, " + 
-            "greenFelt_back TEXT, " +
-            "spaceNight_back TEXT, " +
-            "redDiamonds_cardBack TEXT, " +
-            "material_cardFront TEXT, " +
-            "classic_cardFront TEXT, " +
-            "vegas_chips TEXT, " +
-            "FOREIGN KEY(player_id) REFERENCES players(id))", {}).then((data) => {
-              debugger;
-              console.log("store TABLE CREATED: ", data);
-          }, (error) => {
-              debugger;
-              console.error("Unable to execute sql CREATE TABLE IF NOT EXISTS store", error);
-          });
-      }, (error) => {
-          debugger;
-          console.error("Unable to execute sql CREATE TABLE IF NOT EXISTS players", error);
+            this.db.executeSql("DROP TABLE IF EXISTS players", {}).then((data) => {
+                this.db.executeSql("DROP TABLE IF EXISTS store", {}).then((data) => {
+                  this.db.executeSql("DROP TABLE IF EXISTS settings", {}).then((data) => {
+                    this.initTables();
+                  }, (error) => {
+                      console.error("Unable to execute sql DROP TABLE IF EXISTS settings", error);
+                  });
+                }, (error) => {
+                    console.error("Unable to execute sql DROP TABLE IF EXISTS store", error);
+                });
+            }, (error) => {
+                console.error("Unable to execute sql DROP TABLE IF EXISTS players", error);
+            });
+            
+        }, (error) => {
+            console.error("Unable to open database in app.component", error);
+        });
+  
+        Splashscreen.hide();
       });
   }
+
+    openPage(page) {
+      // close the menu when clicking a link from the menu
+      this.menu.close();
+      // navigate to the new page if it is not the current page
+      this.nav.setRoot(page.component);
+    }
+
+    initTables() {
+      this.db.executeSql("CREATE TABLE IF NOT EXISTS players (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, money INTEGER)", {}).then((data) => {
+            console.log("players TABLE CREATED: ", data);
+            this.createStoreTable();
+        }, (error) => {
+            console.error("Unable to execute sql CREATE TABLE IF NOT EXISTS players", error);
+        });
+    }
+
+    createStoreTable() {
+        this.db.executeSql("CREATE TABLE IF NOT EXISTS store(id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+          "player_id INTEGER, " + 
+          "greenPoker_back TEXT, " + 
+          "redPoker_back TEXT, " + 
+          "bluePoker_back TEXT, " + 
+          "greenFelt_back TEXT, " +
+          "spaceNight_back TEXT, " +
+          "redDiamonds_cardBack TEXT, " +
+          "material_cardFront TEXT, " +
+          "classic_cardFront TEXT, " +
+          "vegas_chips TEXT, " +
+          "FOREIGN KEY(player_id) REFERENCES players(id))", {}).then((data) => {
+            console.log("store TABLE CREATED: ", data);
+            this.createSettingsTable();
+        }, (error) => {
+            console.error("Unable to execute sql CREATE TABLE IF NOT EXISTS store", error);
+        });
+    }
+
+    createSettingsTable() {
+        this.db.executeSql("CREATE TABLE IF NOT EXISTS settings(id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+          "player_id INTEGER, " + 
+          "background TEXT, " + 
+          "cardFront TEXT, " + 
+          "cardBack TEXT, " + 
+          "chips TEXT, " +
+          "cpu_time TEXT, " +
+          "FOREIGN KEY(player_id) REFERENCES players(id))", {}).then((data) => {
+            console.log("settings TABLE CREATED: ", data);
+        }, (error) => {
+            console.error("Unable to execute sql CREATE TABLE IF NOT EXISTS settings", error);
+        });
+    }
 }
