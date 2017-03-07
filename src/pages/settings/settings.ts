@@ -3,6 +3,8 @@ import { Platform, NavController, NavParams } from 'ionic-angular';
 import { SQLite } from 'ionic-native';
 
 import { SettingsProvider } from '../../providers/settings-provider';
+import { PlayerProvider } from '../../providers/player-provider';
+import { StoreProvider } from '../../providers/store-provider';
 
 import { Settings } from '../../models/settings';
 import { Player } from '../../models/player';
@@ -17,14 +19,40 @@ export class SettingsPage {
   player: Player;
   storeDBItem: any;
 
-  constructor(public platform: Platform, public navCtrl: NavController, public navParams: NavParams, public service: SettingsProvider) {
-    this.settings = this.service.getSettings();
+  constructor(public platform: Platform,
+      public navCtrl: NavController,
+      public navParams: NavParams,
+      public settingsProvider: SettingsProvider,
+      public playerProvider: PlayerProvider,
+      public storeProvider: StoreProvider ) {
+    // this.settings = this.service.getSettings();
     this.platform.ready().then(() => {
           this.database = new SQLite();
           this.database.openDatabase({name: "blackJackDB.db", location: "default"}).then(() => {
-              this.getPurchases();
+
+              this.playerProvider.getPlayer().then((player) => {
+
+                    this.player = new Player(player.id, player.name, [], player.money, false, "Human", 0, 0);
+                    this.settingsProvider.getSettings(this.player).then((settings) => {
+                        this.settings = settings;
+
+                        this.storeProvider.getPurchases(this.player).then((settings) => {
+                            // this.settings = settings; PICKUP HERE!
+                        }, (error) => {
+                            console.log("ERROR in settingsPage with getting purchases: ", error);
+                        });
+
+                    }, (error) => {
+                        console.log("ERROR in settingsPage with getting settings: ", error);
+                    });
+
+                }, (error) => {
+                    console.log("ERROR in settingsPage with getting player: ", error);
+                });
+
+            //   this.getPurchases();
           }, (error) => {
-              console.log("ERROR in storePage on opening db: ", error);
+              console.log("ERROR in settingsPage on opening db: ", error);
           });
       });
   }

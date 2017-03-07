@@ -9,98 +9,79 @@ import { Player } from '../models/player';
 
 @Injectable()
 export class SettingsProvider {
-  player: Player;
-  database: SQLite;
-  settings: Settings;
+    player: Player;
+    database: SQLite;
+    settings: Settings;
 
-  constructor(public platform: Platform, public http: Http) {
+    constructor(public platform: Platform, public http: Http) {
         debugger;
         this.platform.ready().then(() => {
             this.database = new SQLite();
             this.database.openDatabase({
-            name: "blackJackDB.db",
-            location: "default"
+                name: "blackJackDB.db",
+                location: "default"
             }).then(() => {
-                debugger;
                 console.log("settings-provider initSettings();");
-                this.initSettings();
             }, (error) => {
                 console.error("Unable to open database in app.component", error);
             });
         });
 
-      //For Browser
-    //   this.settings = new Settings(2000, false, false, 'greenPoker', 'redDiamonds', 'material', 'vegas');
-  }
+        //For Browser
+        //   this.settings = new Settings(2000, false, false, 'greenPoker', 'redDiamonds', 'material', 'vegas');
+    }
 
-  getSettings(): Settings {
-    return this.settings;
-  }
-
-  setTableBackground(backgroundName: string): void {
-    this.settings.selectedBackground = backgroundName;
-  }
-
-  setCardBack(cardBackName: string): void {
-    this.settings.selectedCardBack = cardBackName;
-  }
-
-  setCardFront(cardFrontName: string) {
-    this.settings.selectedCardFront = cardFrontName;
-  }
-
-  initSettings() {
-    this.database.executeSql("SELECT * FROM players", []).then((data) => {
-        if(data.rows.length > 0) {
-            for(var i = 0; i < data.rows.length; i++) {
-                let row = data.rows.item(i);
-                this.player = new Player(row.id, row.name, [], row.money, false, "Human", 0, 0);
-            }
-            this.database.executeSql("SELECT * FROM settings", []).then((settingsdata) => {
-                if(settingsdata.rows.length > 0) {
-                    for(var i = 0; i < settingsdata.rows.length; i++) {
-                        let settingsRow = settingsdata.rows.item(i);
-                        if (settingsRow.player_id === this.player.id) {
+    getSettings(player: Player): Promise<Settings> {
+        return new Promise((resolve, reject) => {
+            let newSettings: Settings;
+            this.database.executeSql("SELECT * FROM settings WHERE player_id = ?", [player.id]).then((settingsData) => {
+                if (settingsData.rows.length > 0) {
+                    for (var i = 0; i < settingsData.rows.length; i++) {
+                        let settingsRow = settingsData.rows.item(i);
+                        if (settingsRow.player_id === player.id) {
                             console.log("settings-provider settings Loaded!");
-                            this.settings = new Settings(settingsRow.cpu_time, false, false, settingsRow.background, settingsRow.cardBack, settingsRow.cardFront, settingsRow.chips);
+                            newSettings = new Settings(settingsRow.cpu_time, false, false, settingsRow.background, settingsRow.cardBack, settingsRow.cardFront, settingsRow.chips);
                             break;
                         }
                     }
                 } else {
-                    //Settings table is empty, add a row with player info
-                    console.log("settings table empty adding row");
-                    this.addSettingsRow( this.player, new Settings(2000, false, false, 'greenFelt', 'redDiamonds', 'material', 'vegas') );
+                    //No Players in db
+                    console.log("settings-provider.ts getSettings(player): No row for player in settings table, adding");
+                    this.addSettings(new Settings(2000, false, false, "greenFelt", "redDiamonds", "material", "vegas"), player).then((settings) => {
+                        newSettings = settings;
+                    });
                 }
+                resolve(newSettings)
             }, (error) => {
-                console.log("ERROR: " + JSON.stringify(error));
+                console.log("ERROR settings-provider.ts getSettings(player): " + JSON.stringify(error));
+                reject(error);
             });
-        } else {
-            //No Players in db
-            alert("No Player in db to tie settings to!");
-            this.settings = new Settings(2000, false, false, 'greenFelt', 'redDiamonds', 'material', 'vegas');
-        }
-    }, (error) => {
-        console.log("ERROR: " + JSON.stringify(error));
-    });
-  }
+        });
+    }
 
-  addSettingsRow(player: Player, settings: Settings) {
-        this.database.executeSql("INSERT INTO settings (player_id, background, cardFront, cardBack, chips, cpu_time) " +
-        " VALUES ('"+ player.id +"', '"+ settings.selectedBackground +"', '"+ settings.selectedCardFront +"', '"+ settings.selectedCardBack +"', '" + settings.chips +"' , '" + settings.cpuDecisionTime +"')", []).then((data) => {
-            console.log("INSERTED into settings: " + JSON.stringify(settings));
-            this.initSettings();
-        }, (error) => {
-            console.log("ERROR: " + JSON.stringify(error.message));
+    addSettings(settings: Settings, player: Player): Promise<Settings> {
+        return new Promise((resolve, reject) => {
+            this.database.executeSql("INSERT INTO settings (player_id, background, cardFront, cardBack, chips, cpu_time) VALUES (?,?,?,?,?,?)",
+                [player.id, settings.selectedBackground, settings.selectedCardFront, settings.selectedCardBack, settings.chips, settings.cpuDecisionTime]).then((resultSet) => {
+                console.log("INSERTED into settings: " + JSON.stringify(resultSet));
+                resolve(resultSet);
+            }, (error) => {
+                console.log("ERROR in settings-provider addSettings(settings: Settings, player: Player): " + JSON.stringify(error.message));
+                reject(error);
+            });
         });
     }
 
     updateSettings(player: Player, settings: Settings) {
-        this.database.executeSql("UPDATE settings SET background = '"+ settings.selectedBackground +"', " +
-        "cardFront = '"+ settings.selectedCardFront +"', cardBack = '"+ settings.selectedCardBack +"', " +
-        "chips = '"+ settings.chips +"', cpu_time = '"+ settings.cpuDecisionTime +"' WHERE id = "+ player.id +"", []).then((data) => {
-            console.log("UPDATED: " + JSON.stringify(data));
-        }, (error) => {
-            console.log("ERROR: " + JSON.stringify(error.message));
+        return new Promise((resolve, reject) => {
+            this.database.executeSql("UPDATE settings SET background = ?, cardFront = ?, cardBack = ?, chips = ?, cpu_time = ? WHERE id = ?",
+                [settings.selectedBackground, settings.selectedCardFront, settings.selectedCardBack, settings.chips, settings.cpuDecisionTime, player.id]).then((resultSet) => {
+                console.log("UPDATED settings in settings-provider: " + JSON.stringify(resultSet));
+                resolve(resultSet);
+            }, (error) => {
+                console.log("SQL ERROR in settings-provider updateSettings(): " + JSON.stringify(error.message));
+                reject(error);
+            });
         });
     }
 

@@ -74,80 +74,75 @@ export class StoreProvider {
                 name: "blackJackDB.db",
                 location: "default"
             }).then(() => {
-                console.log("player-provider constructor();");
+                console.log("store-provider constructor();");
             }, (error) => {
-                console.error("Unable to open database in player-provider", error);
+                console.error("Unable to open database in store-provider", error);
             });
         });
     }
 
-    getPurchases(): Promise<any> {
+    getPurchases(player: Player): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.playerProvider.getPlayer().then((result) => {
-                this.player = result;
-                this.database.executeSql("SELECT * FROM store", []).then((data) => {
-                    let storeDBItem = {};
-                    if (data.rows.length > 0) {
-                        for (var i = 0; i < data.rows.length; i++) {
-                            let dbItem = data.rows.item(i);
-                            if (dbItem.player_id === this.player.id) {
-                                storeDBItem = {
-                                    'player_id': dbItem.player_id,
-                                    'greenPoker': dbItem.greenPoker_back,
-                                    'redPoker': dbItem.redPoker_back,
-                                    'bluePoker': dbItem.bluePoker_back,
-                                    'greenFelt': dbItem.greenFelt_back,
-                                    'spaceNight': dbItem.spaceNight_back,
-                                    'redDiamonds': dbItem.redDiamonds_cardBack,
-                                    'material': dbItem.material_cardFront,
-                                    'classic': dbItem.classic_cardFront,
-                                    'vegas': dbItem.vegas_chips
-                                };
-                                break;
-                            }
-                        }
-
-                    } else {
-                        // No row in store?
-                        this.addStoreRow(this.player).then((data) => {
+            this.database.executeSql("SELECT * FROM store WHERE player_id = ?", [player.id]).then((data) => {
+                let storeDBItem = {};
+                if (data.rows.length > 0) {
+                    for (var i = 0; i < data.rows.length; i++) {
+                        let dbItem = data.rows.item(i);
+                        if (dbItem.player_id === this.player.id) {
                             storeDBItem = {
-                                'player_id': data.player_id,
-                                'greenPoker': data.greenPoker_back,
-                                'redPoker': data.redPoker_back,
-                                'bluePoker': data.bluePoker_back,
-                                'greenFelt': data.greenFelt_back,
-                                'spaceNight': data.spaceNight_back,
-                                'redDiamonds': data.redDiamonds_cardBack,
-                                'material': data.material_cardFront,
-                                'classic': data.classic_cardFront,
-                                'vegas': data.vegas_chips
+                                'player_id': dbItem.player_id,
+                                'greenPoker': dbItem.greenPoker_back,
+                                'redPoker': dbItem.redPoker_back,
+                                'bluePoker': dbItem.bluePoker_back,
+                                'greenFelt': dbItem.greenFelt_back,
+                                'spaceNight': dbItem.spaceNight_back,
+                                'redDiamonds': dbItem.redDiamonds_cardBack,
+                                'material': dbItem.material_cardFront,
+                                'classic': dbItem.classic_cardFront,
+                                'vegas': dbItem.vegas_chips
                             };
-                        });
+                            break;
+                        }
                     }
 
-                    this.purchases.backgrounds = [
-                        new StoreItem('Green Poker', 'assets/img/backgrounds/greenPoker.png', 'A nice classic table to play some black jack with your friends on!', 8500, 'greenPoker', storeDBItem['greenPoker'] === 'true'),
-                        new StoreItem('Red Poker', 'assets/img/backgrounds/redPoker.png', 'Red is for Warning, because at this table it shows you mean business!', 8500, 'redPoker', storeDBItem['redPoker'] === 'true'),
-                        new StoreItem('Blue Poker', 'assets/img/backgrounds/bluePoker.png', 'A blue, calming twist on the classic green black jack table.', 8500, 'bluePoker', storeDBItem['bluePoker'] === 'true'),
-                        new StoreItem('Green Felt', 'assets/img/backgrounds/greenFelt.png', 'A nice table to play some black jack with your friends on!', 2000, 'greenFelt', true),
-                        new StoreItem('Space Night', 'assets/img/storePics/space_night.jpg', 'Nothing like playing cards under the night sky with a full moon!', 8500, 'spaceNight', storeDBItem['spaceNight'] === 'true')
-                    ];
-                    this.purchases.cardFronts = [
-                        new StoreItem('Material', 'assets/img/storePics/material.png', 'A spin off of Google\'s material design, these cards are minimalistic and simple but beautiful.', 8000, 'material', true)
-                    ];
-                    this.purchases.cardBacks = [
-                        new StoreItem('Red Diamonds', 'assets/img/storePics/redDiamonds.png', 'Can\'t go wrong with the red diamonds, unless the dealer turns them over for BlackJack.', 2000, 'redDiamonds', true)
-                    ];
-                    this.purchases.chips = [
-                        new StoreItem('Vegas', 'assets/img/storePics/vegas.png', 'The good ol classic vegas style chips. Certainly would love stacks of the gold chip.', 2000, 'vegasChips', true)
-                    ];
-                    resolve(this.purchases);
-                }, (error) => {
-                    console.log("ERROR getting purchases in store-provider: " + JSON.stringify(error));
-                    reject(error);
-                });
+                } else {
+                    // No row in store?
+                    this.addStoreRow(this.player).then((data) => {
+                        storeDBItem = {
+                            'player_id': data.player_id,
+                            'greenPoker': data.greenPoker_back,
+                            'redPoker': data.redPoker_back,
+                            'bluePoker': data.bluePoker_back,
+                            'greenFelt': data.greenFelt_back,
+                            'spaceNight': data.spaceNight_back,
+                            'redDiamonds': data.redDiamonds_cardBack,
+                            'material': data.material_cardFront,
+                            'classic': data.classic_cardFront,
+                            'vegas': data.vegas_chips
+                        };
+                    });
+                }
+
+                this.purchases.backgrounds = [
+                    new StoreItem('Green Poker', 'assets/img/backgrounds/greenPoker.png', 'A nice classic table to play some black jack with your friends on!', 8500, 'greenPoker', storeDBItem['greenPoker'] === 'true'),
+                    new StoreItem('Red Poker', 'assets/img/backgrounds/redPoker.png', 'Red is for Warning, because at this table it shows you mean business!', 8500, 'redPoker', storeDBItem['redPoker'] === 'true'),
+                    new StoreItem('Blue Poker', 'assets/img/backgrounds/bluePoker.png', 'A blue, calming twist on the classic green black jack table.', 8500, 'bluePoker', storeDBItem['bluePoker'] === 'true'),
+                    new StoreItem('Green Felt', 'assets/img/backgrounds/greenFelt.png', 'A nice table to play some black jack with your friends on!', 2000, 'greenFelt', true),
+                    new StoreItem('Space Night', 'assets/img/storePics/space_night.jpg', 'Nothing like playing cards under the night sky with a full moon!', 8500, 'spaceNight', storeDBItem['spaceNight'] === 'true')
+                ];
+                this.purchases.cardFronts = [
+                    new StoreItem('Material', 'assets/img/storePics/material.png', 'A spin off of Google\'s material design, these cards are minimalistic and simple but beautiful.', 8000, 'material', true)
+                ];
+                this.purchases.cardBacks = [
+                    new StoreItem('Red Diamonds', 'assets/img/storePics/redDiamonds.png', 'Can\'t go wrong with the red diamonds, unless the dealer turns them over for BlackJack.', 2000, 'redDiamonds', true)
+                ];
+                this.purchases.chips = [
+                    new StoreItem('Vegas', 'assets/img/storePics/vegas.png', 'The good ol classic vegas style chips. Certainly would love stacks of the gold chip.', 2000, 'vegasChips', true)
+                ];
+                resolve(this.purchases);
             }, (error) => {
-                console.log("ERROR store-provider.ts getting player: ", error);
+                console.log("ERROR getting purchases in store-provider: " + JSON.stringify(error));
+                reject(error);
             });
         });
 
