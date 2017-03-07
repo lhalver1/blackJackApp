@@ -4,6 +4,7 @@ import { Component, trigger, state, style, transition, animate, keyframes } from
 import { NavController, NavParams, ToastController, Platform } from 'ionic-angular';
 import { SQLite } from "ionic-native";
 
+import { ToastProvider } from '../../providers/toast-provider';
 import { SettingsProvider } from '../../providers/settings-provider';
 
 import { Player } from '../../models/player';
@@ -90,7 +91,7 @@ export class GamePage {
     settings: Settings;
     roundOver: boolean;
 
-    constructor(public navCtrl: NavController, public navParams: NavParams, private toastCtrl: ToastController, private platform: Platform, public service: SettingsProvider) {
+    constructor(public navCtrl: NavController, public navParams: NavParams, private toastProvider: ToastProvider, private platform: Platform, public service: SettingsProvider) {
     // constructor(public navCtrl: NavController, public navParams: NavParams, private toastCtrl: ToastController, private platform: Platform) {
         this.players = [
             new Player(-1, "Dealer", [ new Hand([]) ], 2000, false, "CPU", 0, 0)
@@ -361,7 +362,7 @@ export class GamePage {
             this.pot.addDealerChip(dealerChip);
             this.potTotal = this.pot.total;
         } else {
-            this.showToast('Not Enough Funds!', 3000, 'bottom', 'toastDanger');
+            this.toastProvider.showToast('Not Enough Funds!', 3000, 'bottom', 'toastDanger');
         }
     }
 
@@ -647,30 +648,6 @@ export class GamePage {
             player.turn = false;
             player.handIndex = 0;
         }
-    }
-
-    /**
-     * Shows a toast with the given message for the given duration and
-     * in the given position.
-     * 
-     * @param  {string} msg - Message in the toast
-     * @param  {number} duration - In milliseconds, the duration of the toast
-     * @param  {string} position - 'top', 'bottom', 'middle' position of the toast on the screen
-     * @returns void
-     */
-    showToast(msg: string, duration: number, position: string, cssClass: string): void {
-        let toast = this.toastCtrl.create({
-        message: msg,
-        duration: duration,
-        position: position,
-        cssClass: cssClass
-      });
-    
-      toast.onDidDismiss(() => {
-        console.log('Dismissed toast');
-      });
-    
-      toast.present();
     }
 
     calcCardRotation(cardIndex, numCards) {
