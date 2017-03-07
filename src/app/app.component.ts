@@ -3,6 +3,8 @@ import { Platform, MenuController, Nav } from 'ionic-angular';
 import { StatusBar, Splashscreen, SQLite } from 'ionic-native';
 
 import { SettingsProvider } from '../providers/settings-provider';
+import { PlayerProvider } from '../providers/player-provider';
+import { StoreProvider } from '../providers/store-provider';
 
 import { Page } from '../models/page';
 import { Player } from '../models/player';
@@ -14,7 +16,8 @@ import { SettingsPage } from '../pages/settings/settings';
 
 
 @Component({
-  templateUrl: 'app.html'
+  templateUrl: 'app.html',
+  providers: [PlayerProvider, StoreProvider]
 })
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
@@ -28,7 +31,7 @@ export class MyApp {
   constructor(
     public platform: Platform,
     public menu: MenuController,
-    public service: SettingsProvider
+    public settingsService: SettingsProvider
   ) {
         this.initializeApp();
 
@@ -90,7 +93,7 @@ export class MyApp {
                     this.createStoreTable();
                 } else {
                     let newPlayer = new Player(-1, "Player", [], 10000, false, "Human", 0, 0);
-                    this.db.executeSql("INSERT INTO players (name, money) VALUES ('"+ newPlayer.name +"', "+ newPlayer.money +")", []).then((data) => {
+                    this.db.executeSql("INSERT INTO players (name, money) VALUES (?, ?)", [newPlayer.name, newPlayer.money]).then((data) => {
                         console.log("INSERTED into players: " + JSON.stringify(data));
 
                         this.db.executeSql("SELECT * FROM players", []).then((data) => {
@@ -137,7 +140,7 @@ export class MyApp {
                     this.createSettingsTable();
                 } else {
                     this.db.executeSql("INSERT INTO store (player_id, greenPoker_back, redPoker_back, bluePoker_back, greenFelt_back, spaceNight_back, redDiamonds_cardBack, material_cardFront, classic_cardFront, vegas_chips) " +
-                    " VALUES ('"+ this.player.id +"', 'false', 'false', 'false', 'true', 'false', 'true', 'true', 'false', 'true')", []).then((data) => {
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [this.player.id+'', 'false', 'false', 'false', 'true', 'false', 'true', 'true', 'false', true]).then((data) => {
                         console.log("INSERTED into store: " + " VALUES ('"+ this.player.id +"', 'false', 'false', 'false', 'true', 'false', 'true', 'true', 'false', 'true')");
                         this.createSettingsTable();
                     }, (error) => {
@@ -167,14 +170,14 @@ export class MyApp {
                 if(data.rows.length > 0) {
                     Splashscreen.hide();
                     this.rootPage = GamePage;
-                    this.service.initSettings();
+                    this.settingsService.initSettings();
                 } else {
                     this.db.executeSql("INSERT INTO settings (player_id, background, cardFront, cardBack, chips, cpu_time) " +
                     " VALUES ('"+ this.player.id +"', 'greenFelt', 'material', 'redDiamonds', 'vegas', '2000')", []).then((data) => {
                         console.log("INSERTED into settings: VALUES ('"+ this.player.id +"', 'greenFelt', 'material', 'redDiamonds', 'vegas', '2000')");
                         Splashscreen.hide();
                         this.rootPage = GamePage;
-                        this.service.initSettings();
+                        this.settingsService.initSettings();
                     }, (error) => {
                         console.log("ERROR: " + JSON.stringify(error.message));
                     });

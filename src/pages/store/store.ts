@@ -22,12 +22,6 @@ class StoreItem {
   }
 }
 
-/*
-  Generated class for the Store page.
-
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
-*/
 @Component({
   selector: 'page-store',
   templateUrl: 'store.html'
@@ -53,24 +47,6 @@ export class StorePage {
           });
       });
       this.storeFilter = 'all';
-  
-      //For browser
-      // this.backgrounds = [
-      //   new StoreItem( 'Green Poker', 'assets/img/backgrounds/greenPoker.png', 'A nice classic table to play some black jack with your friends on!', 8500, 'greenPoker', false ),
-      //   new StoreItem( 'Red Poker', 'assets/img/backgrounds/redPoker.png', 'Red is for Warning, because with this table it shows you mean business!', 8500, 'redPoker', false ),
-      //   new StoreItem( 'Blue Poker', 'assets/img/backgrounds/bluePoker.png', 'A blue, calmning twist on the class green black jack table.', 8500, 'bluePoker', false ),
-      //   new StoreItem( 'Green Felt', 'assets/img/backgrounds/greenFelt.png', 'A nice table to play some black jack with your friends on!', 2000, 'greenFelt', true ),
-      //   new StoreItem( 'Space Night', 'assets/img/storePics/space_night.jpg', 'Nothing like playing cards under the night sky with a full moon!', 8500, 'spaceNight', false )
-      // ];
-      // this.cardFronts = [
-      //   new StoreItem('Material', 'assets/img/storePics/material.png', 'A spin off of Google\'s material design, these cards are minimalistic and simple but beautiful.', 8000, 'material', true)
-      // ];
-      // this.cardBacks = [
-      //   new StoreItem('Red Diamonds', 'assets/img/storePics/redDiamonds.png', 'Can\'t go wrong with the red diamonds, unless the dealer turns them over for BlackJack.', 2000, 'redDiamonds', true)
-      // ];
-      // this.chips = [
-      //   new StoreItem('Vegas', 'assets/img/storePics/vegas.png', 'The good ol classic vegas style chips. Certainly would love stacks of the gold chip.', 2000, 'vegasChips', true)
-      // ];
   }
 
   ionViewDidLoad() {
