@@ -18,62 +18,56 @@
 
 <ion-content padding>
 
-  <ion-list radio-group [(ngModel)]="settings.selectedBackground">
-
-    <ion-list-header>
-      Table Background
-    </ion-list-header>
-
+  <ion-list>
     <ion-item>
-      <ion-label>Green Felt</ion-label>
-      <ion-radio value="greenFelt"></ion-radio>
+      <ion-label>Background</ion-label>
+      <ion-select [(ngModel)]="settings.selectedBackground">
+        <ion-option *ngIf="storeDBItem?.greenPoker === 'true'" value="greenPoker">Green Poker</ion-option>
+        <ion-option *ngIf="storeDBItem?.redPoker === 'true'" value="redPoker">Red Poker</ion-option>
+        <ion-option *ngIf="storeDBItem?.bluePoker === 'true'" value="bluePoker">Blue Poker</ion-option>
+        <ion-option *ngIf="storeDBItem?.greenFelt === 'true'" value="greenFelt">Green Felt</ion-option>
+        <ion-option *ngIf="storeDBItem?.spaceNight === 'true'" value="spaceNight">Space Night</ion-option>
+      </ion-select>
     </ion-item>
-
-    <ion-item>
-      <ion-label>Material Green</ion-label>
-      <ion-radio value="materialGreen"></ion-radio>
-    </ion-item>
-
-    <ion-item>
-      <ion-label>Green Poker</ion-label>
-      <ion-radio value="greenPoker"></ion-radio>
-    </ion-item>
-
   </ion-list>
 
-  <ion-list radio-group [(ngModel)]="settings.selectedCardFront">
-
-    <ion-list-header>
-      Card Front
-    </ion-list-header>
-
+  <ion-list>
     <ion-item>
-      <ion-label>Material</ion-label>
-      <ion-radio value="material"></ion-radio>
+      <ion-label>Card Front</ion-label>
+      <ion-select [(ngModel)]="settings.selectedCardFront">
+        <ion-option *ngIf="storeDBItem?.material === 'true'" value="material">Material</ion-option>
+        <ion-option *ngIf="storeDBItem?.classic === 'true'" value="classic">Classic</ion-option>
+      </ion-select>
     </ion-item>
-
   </ion-list>
 
-  <ion-list radio-group [(ngModel)]="settings.selectedCardBack">
-
-    <ion-list-header>
-      Card Back
-    </ion-list-header>
-
+  <ion-list>
     <ion-item>
-      <ion-label>Red Diamonds</ion-label>
-      <ion-radio value="redDiamonds"></ion-radio>
+      <ion-label>Background</ion-label>
+      <ion-select [(ngModel)]="settings.selectedCardBack">
+        <ion-option *ngIf="storeDBItem?.redDiamonds === 'true'" value="redDiamonds">Red Diamonds</ion-option>
+      </ion-select>
     </ion-item>
-
   </ion-list>
 
   <ion-list>
 
     <ion-item>
-      <ion-label floating>CPU Decision Time (sec)</ion-label>
+      <ion-label floating>CPU Decision Time (ms)</ion-label>
       <ion-input type="text" [(ngModel)]="settings.cpuDecisionTime"></ion-input>
     </ion-item>
 
   </ion-list>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col width-50>
+        <button ion-button block round color="danger" (click)="cancel()">Cancel</button>
+      </ion-col>
+      <ion-col width-50>
+        <button ion-button block round color="primary" (click)="save()">Save</button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
 </ion-content>

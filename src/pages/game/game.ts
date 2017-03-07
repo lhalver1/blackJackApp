@@ -91,6 +91,7 @@ export class GamePage {
     roundOver: boolean;
 
     constructor(public navCtrl: NavController, public navParams: NavParams, private toastCtrl: ToastController, private platform: Platform, public service: SettingsProvider) {
+    // constructor(public navCtrl: NavController, public navParams: NavParams, private toastCtrl: ToastController, private platform: Platform) {
         this.players = [
             new Player(-1, "Dealer", [ new Hand([]) ], 2000, false, "CPU", 0, 0)
         ];
@@ -104,6 +105,8 @@ export class GamePage {
                 console.log("ERROR: ", error);
             });
         });
+
+        debugger;
         this.winningPlayers = [];
         this.winnerStr = "";
         this.trash = [];
@@ -118,27 +121,26 @@ export class GamePage {
         this.deck.buildDeck()
         this.deck.shuffle();
 
-        // this.dealOutCards();
     }
 
     ngAfterViewInit() {
     }
 
     dealOneCard(player: Player, hand: Hand) {
-        if (player.type === "Human" && player.hands.length === 1 && player.hands[0].cards.length === 1) {
-            let currPlayersCard: Card = player.hands[0].cards[0];
-            for (var deckIndex = 0; deckIndex < this.deck.cards.length; deckIndex++) {
-                var currDeckCard = this.deck.cards[deckIndex];
-                if (currDeckCard.value === currPlayersCard.value) {
-                    let currCard = this.deck.cards.splice(deckIndex, 1)[0];
-                    hand.cards.push(currCard);
-                    break;
-                }
-            }
-        } else {
+        // if (player.type === "Human" && player.hands.length === 1 && player.hands[0].cards.length === 1) {
+        //     let currPlayersCard: Card = player.hands[0].cards[0];
+        //     for (var deckIndex = 0; deckIndex < this.deck.cards.length; deckIndex++) {
+        //         var currDeckCard = this.deck.cards[deckIndex];
+        //         if (currDeckCard.value === currPlayersCard.value) {
+        //             let currCard = this.deck.cards.splice(deckIndex, 1)[0];
+        //             hand.cards.push(currCard);
+        //             break;
+        //         }
+        //     }
+        // } else {
             let currCard = this.deck.cards.splice(0, 1)[0];
             hand.cards.push(currCard);
-        }
+        // }
     }
 
     /**
@@ -764,12 +766,15 @@ export class GamePage {
 
                         if (!playerIsIn) {
                             this.addStoreRow(newPlayer);
+                        } else {
+                            //Player is all set up lets get the game going
+                            
                         }
                     }, (error) => {
                         console.log("ERROR: " + JSON.stringify(error));
                     });
+
                 }
-                this.loading = false;
             } else {
                 let newPlayer = new Player(-1, "Player", [], 2000, false, "Human", 0, 0);
                 this.addPlayer(newPlayer);
@@ -790,8 +795,8 @@ export class GamePage {
 
     addStoreRow(player: Player) {
         this.database.executeSql("INSERT INTO store "+
-            "(player_id, materialGreen_back, pokerGreen_back, feltGreen_back, diamondsRed_cardBack, material_cardFront, classic_cardFront) " + 
-            "VALUES ("+ player.id + ", 'false', 'false', 'true', 'true', 'true', 'false')", []).then((data) => {
+            "(player_id, greenPoker_back, redPoker_back, bluePoker_back, greenFelt_back, spaceNight_back, redDiamonds_cardBack, material_cardFront, classic_cardFront, vegas_chips) " + 
+            "VALUES ("+ player.id + ", 'false', 'false', 'false', 'true', 'false', 'true', 'true', 'false', 'true')", []).then((data) => {
             console.log("INSERTED into store: " + JSON.stringify(data));
             this.getAllPlayers();
         }, (error) => {

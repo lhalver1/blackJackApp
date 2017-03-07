@@ -81,6 +81,8 @@ export class StorePage {
       if (this.player.money >= backgroundObj.price) {
           let columnName = backgroundObj.name + "_back";
           this.updateStoreTable(columnName, this.player.id, backgroundObj);
+      } else {
+          alert("Not Enough Funds to buy: " + backgroundObj.title);
       }
   }
 
@@ -88,6 +90,8 @@ export class StorePage {
       if (this.player.money >= cardBack.price) {
           let columnName = cardBack.name + "_cardBack";
           this.updateStoreTable(columnName, this.player.id, cardBack);
+      } else {
+          alert("Not Enough Funds to buy: " + cardBack.title);
       }
   }
 
@@ -95,6 +99,8 @@ export class StorePage {
       if (this.player.money >= cardFront.price) {
           let columnName = cardFront.name + "_cardFront";
           this.updateStoreTable(columnName, this.player.id, cardFront);
+      } else {
+          alert("Not Enough Funds to buy: " + cardFront.title);
       }
   }
 
@@ -102,6 +108,8 @@ export class StorePage {
       if (this.player.money >= chip.price) {
           let columnName = chip.name + "_chips";
           this.updateStoreTable(columnName, this.player.id, chip);
+      } else {
+          alert("Not Enough Funds to buy: " + chip.title);
       }
   }
 
@@ -112,16 +120,18 @@ export class StorePage {
        // update db that user bought this background
         alert('You bought: ' + item.title + ' for: $' + item.price);
         
-        this.database.executeSql("UPDATE store SET "+ columnName +" = 'true', WHERE player_id = "+ player_id +"", []).then((data) => {
+        this.database.executeSql("UPDATE store SET "+ columnName +" = 'true' WHERE player_id = "+ player_id +"", []).then((data) => {
             console.log("Bought Background: " + JSON.stringify(data));
             this.database.executeSql("UPDATE players SET money = "+ newPlayerMoneyTotal +" WHERE id = "+ player_id+"", []).then((data) => {
                 this.player.subtractMoney(item.price);
                 console.log("UPDATED: " + JSON.stringify(data));
+                this.getPurchases();
             }, (error) => {
                 console.log("ERROR: " + JSON.stringify(error.message));
             });
         }, (error) => {
             console.log("ERROR: " + JSON.stringify(error.message));
+            console.log("sql statement: " + "UPDATE players SET money = "+ newPlayerMoneyTotal +" WHERE id = "+ player_id+"");
         }); 
   }
 
@@ -173,6 +183,7 @@ export class StorePage {
                       
                   } else {
                       // No row in store?
+                      this.addStoreRow(this.player);
                   }
               }, (error) => {
                   console.log("ERROR getting purchases in storePage: " + JSON.stringify(error));
@@ -185,5 +196,15 @@ export class StorePage {
       });
       
   }//END getPurchasese()
+
+  addStoreRow(player: Player) {
+        this.database.executeSql("INSERT INTO store (player_id, greenPoker_back, redPoker_back, bluePoker_back, greenFelt_back, spaceNight_back, redDiamonds_cardBack, material_cardFront, classic_cardFront, vegas_chips) " +
+        " VALUES ('"+ player.id +"', 'false', 'false', 'false', 'true', 'false', 'true', 'true', 'false', 'true')", []).then((data) => {
+            console.log("INSERTED into store: " + " VALUES ('"+ player.id +"', 'false', 'false', 'false', 'true', 'false', 'true', 'true', 'false', 'true')");
+            this.getPurchases();
+        }, (error) => {
+            console.log("ERROR: " + JSON.stringify(error.message));
+        });
+    }
 
 }

@@ -6,7 +6,7 @@
     <ion-title>Black Jack</ion-title>
   </ion-navbar>
 </ion-header>-->
-  <ion-content class="home" padding [ngStyle]="{'background': 'url( ' + settings.getBackgroundPath() + ' )', 'background-position': 'center center' }">
+  <ion-content class="home" padding [ngStyle]="{'background': 'url( ' + settings?.getBackgroundPath() + ' )', 'background-position': 'center center' }">
     <div *ngIf="loading">   
       <h3>Loading</h3>
     </div>
@@ -15,10 +15,10 @@
       <ion-row id="headerRow">
         <ion-col width-75>
           <div id="playersMoney">${{ players[1]?.money }}</div>
-                <div *ngIf="playerMoneyChange.show" [ngClass]="{'winMoneyFade': playerMoneyChange.direction === 'up', 'loseMoneyFade': playerMoneyChange.direction === 'down'}">
-                  <span *ngIf="playerMoneyChange.direction === 'up'">+</span>
-                  <span *ngIf="playerMoneyChange.direction === 'down'">-</span>
-                  ${{ playerMoneyChange.amount }}
+                <div *ngIf="playerMoneyChange?.show" [ngClass]="{'winMoneyFade': playerMoneyChange?.direction === 'up', 'loseMoneyFade': playerMoneyChange?.direction === 'down'}">
+                  <span *ngIf="playerMoneyChange?.direction === 'up'">+</span>
+                  <span *ngIf="playerMoneyChange?.direction === 'down'">-</span>
+                  ${{ playerMoneyChange?.amount }}
                 </div>
         </ion-col>
         <ion-col width-25>
@@ -43,7 +43,7 @@
                         [suit]="card.suit" [value]="card.value"></card>-->
                       <div *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === i || players[0].turn || players[0].hands[0]?.handTotal() == 21"
                         [ngStyle]="{
-                          'background-image': 'url(' + this.settings.getCardFrontPath() + card.suit.toLowerCase() + '/' +card?.value+ '.png)',
+                          'background-image': 'url(' + this.settings?.getCardFrontPath() + card.suit.toLowerCase() + '/' +card?.value+ '.png)',
                           'background-size': '71px 93px',
                           'height': '92px',
                           'width': '69px',
@@ -52,7 +52,7 @@
                           }">
                         </div> 
 
-                      <div class="cardBack" [ngStyle]="{'background': 'url( ' + settings.getCardBackPath() + ' )', 'background-size': '102px 119px' }" *ngIf="cardIndex+1 != players[0].hands[0]?.cards.length && !players[0].turn && players[0].hands[0].handTotal() != 21"></div>
+                      <div class="cardBack" [ngStyle]="{'background': 'url( ' + settings?.getCardBackPath() + ' )', 'background-size': '102px 119px' }" *ngIf="cardIndex+1 != players[0].hands[0]?.cards.length && !players[0].turn && players[0].hands[0].handTotal() != 21"></div>
                   </div>
               </div>
             </ion-col>
@@ -197,7 +197,7 @@
                         [suit]="card.suit" [value]="card.value"></card>-->
                       <div *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === i || players[1]?.turn || players[1]?.hands[0]?.handTotal() == 21"
                         [ngStyle]="{
-                          'background-image': 'url(' + this.settings.getCardFrontPath() + card.suit.toLowerCase() + '/' +card?.value+ '.png)',
+                          'background-image': 'url(' + this.settings?.getCardFrontPath() + card.suit.toLowerCase() + '/' +card?.value+ '.png)',
                           'background-size': '71px 93px',
                           'height': '92px',
                           'width': '69px',
@@ -206,7 +206,7 @@
                           }">
                         </div> 
 
-                      <div class="cardBack" [ngStyle]="{ 'background': 'url(' + settings.getCardBackPath() + ')', 'background-size': '102px 119px' }" *ngIf="cardIndex+1 != players[1]?.hands[0]?.cards.length && !players[1]?.turn && players[1]?.hands[0]?.handTotal() != 21"></div>
+                      <div class="cardBack" [ngStyle]="{ 'background': 'url(' + settings?.getCardBackPath() + ')', 'background-size': '102px 119px' }" *ngIf="cardIndex+1 != players[1]?.hands[0]?.cards.length && !players[1]?.turn && players[1]?.hands[0]?.handTotal() != 21"></div>
                   </div>
               </div>
             </ion-col>
@@ -221,7 +221,7 @@
                         [suit]="card.suit" [value]="card.value"></card>-->
                       <div *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === i || players[1]?.turn || players[1]?.hands[1]?.handTotal() == 21"
                         [ngStyle]="{
-                          'background-image': 'url(' + this.settings.getCardFrontPath() + card.suit.toLowerCase() + '/' +card?.value+ '.png)',
+                          'background-image': 'url(' + this.settings?.getCardFrontPath() + card.suit.toLowerCase() + '/' +card?.value+ '.png)',
                           'background-size': '71px 93px',
                           'height': '92px',
                           'width': '69px',
@@ -230,7 +230,7 @@
                           }">
                         </div> 
 
-                      <div class="cardBack" [ngStyle]="{ 'background': 'url(' + settings.getCardBackPath() + ')', 'background-size': '102px 119px' }" *ngIf="cardIndex+1 != players[1]?.hands[1]?.cards.length && !players[1]?.turn && players[1]?.hands[1]?.handTotal() != 21"></div>
+                      <div class="cardBack" [ngStyle]="{ 'background': 'url(' + settings?.getCardBackPath() + ')', 'background-size': '102px 119px' }" *ngIf="cardIndex+1 != players[1]?.hands[1]?.cards.length && !players[1]?.turn && players[1]?.hands[1]?.handTotal() != 21"></div>
                   </div>
               </div>
             </ion-col>
