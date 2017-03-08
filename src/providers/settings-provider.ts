@@ -28,7 +28,7 @@ export class SettingsProvider {
         });
 
         //For Browser
-        //   this.settings = new Settings(2000, false, false, 'greenPoker', 'redDiamonds', 'material', 'vegas');
+        //   this.settings = new Settings(2, false, false, 'greenPoker', 'redDiamonds', 'material', 'vegas');
     }
 
     getSettings(player: Player): Promise<Settings> {
@@ -47,7 +47,7 @@ export class SettingsProvider {
                 } else {
                     //No Players in db
                     console.log("settings-provider.ts getSettings(player): No row for player in settings table, adding");
-                    this.addSettings(new Settings(2000, false, false, "greenFelt", "redDiamonds", "material", "vegas"), player).then((settings) => {
+                    this.addSettings(new Settings(2, false, false, "greenFelt", "redDiamonds", "material", "vegas"), player).then((settings) => {
                         newSettings = settings;
                     });
                 }

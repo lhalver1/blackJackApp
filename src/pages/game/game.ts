@@ -240,19 +240,19 @@ export class GamePage {
         if (total === 21) {
             setTimeout(() => {
                 this.stay(player);
-            }, this.settings.cpuDecisionTime);
+            }, this.settings.cpuDecisionTime * 1000);
         } else if (bustedPlayers.length > 0) {
             setTimeout(() => {
                 this.stay(player);
-            }, this.settings.cpuDecisionTime);
+            }, this.settings.cpuDecisionTime * 1000);
         } else if (total <= 16 && bustedPlayers.length <= 0) {
             setTimeout(() => {
                 this.hit(player);
-            }, this.settings.cpuDecisionTime);
+            }, this.settings.cpuDecisionTime * 1000);
         } else if (total > 16 && bustedPlayers.length <= 0) {
             setTimeout(() => {
                 this.stay(player);
-            }, this.settings.cpuDecisionTime);
+            }, this.settings.cpuDecisionTime * 1000);
         }
     }
 
