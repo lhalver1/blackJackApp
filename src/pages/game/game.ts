@@ -104,6 +104,7 @@ export class GamePage {
             new Player(-1, "Dealer", [ new Hand([]) ], 2000, false, "CPU", 0, 0)
         ];
         this.platform.ready().then(() => {
+            debugger;
             this.database = new SQLite();
             this.database.openDatabase({name: "blackJackDB.db", location: "default"}).then(() => {
                 debugger;

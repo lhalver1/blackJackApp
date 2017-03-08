@@ -88,7 +88,7 @@ export class StoreProvider {
                 if (data.rows.length > 0) {
                     for (var i = 0; i < data.rows.length; i++) {
                         let dbItem = data.rows.item(i);
-                        if (dbItem.player_id === this.player.id) {
+                        if (dbItem.player_id === player.id) {
                             storeDBItem = {
                                 'player_id': dbItem.player_id,
                                 'greenPoker': dbItem.greenPoker_back,
@@ -107,7 +107,7 @@ export class StoreProvider {
 
                 } else {
                     // No row in store?
-                    this.addStoreRow(this.player).then((data) => {
+                    this.addStoreRow(player).then((data) => {
                         storeDBItem = {
                             'player_id': data.player_id,
                             'greenPoker': data.greenPoker_back,
@@ -160,18 +160,18 @@ export class StoreProvider {
         });
     }
 
-    updateStoreTable(columnName: string, player_id: number, item: StoreItem): Promise<StoreRow> {
+    updateStoreTable(columnName: string, player: Player, item: StoreItem): Promise<StoreRow> {
         return new Promise((resolve, reject) => {
             // update db that user bought this background
             alert('You bought: ' + item.title + ' for: $' + item.price);
     
-            this.database.executeSql("UPDATE store SET " + columnName + " = 'true' WHERE player_id = ?", [player_id]).then((data) => {
-                this.player.subtractMoney(item.price);
-                this.playerProvider.updatePlayer(this.player).then((result) => {
+            this.database.executeSql("UPDATE store SET " + columnName + " = 'true' WHERE player_id = ?", [player.id]).then((data) => {
+                player.subtractMoney(item.price);
+                this.playerProvider.updatePlayer(player).then((result) => {
                     resolve(data);
                 }, (error) => {
                     console.log("ERROR store-provider updateStoreTable() UPDATE player: ", error);
-                    this.player.addMoney(item.price);
+                    player.addMoney(item.price);
                 });
             }, (error) => {
                 console.log("ERROR store-provider updateStoreTable() UPDATE store: " + JSON.stringify(error.message));

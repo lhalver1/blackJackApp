@@ -22,11 +22,12 @@
     <ion-item>
       <ion-label>Background</ion-label>
       <ion-select [(ngModel)]="settings.selectedBackground">
-        <ion-option *ngIf="storeDBItem?.greenPoker === 'true'" value="greenPoker">Green Poker</ion-option>
+        <ion-option *ngFor="let backgroundItem of purchases?.backgrounds" value="{{ backgroundItem.name }}" [disabled]="!backgroundItem.owned">{{ backgroundItem.title }}</ion-option>
+        <!--<ion-option *ngIf="storeDBItem?.greenPoker === 'true'" value="greenPoker">Green Poker</ion-option>
         <ion-option *ngIf="storeDBItem?.redPoker === 'true'" value="redPoker">Red Poker</ion-option>
         <ion-option *ngIf="storeDBItem?.bluePoker === 'true'" value="bluePoker">Blue Poker</ion-option>
         <ion-option *ngIf="storeDBItem?.greenFelt === 'true'" value="greenFelt">Green Felt</ion-option>
-        <ion-option *ngIf="storeDBItem?.spaceNight === 'true'" value="spaceNight">Space Night</ion-option>
+        <ion-option *ngIf="storeDBItem?.spaceNight === 'true'" value="spaceNight">Space Night</ion-option>-->
       </ion-select>
     </ion-item>
   </ion-list>
@@ -35,17 +36,19 @@
     <ion-item>
       <ion-label>Card Front</ion-label>
       <ion-select [(ngModel)]="settings.selectedCardFront">
-        <ion-option *ngIf="storeDBItem?.material === 'true'" value="material">Material</ion-option>
-        <ion-option *ngIf="storeDBItem?.classic === 'true'" value="classic">Classic</ion-option>
+        <ion-option *ngFor="let cardFront of purchases?.cardFronts" value="{{ cardFront.name }}" [disabled]="!cardFront.owned">{{ cardFront.title }}</ion-option>
+        <!--<ion-option *ngIf="storeDBItem?.material === 'true'" value="material">Material</ion-option>
+        <ion-option *ngIf="storeDBItem?.classic === 'true'" value="classic">Classic</ion-option>-->
       </ion-select>
     </ion-item>
   </ion-list>
 
   <ion-list>
     <ion-item>
-      <ion-label>Background</ion-label>
+      <ion-label>Card Back</ion-label>
       <ion-select [(ngModel)]="settings.selectedCardBack">
-        <ion-option *ngIf="storeDBItem?.redDiamonds === 'true'" value="redDiamonds">Red Diamonds</ion-option>
+        <ion-option *ngFor="let cardBack of purchases?.cardBacks" value="{{ cardBack.name }}" [disabled]="!cardBack.owned">{{ cardBack.title }}</ion-option>
+        <!--<ion-option *ngIf="storeDBItem?.redDiamonds === 'true'" value="redDiamonds">Red Diamonds</ion-option>-->
       </ion-select>
     </ion-item>
   </ion-list>

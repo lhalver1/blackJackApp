@@ -54,20 +54,20 @@ export class MyApp {
           name: "blackJackDB.db",
           location: "default"
         }).then(() => {
-
-            this.db.executeSql("DROP TABLE IF EXISTS players", {}).then((data) => {
-                this.db.executeSql("DROP TABLE IF EXISTS store", {}).then((data) => {
-                  this.db.executeSql("DROP TABLE IF EXISTS settings", {}).then((data) => {
-                    this.initTables();
-                  }, (error) => {
-                      console.error("Unable to execute sql DROP TABLE IF EXISTS settings", error);
-                  });
-                }, (error) => {
-                    console.error("Unable to execute sql DROP TABLE IF EXISTS store", error);
-                });
-            }, (error) => {
-                console.error("Unable to execute sql DROP TABLE IF EXISTS players", error);
-            });
+            this.initTables();
+            // this.db.executeSql("DROP TABLE IF EXISTS players", {}).then((data) => {
+            //     this.db.executeSql("DROP TABLE IF EXISTS store", {}).then((data) => {
+            //       this.db.executeSql("DROP TABLE IF EXISTS settings", {}).then((data) => {
+            //         this.initTables();
+            //       }, (error) => {
+            //           console.error("Unable to execute sql DROP TABLE IF EXISTS settings", error);
+            //       });
+            //     }, (error) => {
+            //         console.error("Unable to execute sql DROP TABLE IF EXISTS store", error);
+            //     });
+            // }, (error) => {
+            //     console.error("Unable to execute sql DROP TABLE IF EXISTS players", error);
+            // });
             
         }, (error) => {
             console.error("Unable to open database in app.component", error);
@@ -168,16 +168,15 @@ export class MyApp {
 
             this.db.executeSql("SELECT * FROM settings", []).then((data) => {
                 if(data.rows.length > 0) {
-                    Splashscreen.hide();
                     this.rootPage = GamePage;
-                    this.settingsService.initSettings();
+                    // this.settingsService.initSettings();
                 } else {
                     this.db.executeSql("INSERT INTO settings (player_id, background, cardFront, cardBack, chips, cpu_time) " +
                     " VALUES ('"+ this.player.id +"', 'greenFelt', 'material', 'redDiamonds', 'vegas', '2000')", []).then((data) => {
                         console.log("INSERTED into settings: VALUES ('"+ this.player.id +"', 'greenFelt', 'material', 'redDiamonds', 'vegas', '2000')");
                         Splashscreen.hide();
                         this.rootPage = GamePage;
-                        this.settingsService.initSettings();
+                        // this.settingsService.initSettings();
                     }, (error) => {
                         console.log("ERROR: " + JSON.stringify(error.message));
                     });

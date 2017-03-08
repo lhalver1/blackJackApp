@@ -2,6 +2,9 @@ import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 
 import { SettingsProvider } from '../providers/settings-provider';
+import { PlayerProvider } from '../providers/player-provider';
+import { StoreProvider } from '../providers/store-provider';
+import { ToastProvider } from '../providers/toast-provider';
 
 import { ChangeDisplayPipe } from './pipes/change-display-pipe';
 
@@ -36,6 +39,12 @@ import { SettingsPage } from '../pages/settings/settings';
     StorePage,
     SettingsPage
   ],
-  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}, SettingsProvider]
+  providers: [
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    PlayerProvider, 
+    StoreProvider, 
+    SettingsProvider, 
+    ToastProvider
+  ]
 })
 export class AppModule {}

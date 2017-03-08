@@ -78,7 +78,7 @@ export class StorePage {
     buyBackground(backgroundObj: StoreItem) {
         if (this.player.money >= backgroundObj.price) {
             let columnName = backgroundObj.name + "_back";
-            this.storeProvider.updateStoreTable(columnName, this.player.id, backgroundObj).then((purchases) => {
+            this.storeProvider.updateStoreTable(columnName, this.player, backgroundObj).then((purchases) => {
                 console.log("UPDATE store set " + columnName + " for " + this.player.id + " to true");
             }, (error) => {
                 console.log("ERROR in store.ts with updating store table with background");
@@ -91,7 +91,7 @@ export class StorePage {
     buyCardBack(cardBack: StoreItem) {
         if (this.player.money >= cardBack.price) {
             let columnName = cardBack.name + "_cardBack";
-            this.storeProvider.updateStoreTable(columnName, this.player.id, cardBack).then((purchases) => {
+            this.storeProvider.updateStoreTable(columnName, this.player, cardBack).then((purchases) => {
                 console.log("UPDATE store set " + columnName + " for " + this.player.id + " to true");
             }, (error) => {
                 console.log("ERROR in store.ts with updating store table with card back");
@@ -104,7 +104,7 @@ export class StorePage {
     buyCardFront(cardFront: StoreItem) {
         if (this.player.money >= cardFront.price) {
             let columnName = cardFront.name + "_cardFront";
-            this.storeProvider.updateStoreTable(columnName, this.player.id, cardFront).then((purchases) => {
+            this.storeProvider.updateStoreTable(columnName, this.player, cardFront).then((purchases) => {
                 console.log("UPDATE store set " + columnName + " for " + this.player.id + " to true");
             }, (error) => {
                 console.log("ERROR in store.ts with updating store table with card front");
@@ -117,7 +117,7 @@ export class StorePage {
     buyChips(chip: StoreItem) {
         if (this.player.money >= chip.price) {
             let columnName = chip.name + "_chips";
-            this.storeProvider.updateStoreTable(columnName, this.player.id, chip).then((purchases) => {
+            this.storeProvider.updateStoreTable(columnName, this.player, chip).then((purchases) => {
                 console.log("UPDATE store set " + columnName + " for " + this.player.id + " to true");
             }, (error) => {
                 console.log("ERROR in store.ts with updating store table with chips");

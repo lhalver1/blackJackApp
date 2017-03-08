@@ -6,14 +6,26 @@
     <ion-title>Black Jack</ion-title>
   </ion-navbar>
 </ion-header>-->
-  <ion-content class="home" padding [ngStyle]="{'background': 'url( ' + settings?.getBackgroundPath() + ' )', 'background-position': 'center center' }">
+  <ion-content class="home" padding [ngStyle]="{'background': 'url( ' + settings?.getBackgroundPath() + ' ) center center' }">
     <div *ngIf="loading">   
       <h3>Loading</h3>
     </div>
     <ion-grid *ngIf="!loading">
 
       <ion-row id="headerRow">
-        <ion-col width-75>
+        <ion-col width-100>
+          <ion-list>
+            <ion-item>
+              <button ion-button menuToggle>
+                <ion-icon name="menu" item-left></ion-icon>
+              </button>
+              <ion-note id="playerCash" item-right>${{ players[1]?.money }}</ion-note>
+              <ion-icon name="cash" item-right color="secondary"></ion-icon>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+        
+        <!--<ion-col width-75>
           <div id="playersMoney">${{ players[1]?.money }}</div>
                 <div *ngIf="playerMoneyChange?.show" [ngClass]="{'winMoneyFade': playerMoneyChange?.direction === 'up', 'loseMoneyFade': playerMoneyChange?.direction === 'down'}">
                   <span *ngIf="playerMoneyChange?.direction === 'up'">+</span>
@@ -22,10 +34,8 @@
                 </div>
         </ion-col>
         <ion-col width-25>
-          <!--<button ion-button clear menuToggle style="float: right; color: white;">
-            <ion-icon name="more"></ion-icon>
-          </button>-->
-        </ion-col>
+           
+        </ion-col>-->
       </ion-row>
 
       <ion-row class="playerRow dealerRow">
