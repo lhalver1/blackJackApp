@@ -27,7 +27,7 @@ export class SettingsPage {
         public playerProvider: PlayerProvider,
         public storeProvider: StoreProvider,
         public toastProvider: ToastProvider) {
-        this.settings = new Settings(2000, false, false, "greenFelt", "redDiamonds", "material", "vegas");
+        this.settings = new Settings(2000, false, false, "greenFelt", "redDiamonds", "material", "vegas");//default that gets overriden
         this.platform.ready().then(() => {
             this.database = new SQLite();
             this.database.openDatabase({ name: "blackJackDB.db", location: "default" }).then(() => {

@@ -18,12 +18,14 @@ class StoreRow {
     public greenFelt_back: string;
     public spaceNight_back: string;
     public redDiamonds_cardBack: string;
+    public geometric_cardBack: string;
     public material_cardFront: string;
     public classic_cardFront: string;
     public vegas_chips: string;
+    public neon_chips: string;
 
     constructor(player_id: string, greenPoker_back: string, redPoker_back: string, bluePoker_back: string, greenFelt_back: string, spaceNight_back: string,
-        redDiamonds_cardBack: string, material_cardFront: string, classic_cardFront: string, vegas_chips: string) {
+        redDiamonds_cardBack: string, geometric_cardBack: string, material_cardFront: string, classic_cardFront: string, vegas_chips: string, neon_chips: string) {
         this.player_id = player_id;
         this.greenPoker_back = greenPoker_back;
         this.redPoker_back = redPoker_back;
@@ -31,9 +33,11 @@ class StoreRow {
         this.greenFelt_back = greenFelt_back;
         this.spaceNight_back = spaceNight_back;
         this.redDiamonds_cardBack = redDiamonds_cardBack;
+        this.geometric_cardBack = geometric_cardBack;
         this.material_cardFront = material_cardFront;
         this.classic_cardFront = classic_cardFront;
         this.vegas_chips = vegas_chips;
+        this.neon_chips = neon_chips;
     }
 }
 class StoreItem {
@@ -60,7 +64,7 @@ export class StoreProvider {
     database: SQLite;
     settings: Settings;
     purchases: any;
-    columns: string = "player_id, greenPoker_back, redPoker_back, bluePoker_back, greenFelt_back, spaceNight_back, redDiamonds_cardBack, material_cardFront, classic_cardFront, vegas_chips";
+    columns: string = "player_id, greenPoker_back, redPoker_back, bluePoker_back, greenFelt_back, spaceNight_back, redDiamonds_cardBack, geometric_cardBack, material_cardFront, classic_cardFront, vegas_chips, neon_chips";
 
     constructor(public platform: Platform, public http: Http, private playerProvider: PlayerProvider, private toastProvider: ToastProvider) {
         this.purchases = {
@@ -98,9 +102,11 @@ export class StoreProvider {
                                 'greenFelt': dbItem.greenFelt_back,
                                 'spaceNight': dbItem.spaceNight_back,
                                 'redDiamonds': dbItem.redDiamonds_cardBack,
+                                'geometric': dbItem.geometric_cardBack,
                                 'material': dbItem.material_cardFront,
                                 'classic': dbItem.classic_cardFront,
-                                'vegas': dbItem.vegas_chips
+                                'vegas': dbItem.vegas_chips,
+                                'neon': dbItem.neon_chips
                             };
                             break;
                         }
@@ -117,9 +123,11 @@ export class StoreProvider {
                             'greenFelt': data.greenFelt_back,
                             'spaceNight': data.spaceNight_back,
                             'redDiamonds': data.redDiamonds_cardBack,
+                            'geometric': data.geometric_cardBack,
                             'material': data.material_cardFront,
                             'classic': data.classic_cardFront,
-                            'vegas': data.vegas_chips
+                            'vegas': data.vegas_chips,
+                            'neon': data.neon_chips
                         };
                     });
                 }
@@ -136,10 +144,12 @@ export class StoreProvider {
                     new StoreItem('Material', 'assets/img/storePics/material.png', 'A spin off of Google\'s material design, these cards are minimalistic and simple but beautiful.', 8000, 'material', storeDBItem['material'] === 'true')
                 ];
                 this.purchases.cardBacks = [
-                    new StoreItem('Red Diamonds', 'assets/img/storePics/redDiamonds.png', 'Can\'t go wrong with the red diamonds, unless the dealer turns them over for BlackJack.', 2000, 'redDiamonds', true)
+                    new StoreItem('Red Diamonds', 'assets/img/storePics/redDiamonds.png', 'Can\'t go wrong with the red diamonds, unless the dealer turns them over for BlackJack.', 2000, 'redDiamonds', storeDBItem['redDiamonds'] === 'true'),
+                    new StoreItem('Geometric', 'assets/img/storePics/geometric.png', 'This is a colorful and vibrant card back, almost makes you not want to turn the card over.', 8000, 'geometric', storeDBItem['geometic'] === 'true')
                 ];
                 this.purchases.chips = [
-                    new StoreItem('Vegas', 'assets/img/storePics/vegas.png', 'The good ol classic vegas style chips. Certainly would love stacks of the gold chip.', 2000, 'vegas', true)
+                    new StoreItem('Vegas', 'assets/img/storePics/vegas.png', 'The good ol classic vegas style chips. Certainly would love stacks of the gold chip.', 2000, 'vegas', storeDBItem['vegas'] === 'true'),
+                    new StoreItem('Neon', 'assets/img/storePics/neon.png', 'These chips will match all the neon lights in the casino and light up the table.', 9000, 'neon', storeDBItem['neon'] === 'true')
                 ];
                 resolve(this.purchases);
             }, (error) => {
@@ -153,7 +163,7 @@ export class StoreProvider {
     addStoreRow(player: Player): Promise<StoreRow> {
         return new Promise((resolve, reject) => {
             this.database.executeSql("INSERT INTO store (" + this.columns + ") " +
-                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [player.id + "", 'false', 'false', 'false', 'true', 'false', 'true', 'false', 'true', 'true']).then((data) => {
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [player.id + "", 'false', 'false', 'false', 'true', 'false', 'true', 'false', 'false', 'true', 'true', 'false']).then((data) => {
                     resolve(data);
                 }, (error) => {
                     console.log("ERROR store-provider addStoreRow() INSERT INTO store: " + JSON.stringify(error.message));

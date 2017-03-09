@@ -92,7 +92,7 @@ export class MyApp {
                     this.player = new Player(data.rows.item(0).id, data.rows.item(0).name, [], data.rows.item(0).money, false, "Human", 0, 0);
                     this.createStoreTable();
                 } else {
-                    let newPlayer = new Player(-1, "Player", [], 100000, false, "Human", 0, 0);
+                    let newPlayer = new Player(-1, "Player", [], 100000, false, "Human", 0, 0);//Default player
                     this.db.executeSql("INSERT INTO players (name, money) VALUES (?, ?)", [newPlayer.name, newPlayer.money]).then((data) => {
                         console.log("INSERTED into players: " + JSON.stringify(data));
 
@@ -129,9 +129,11 @@ export class MyApp {
           "greenFelt_back TEXT, " +
           "spaceNight_back TEXT, " +
           "redDiamonds_cardBack TEXT, " +
+          "geometric_cardBack TEXT, " +
           "material_cardFront TEXT, " +
           "classic_cardFront TEXT, " +
           "vegas_chips TEXT, " +
+          "neon_chips TEXT, " +
           "FOREIGN KEY(player_id) REFERENCES players(id))", {}).then((data) => {
             console.log("store TABLE CREATED: ", data);
 
@@ -139,9 +141,9 @@ export class MyApp {
                 if(data.rows.length > 0) {
                     this.createSettingsTable();
                 } else {
-                    this.db.executeSql("INSERT INTO store (player_id, greenPoker_back, redPoker_back, bluePoker_back, greenFelt_back, spaceNight_back, redDiamonds_cardBack, material_cardFront, classic_cardFront, vegas_chips) " +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [this.player.id+'', 'false', 'false', 'false', 'true', 'false', 'true', 'false', 'true', 'true']).then((data) => {
-                        console.log("INSERTED into store: " + " VALUES ('"+ this.player.id +"', 'false', 'false', 'false', 'true', 'false', 'true', 'false', 'true', 'true')");
+                    this.db.executeSql("INSERT INTO store (player_id, greenPoker_back, redPoker_back, bluePoker_back, greenFelt_back, spaceNight_back, redDiamonds_cardBack, geometric_cardBack, material_cardFront, classic_cardFront, vegas_chips, neon_chips) " +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [this.player.id+'', 'false', 'false', 'false', 'true', 'false', 'true', 'false', 'false', 'true', 'true', 'false']).then((data) => {
+                        console.log("INSERTED into store: " + " VALUES ('"+ this.player.id +"', 'false', 'false', 'false', 'true', 'false', 'true', 'false', 'false', 'true', 'true', 'false')");
                         this.createSettingsTable();
                     }, (error) => {
                         console.log("ERROR: " + JSON.stringify(error.message));
