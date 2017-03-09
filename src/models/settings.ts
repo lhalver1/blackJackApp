@@ -51,6 +51,8 @@ export class Settings {
         switch (this.selectedCardFront) {
             case 'material':
                 return 'assets/img/cardImages/material/';
+            case 'classic':
+                return 'assets/img/cardImages/classic/';
         
             default:
                 return 'assets/img/cardImages/material/';

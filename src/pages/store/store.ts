@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { Platform, NavController, NavParams } from 'ionic-angular';
+import { Platform, NavController, NavParams, AlertController } from 'ionic-angular';
 import { SQLite } from 'ionic-native';
 
 import { PlayerProvider } from '../../providers/player-provider';
 import { StoreProvider } from '../../providers/store-provider';
+import { ToastProvider } from '../../providers/toast-provider';
 
 import { Player } from '../../models/player';
 
@@ -43,7 +44,9 @@ export class StorePage {
         public navCtrl: NavController,
         public navParams: NavParams,
         private playerProvider: PlayerProvider,
-        private storeProvider: StoreProvider) {
+        private storeProvider: StoreProvider,
+        private toastProvider: ToastProvider,
+        public alertCtrl: AlertController) {
 
         this.platform.ready().then(() => {
             this.database = new SQLite();
@@ -77,53 +80,132 @@ export class StorePage {
 
     buyBackground(backgroundObj: StoreItem) {
         if (this.player.money >= backgroundObj.price) {
-            let columnName = backgroundObj.name + "_back";
-            this.storeProvider.updateStoreTable(columnName, this.player, backgroundObj).then((purchases) => {
-                console.log("UPDATE store set " + columnName + " for " + this.player.id + " to true");
-            }, (error) => {
-                console.log("ERROR in store.ts with updating store table with background");
+            let confirm = this.alertCtrl.create({
+                title: 'Are You Sure?',
+                message: 'Are you sure you want to buy '+ backgroundObj.title +' for $'+ backgroundObj.price +'?',
+                buttons: [
+                    {
+                        text: 'No',
+                        handler: () => {
+                            console.log('Disagree clicked');
+                        }
+                    },
+                    {
+                        text: 'Yes',
+                        handler: () => {
+                            let columnName = backgroundObj.name + "_back";
+                            this.storeProvider.updateStoreTable(columnName, this.player, backgroundObj).then((purchases) => {
+                                console.log("UPDATE store set " + columnName + " for " + this.player.id + " to true");
+                                backgroundObj.owned = true;
+                            }, (error) => {
+                                console.log("ERROR in store.ts with updating store table with background");
+                            });
+                        }
+                    }
+                ]
             });
+            confirm.present();
         } else {
-            alert("Not Enough Funds to buy: " + backgroundObj.title);
+            this.toastProvider.showToast("Not Enough Funds to buy: " + backgroundObj.title, 3000, 'bottom', 'toastDanger');
         }
     }
 
     buyCardBack(cardBack: StoreItem) {
         if (this.player.money >= cardBack.price) {
-            let columnName = cardBack.name + "_cardBack";
-            this.storeProvider.updateStoreTable(columnName, this.player, cardBack).then((purchases) => {
-                console.log("UPDATE store set " + columnName + " for " + this.player.id + " to true");
-            }, (error) => {
-                console.log("ERROR in store.ts with updating store table with card back");
+            let confirm = this.alertCtrl.create({
+                title: 'Are You Sure?',
+                message: 'Are you sure you want to buy '+ cardBack.title +' for $'+ cardBack.price +'?',
+                buttons: [
+                    {
+                        text: 'No',
+                        handler: () => {
+                            console.log('Disagree clicked');
+                        }
+                    },
+                    {
+                        text: 'Yes',
+                        handler: () => {
+                            let columnName = cardBack.name + "_cardBack";
+                            this.storeProvider.updateStoreTable(columnName, this.player, cardBack).then((purchases) => {
+                                console.log("UPDATE store set " + columnName + " for " + this.player.id + " to true");
+                                cardBack.owned = true;
+                            }, (error) => {
+                                console.log("ERROR in store.ts with updating store table with card back");
+                            });
+                        }
+                    }
+                ]
             });
+            confirm.present();
+            
         } else {
-            alert("Not Enough Funds to buy: " + cardBack.title);
+            this.toastProvider.showToast("Not Enough Funds to buy: " + cardBack.title, 3000, 'bottom', 'toastDanger');
         }
     }
 
     buyCardFront(cardFront: StoreItem) {
         if (this.player.money >= cardFront.price) {
-            let columnName = cardFront.name + "_cardFront";
-            this.storeProvider.updateStoreTable(columnName, this.player, cardFront).then((purchases) => {
-                console.log("UPDATE store set " + columnName + " for " + this.player.id + " to true");
-            }, (error) => {
-                console.log("ERROR in store.ts with updating store table with card front");
+            let confirm = this.alertCtrl.create({
+                title: 'Are You Sure?',
+                message: 'Are you sure you want to buy '+ cardFront.title +' for $'+ cardFront.price +'?',
+                buttons: [
+                    {
+                        text: 'No',
+                        handler: () => {
+                            console.log('Disagree clicked');
+                        }
+                    },
+                    {
+                        text: 'Yes',
+                        handler: () => {
+                            let columnName = cardFront.name + "_cardFront";
+                            this.storeProvider.updateStoreTable(columnName, this.player, cardFront).then((purchases) => {
+                                console.log("UPDATE store set " + columnName + " for " + this.player.id + " to true");
+                                cardFront.owned = true;
+                            }, (error) => {
+                                console.log("ERROR in store.ts with updating store table with card front");
+                            });
+                        }
+                    }
+                ]
             });
+            confirm.present();
+            
         } else {
-            alert("Not Enough Funds to buy: " + cardFront.title);
+            this.toastProvider.showToast("Not Enough Funds to buy: " + cardFront.title, 3000, 'bottom', 'toastDanger');
         }
     }
 
     buyChips(chip: StoreItem) {
         if (this.player.money >= chip.price) {
-            let columnName = chip.name + "_chips";
-            this.storeProvider.updateStoreTable(columnName, this.player, chip).then((purchases) => {
-                console.log("UPDATE store set " + columnName + " for " + this.player.id + " to true");
-            }, (error) => {
-                console.log("ERROR in store.ts with updating store table with chips");
+            let confirm = this.alertCtrl.create({
+                title: 'Are You Sure?',
+                message: 'Are you sure you want to buy '+ chip.title +' for $'+ chip.price +'?',
+                buttons: [
+                    {
+                        text: 'No',
+                        handler: () => {
+                            console.log('Disagree clicked');
+                        }
+                    },
+                    {
+                        text: 'Yes',
+                        handler: () => {
+                            let columnName = chip.name + "_chips";
+                            this.storeProvider.updateStoreTable(columnName, this.player, chip).then((purchases) => {
+                                console.log("UPDATE store set " + columnName + " for " + this.player.id + " to true");
+                                chip.owned = true;
+                            }, (error) => {
+                                console.log("ERROR in store.ts with updating store table with chips");
+                            });
+                        }
+                    }
+                ]
             });
+            confirm.present();
+            
         } else {
-            alert("Not Enough Funds to buy: " + chip.title);
+            this.toastProvider.showToast("Not Enough Funds to buy: " + chip.title, 3000, 'bottom', 'toastDanger');
         }
     }
 

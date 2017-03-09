@@ -92,7 +92,7 @@ export class MyApp {
                     this.player = new Player(data.rows.item(0).id, data.rows.item(0).name, [], data.rows.item(0).money, false, "Human", 0, 0);
                     this.createStoreTable();
                 } else {
-                    let newPlayer = new Player(-1, "Player", [], 10000, false, "Human", 0, 0);
+                    let newPlayer = new Player(-1, "Player", [], 100000, false, "Human", 0, 0);
                     this.db.executeSql("INSERT INTO players (name, money) VALUES (?, ?)", [newPlayer.name, newPlayer.money]).then((data) => {
                         console.log("INSERTED into players: " + JSON.stringify(data));
 
@@ -140,8 +140,8 @@ export class MyApp {
                     this.createSettingsTable();
                 } else {
                     this.db.executeSql("INSERT INTO store (player_id, greenPoker_back, redPoker_back, bluePoker_back, greenFelt_back, spaceNight_back, redDiamonds_cardBack, material_cardFront, classic_cardFront, vegas_chips) " +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [this.player.id+'', 'false', 'false', 'false', 'true', 'false', 'true', 'true', 'false', true]).then((data) => {
-                        console.log("INSERTED into store: " + " VALUES ('"+ this.player.id +"', 'false', 'false', 'false', 'true', 'false', 'true', 'true', 'false', 'true')");
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [this.player.id+'', 'false', 'false', 'false', 'true', 'false', 'true', 'false', 'true', 'true']).then((data) => {
+                        console.log("INSERTED into store: " + " VALUES ('"+ this.player.id +"', 'false', 'false', 'false', 'true', 'false', 'true', 'false', 'true', 'true')");
                         this.createSettingsTable();
                     }, (error) => {
                         console.log("ERROR: " + JSON.stringify(error.message));
@@ -172,8 +172,8 @@ export class MyApp {
                     // this.settingsService.initSettings();
                 } else {
                     this.db.executeSql("INSERT INTO settings (player_id, background, cardFront, cardBack, chips, cpu_time) " +
-                    " VALUES ('"+ this.player.id +"', 'greenFelt', 'material', 'redDiamonds', 'vegas', '2000')", []).then((data) => {
-                        console.log("INSERTED into settings: VALUES ('"+ this.player.id +"', 'greenFelt', 'material', 'redDiamonds', 'vegas', '2000')");
+                    " VALUES ('"+ this.player.id +"', 'greenFelt', 'classic', 'redDiamonds', 'vegas', '2000')", []).then((data) => {
+                        console.log("INSERTED into settings: VALUES ('"+ this.player.id +"', 'greenFelt', 'classic', 'redDiamonds', 'vegas', '2000')");
                         Splashscreen.hide();
                         this.rootPage = GamePage;
                         // this.settingsService.initSettings();

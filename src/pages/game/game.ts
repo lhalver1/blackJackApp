@@ -177,11 +177,6 @@ export class GamePage {
             console.log("ERROR in store.ts with getting perchases");
         }); // update the user
 
-        // If there are 12 or less cards remaining do a reshuffle.
-        if (this.deck.cards.length <= 12) {
-            this.deck.buildDeck();
-        }
-
         // Pass out cards to each player, each player gets 1 card
         // then each player gets their 2nd card.
         this.players[0].hands = [ new Hand([]) ];
@@ -241,19 +236,19 @@ export class GamePage {
         if (total === 21) {
             setTimeout(() => {
                 this.stay(player);
-            }, this.settings.cpuDecisionTime * 1000);
+            }, 2000);
         } else if (bustedPlayers.length > 0) {
             setTimeout(() => {
                 this.stay(player);
-            }, this.settings.cpuDecisionTime * 1000);
+            }, 2000);
         } else if (total <= 16 && bustedPlayers.length <= 0) {
             setTimeout(() => {
                 this.hit(player);
-            }, this.settings.cpuDecisionTime * 1000);
+            }, 2000);
         } else if (total > 16 && bustedPlayers.length <= 0) {
             setTimeout(() => {
                 this.stay(player);
-            }, this.settings.cpuDecisionTime * 1000);
+            }, 2000);
         }
     }
 
@@ -414,6 +409,12 @@ export class GamePage {
             this.players[1].bet.splice(0, this.players[1].bet.length);
             this.pot.clearPot();
             this.potTotal = this.pot.total;
+
+            // If there are 12 or less cards remaining do a reshuffle.
+            if (this.deck.cards.length <= 12) {
+                this.deck.buildDeck();
+                this.toastProvider.showToast("Shuffling Deck", 1000, 'bottom', 'toastInfo');
+            }
 
             // Take each players cards and push them to the trash and then
             // clear the players hand.

@@ -23,11 +23,6 @@
       <ion-label>Background</ion-label>
       <ion-select [(ngModel)]="settings.selectedBackground">
         <ion-option *ngFor="let backgroundItem of purchases?.backgrounds" value="{{ backgroundItem.name }}" [disabled]="!backgroundItem.owned">{{ backgroundItem.title }}</ion-option>
-        <!--<ion-option *ngIf="storeDBItem?.greenPoker === 'true'" value="greenPoker">Green Poker</ion-option>
-        <ion-option *ngIf="storeDBItem?.redPoker === 'true'" value="redPoker">Red Poker</ion-option>
-        <ion-option *ngIf="storeDBItem?.bluePoker === 'true'" value="bluePoker">Blue Poker</ion-option>
-        <ion-option *ngIf="storeDBItem?.greenFelt === 'true'" value="greenFelt">Green Felt</ion-option>
-        <ion-option *ngIf="storeDBItem?.spaceNight === 'true'" value="spaceNight">Space Night</ion-option>-->
       </ion-select>
     </ion-item>
   </ion-list>
@@ -37,8 +32,6 @@
       <ion-label>Card Front</ion-label>
       <ion-select [(ngModel)]="settings.selectedCardFront">
         <ion-option *ngFor="let cardFront of purchases?.cardFronts" value="{{ cardFront.name }}" [disabled]="!cardFront.owned">{{ cardFront.title }}</ion-option>
-        <!--<ion-option *ngIf="storeDBItem?.material === 'true'" value="material">Material</ion-option>
-        <ion-option *ngIf="storeDBItem?.classic === 'true'" value="classic">Classic</ion-option>-->
       </ion-select>
     </ion-item>
   </ion-list>
@@ -48,21 +41,33 @@
       <ion-label>Card Back</ion-label>
       <ion-select [(ngModel)]="settings.selectedCardBack">
         <ion-option *ngFor="let cardBack of purchases?.cardBacks" value="{{ cardBack.name }}" [disabled]="!cardBack.owned">{{ cardBack.title }}</ion-option>
-        <!--<ion-option *ngIf="storeDBItem?.redDiamonds === 'true'" value="redDiamonds">Red Diamonds</ion-option>-->
       </ion-select>
     </ion-item>
   </ion-list>
 
   <ion-list>
+    <ion-item>
+      <ion-label>Chips</ion-label>
+      <ion-select [(ngModel)]="settings.chips">
+        <ion-option *ngFor="let chip of purchases?.chips" value="{{ chip.name }}" [disabled]="!chip.owned">{{ chip.title }}</ion-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+
+  <!--<ion-list>
 
     <ion-item>
       <ion-label floating>CPU Decision Time (sec)</ion-label>
       <ion-input type="text" [(ngModel)]="settings.cpuDecisionTime"></ion-input>
     </ion-item>
 
-  </ion-list>
+  </ion-list>-->
 
-  <ion-grid>
+</ion-content>
+
+<ion-footer no-border>
+  <ion-toolbar color="transparent">
+    <ion-grid>
     <ion-row>
       <ion-col width-50>
         <button ion-button block round color="danger" (click)="cancel()">Cancel</button>
@@ -72,5 +77,5 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-
-</ion-content>
+  </ion-toolbar>
+</ion-footer>

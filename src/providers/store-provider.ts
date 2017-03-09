@@ -5,6 +5,7 @@ import { SQLite } from 'ionic-native';
 import 'rxjs/add/operator/map';
 
 import { PlayerProvider } from './player-provider';
+import { ToastProvider } from '../providers/toast-provider';
 
 import { Settings } from '../models/settings';
 import { Player } from '../models/player';
@@ -61,7 +62,7 @@ export class StoreProvider {
     purchases: any;
     columns: string = "player_id, greenPoker_back, redPoker_back, bluePoker_back, greenFelt_back, spaceNight_back, redDiamonds_cardBack, material_cardFront, classic_cardFront, vegas_chips";
 
-    constructor(public platform: Platform, public http: Http, private playerProvider: PlayerProvider) {
+    constructor(public platform: Platform, public http: Http, private playerProvider: PlayerProvider, private toastProvider: ToastProvider) {
         this.purchases = {
             'backgrounds': [],
             'cardFronts': [],
@@ -131,13 +132,14 @@ export class StoreProvider {
                     new StoreItem('Space Night', 'assets/img/storePics/space_night.jpg', 'Nothing like playing cards under the night sky with a full moon!', 8500, 'spaceNight', storeDBItem['spaceNight'] === 'true')
                 ];
                 this.purchases.cardFronts = [
-                    new StoreItem('Material', 'assets/img/storePics/material.png', 'A spin off of Google\'s material design, these cards are minimalistic and simple but beautiful.', 8000, 'material', true)
+                    new StoreItem('Classic', 'assets/img/storePics/classic.png', 'If you were to play cards at a casino, their cards would probably look something like this.', 2000, 'classic', storeDBItem['classic'] === 'true'),
+                    new StoreItem('Material', 'assets/img/storePics/material.png', 'A spin off of Google\'s material design, these cards are minimalistic and simple but beautiful.', 8000, 'material', storeDBItem['material'] === 'true')
                 ];
                 this.purchases.cardBacks = [
                     new StoreItem('Red Diamonds', 'assets/img/storePics/redDiamonds.png', 'Can\'t go wrong with the red diamonds, unless the dealer turns them over for BlackJack.', 2000, 'redDiamonds', true)
                 ];
                 this.purchases.chips = [
-                    new StoreItem('Vegas', 'assets/img/storePics/vegas.png', 'The good ol classic vegas style chips. Certainly would love stacks of the gold chip.', 2000, 'vegasChips', true)
+                    new StoreItem('Vegas', 'assets/img/storePics/vegas.png', 'The good ol classic vegas style chips. Certainly would love stacks of the gold chip.', 2000, 'vegas', true)
                 ];
                 resolve(this.purchases);
             }, (error) => {
@@ -146,12 +148,12 @@ export class StoreProvider {
             });
         });
 
-    }//END getPurchasese()
+    }//END getPurchasese();
 
     addStoreRow(player: Player): Promise<StoreRow> {
         return new Promise((resolve, reject) => {
             this.database.executeSql("INSERT INTO store (" + this.columns + ") " +
-                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [player.id + "", 'false', 'false', 'false', 'true', 'false', 'true', 'true', 'false', 'true']).then((data) => {
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [player.id + "", 'false', 'false', 'false', 'true', 'false', 'true', 'false', 'true', 'true']).then((data) => {
                     resolve(data);
                 }, (error) => {
                     console.log("ERROR store-provider addStoreRow() INSERT INTO store: " + JSON.stringify(error.message));
@@ -163,7 +165,7 @@ export class StoreProvider {
     updateStoreTable(columnName: string, player: Player, item: StoreItem): Promise<StoreRow> {
         return new Promise((resolve, reject) => {
             // update db that user bought this background
-            alert('You bought: ' + item.title + ' for: $' + item.price);
+            this.toastProvider.showToast('You bought: ' + item.title + ' for: $' + item.price, 3000, 'bottom', 'toastSuccess');
     
             this.database.executeSql("UPDATE store SET " + columnName + " = 'true' WHERE player_id = ?", [player.id]).then((data) => {
                 player.subtractMoney(item.price);
