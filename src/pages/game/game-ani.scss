@@ -1,0 +1,229 @@
+game-page {
+    .handWon {
+        border: 2px solid $bs-success;
+        border-radius: 6px;
+        background-color: rgba(26,115,52,0.3);
+        padding: 10px;
+
+        animation: flashWinner 4s forwards linear normal;
+    }
+    .handPush {
+        border: 2px solid $bs-warning; //#f0ad4e
+        border-radius: 6px;
+        background-color: rgba(240,173,78,0.3);
+        padding: 10px;
+
+        animation: flashPush 4s forwards linear normal;
+    }
+    @keyframes flashWinner {
+        0% {
+            border: 2px solid $bs-success;
+            border-radius: 6px;
+            background-color: rgba(26,115,52,0.3);
+        }
+        4% {
+            border: 2px solid transparent;
+            border-radius: 6px;
+            background-color: transparent;
+        }
+        8% {
+            border: 2px solid $bs-success;
+            border-radius: 6px;
+            background-color: rgba(26,115,52,0.3);
+        }
+        12% {
+            border: 2px solid transparent;
+            border-radius: 6px;
+            background-color: transparent;
+        }
+
+        16% {
+            border: 2px solid $bs-success;
+            border-radius: 6px;
+            background-color: rgba(26,115,52,0.3);
+        }
+        100% {
+            border: 2px solid $bs-success;
+            border-radius: 6px;
+            background-color: rgba(26,115,52,0.3);
+        }
+    }
+    @keyframes flashPush {
+        0% {
+            border: 2px solid $bs-warning;
+            border-radius: 6px;
+            background-color: rgba(240,173,78,0.3);
+        }
+        4% {
+            border: 2px solid transparent;
+            border-radius: 6px;
+            background-color: transparent;
+        }
+        8% {
+            border: 2px solid $bs-warning;
+            border-radius: 6px;
+            background-color: rgba(240,173,78,0.3);
+        }
+        12% {
+            border: 2px solid transparent;
+            border-radius: 6px;
+            background-color: transparent;
+        }
+
+        16% {
+            border: 2px solid $bs-warning;
+            border-radius: 6px;
+            background-color: rgba(240,173,78,0.3);
+        }
+        100% {
+            border: 2px solid $bs-warning;
+            border-radius: 6px;
+            background-color: rgba(240,173,78,0.3);
+        }
+    }
+
+    .bounce {
+        animation: bounce 1s forwards linear normal;
+    }
+    @keyframes bounce {
+        0% {
+            transform: translateY(-40px);
+        }
+        12%, 32%, 100% {
+            transform: translateY(0);
+        }
+        22% {
+            transform: translateY(-16px);
+        }
+    }
+
+    .upAndBounce {
+        animation: upAndBounce 1s forwards linear normal;
+    }
+    @keyframes upAndBounce {
+        0%, 20%, 40%, 60%, 80%, 100% {
+            transform: translateY(0);
+        }
+        30% {
+            transform: translateY(-30px);
+        }
+        50% {
+            transform: translateY(-15px);
+        }
+    }
+
+    .loseMoneyFade {
+        color: $bs-danger;
+        font-weight: 800;
+        font-size: large;
+        transform: translateY(0%);
+        animation: fadeDown 2s forwards linear normal;
+    }
+    .winMoneyFade {
+        color: $bs-success;
+        font-weight: 800;
+        font-size: large;
+        transform: translateY(-40px);
+        animation: fadeUpToCurr 2s forwards linear normal;
+    }
+    .basicFadeUp {
+        animation: fadeUpFromCurr 2s forwards linear normal;
+    }
+    .basicFadeDown {
+        animation: fadeDown 2s forwards linear normal;
+    }
+    @keyframes fadeUpFromCurr {
+        0%, 50% {
+            transform: translateY(0%);
+            opacity: 1;
+        }
+        75% {
+            transform: translateY(-50px);
+            opacity: 0;
+        }
+        100% {
+            transform: translateY(-50px);
+            opacity: 0;
+        }
+    }
+    @keyframes fadeUpToCurr {
+        0%, 50% {
+            transform: translateY(40px);
+            opacity: 1;
+        }
+        75% {
+            transform: translateY(0%);
+            opacity: 0;
+        }
+        100% {
+            transform: translateY(0%);
+            opacity: 0;
+        }
+    }
+    @keyframes fadeDown {
+        0%, 50% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        75% {
+            transform: translateY(40px);
+            opacity: 0;
+        }
+        100% {
+            transform: translateY(40px);
+            opacity: 0;
+        }
+    }
+
+
+    .top-right-fly-in {
+        transform: translateX(0);
+        animation: topRightFlyIn 500ms cubic-bezier(0.4, 0.0, 0.2, 1) normal;
+    }
+    @keyframes topRightFlyIn {
+        0% {
+            opacity: 0;
+            transform: translate(100%, -100%);
+        }
+        100% {
+            opacity: 1;
+            transform: translate(0, 0);
+        }
+    }
+    .bottom-right-fly-in {
+        transform: translateX(0);
+        animation: bottomRightFlyIn 500ms cubic-bezier(0.4, 0.0, 0.2, 1) normal;
+    }
+    @keyframes bottomRightFlyIn {
+        0% {
+            opacity: 0;
+            transform: translate(100%, 100%);
+        }
+        100% {
+            opacity: 1;
+            transform: translate(0, 0);
+        }
+    }
+
+
+    .hitStay-enter {
+        animation: moveUp 500ms cubic-bezier(0.4, 0.0, 0.2, 1) normal;
+    }
+    @keyframes moveUp {
+        0% {
+            transform: translateY(100%);
+        }
+        100% {
+            transform: translateY(0%);
+        }
+    }
+    @keyframes moveDown {
+        0% {
+            transform: translateY(0%);
+        }
+        100% {
+            transform: translateY(100%);
+        }
+    }
+
+}

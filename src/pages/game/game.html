@@ -55,6 +55,10 @@
                   [@flyIn]="cardIndex > 1 ? 'yes':'no'">
                     <!--<card *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === i || player.turn || player.cardsTotal() == 21"
                       [suit]="card.suit" [value]="card.value"></card>-->
+
+                      <!--
+                        /assets/... = no
+                      -->
                       <div *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === i || player.turn || player.cardsTotal() == 21"
                         [ngStyle]="{
                           'background-image': 'url(assets/img/cardImages/' +card.suit+ '/' +card.value+ '.png)',
@@ -64,7 +68,7 @@
                           'margin-left': '-2px'
                           }">
                         </div>                    
-			<div class="cardBack" *ngIf="cardIndex+1 != player.hand.length && !player.turn && player.cardsTotal() != 21"></div>
+			            <div class="cardBack" *ngIf="cardIndex+1 != player.hand.length && !player.turn && player.cardsTotal() != 21"></div>
                 </div> <br>
                 <!--<div class="hitStayButtonGroup" *ngIf="playerTurnIndex === i && player?.type === 'Human'">
                   <button class="stayBtn" ion-button round block small color="danger" (click)="stay(player)">Stay</button>

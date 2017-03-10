@@ -1,0 +1,156 @@
+<!--
+  Generated template for the Store page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Store</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <ion-list>
+    <ion-item>
+      <ion-icon name="cash" item-left></ion-icon>
+        Cash
+      <ion-note id="playerCash" item-right>${{ player?.money }}</ion-note>
+    </ion-item>
+    <ion-item>
+      <ion-label>Filter</ion-label>
+      <ion-select [(ngModel)]="storeFilter">
+        <ion-option value="all">All</ion-option>
+        <ion-option value="background">Background</ion-option>
+        <ion-option value="cardFront">Card Fronts</ion-option>
+        <ion-option value="cardBack">Card Backs</ion-option>
+        <ion-option value="chips">Chips</ion-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+
+
+  <div *ngIf="storeFilter === 'all' || storeFilter === 'background'">
+    <ion-card *ngFor="let background of backgrounds">
+      <img [src]="background.path" style="max-height: 200px;"/>
+      <ion-card-content>
+        <ion-card-title>
+          {{ background.title }} <ion-note>Background</ion-note>
+        </ion-card-title>
+        <p>
+          {{ background.description }}
+        </p>
+      </ion-card-content>
+      <ion-row>
+        <ion-col center text-center>
+          <span *ngIf="!background.owned">${{ background.price }}</span>
+          <s *ngIf="background.owned">${{ background.price }}</s>
+        </ion-col>
+        <ion-col>
+          
+        </ion-col>
+        <ion-col>
+          <button ion-button icon-left clear small (click)="buyBackground(background)" [disabled]="background.owned">
+            <ion-icon name="cash"></ion-icon>
+            <div>Buy</div>
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+  </div>
+
+  <div *ngIf="storeFilter === 'all' || storeFilter === 'cardFront'">
+    <ion-card *ngFor="let cardFront of cardFronts">
+      <img [src]="cardFront.path" style="max-height: 200px;"/>
+      <ion-card-content>
+        <ion-card-title>
+          {{ cardFront.title }} <ion-note>Card Front</ion-note>
+        </ion-card-title>
+        <p>
+          {{ cardFront.description }}
+        </p>
+      </ion-card-content>
+      <ion-row>
+        <ion-col center text-center>
+          <span *ngIf="!cardFront.owned">${{ cardFront.price }}</span>
+          <s *ngIf="cardFront.owned">${{ cardFront.price }}</s>
+        </ion-col>
+        <ion-col>
+          
+        </ion-col>
+        <ion-col>
+          <button ion-button icon-left clear small (click)="buyCardFront(cardFront)" [disabled]="cardFront.owned">
+            <ion-icon name="cash"></ion-icon>
+            <div>Buy</div>
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+  </div>
+
+  <div *ngIf="storeFilter === 'all' || storeFilter === 'cardBack'">
+    <ion-card *ngFor="let cardBack of cardBacks">
+      <img [src]="cardBack.path" style="max-height: 200px;"/>
+      <ion-card-content>
+        <ion-card-title>
+          {{ cardBack.title }} <ion-note>Card Back</ion-note>
+        </ion-card-title>
+        <p>
+          {{ cardBack.description }}
+        </p>
+      </ion-card-content>
+      <ion-row>
+        <ion-col center text-center>
+          <span *ngIf="!cardBack.owned">${{ cardBack.price }}</span>
+          <s *ngIf="cardBack.owned">${{ cardBack.price }}</s>
+        </ion-col>
+        <ion-col>
+          
+        </ion-col>
+        <ion-col>
+          <button ion-button icon-left clear small (click)="buyCardBack(cardBack)" [disabled]="cardBack.owned">
+            <ion-icon name="cash"></ion-icon>
+            <div>Buy</div>
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+  </div>
+
+  <div *ngIf="storeFilter === 'all' || storeFilter === 'chips'">
+    <ion-card *ngFor="let chip of chips">
+      <img [src]="chip.path" style="max-height: 200px;"/>
+      <ion-card-content>
+        <ion-card-title>
+          {{ chip.title }} <ion-note>Chips</ion-note>
+        </ion-card-title>
+        <p>
+          {{ chip.description }}
+        </p>
+      </ion-card-content>
+      <ion-row>
+        <ion-col center text-center>
+          <span *ngIf="!chip.owned">${{ chip.price }}</span>
+          <s *ngIf="chip.owned">${{ chip.price }}</s>
+        </ion-col>
+        <ion-col>
+          
+        </ion-col>
+        <ion-col>
+          <button ion-button icon-left clear small (click)="buyChips(chip)" [disabled]="chip.owned">
+            <ion-icon name="cash"></ion-icon>
+            <div>Buy</div>
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+  </div>
+
+</ion-content>

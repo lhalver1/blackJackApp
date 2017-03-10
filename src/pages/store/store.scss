@@ -1,0 +1,21 @@
+page-store {
+    $backgroundColor1: #6B00D6;
+    $backgroundColor2: #c100e8;
+    ion-content {
+        background: #6b00d6;
+        background: -moz-linear-gradient(top, $backgroundColor1 0%, #c100e8 85%, #c100e8 85%);
+        background: -webkit-linear-gradient(top, $backgroundColor1 0%,#c100e8 85%,#c100e8 85%);
+        background: linear-gradient(to bottom, $backgroundColor1 0%,#c100e8 85%,#c100e8 85%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$backgroundColor1', endColorstr='#c100e8',GradientType=0 );
+    }
+
+    #playerCash {
+        color: $bs-success;
+    }
+
+    ion-card img {
+        width: initial;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}

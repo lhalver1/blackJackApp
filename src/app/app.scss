@@ -14,3 +14,20 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+
+// Toast Classes
+.toastPrimary .toast-message {
+    color: $bs-primary;
+}
+.toastSuccess .toast-message {
+    color: $bs-success;
+}
+.toastDanger .toast-message {
+    color: $bs-danger;
+}
+.toastInfo .toast-message {
+    color: $bs-info;
+}
+.toastWarning .toast-message {
+    color: $bs-warning;
+}
