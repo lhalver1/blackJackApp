@@ -36,32 +36,31 @@ export class SettingsPage {
 
                     this.player = new Player(player.id, player.name, [], player.money, false, "Human", 0, 0);
                     this.settingsProvider.getSettings(this.player).then((settings) => {
-                        debugger;
+                        // debugger;
                         this.settings = settings;
 
                         this.storeProvider.getPurchases(this.player).then((purchases) => {
                             this.purchases = purchases;
                         }, (error) => {
-                            console.log("ERROR in settingsPage with getting purchases: ", error);
+                            // console.log("ERROR in settingsPage with getting purchases: ", error);
                         });
 
                     }, (error) => {
-                        console.log("ERROR in settingsPage with getting settings: ", error);
+                        // console.log("ERROR in settingsPage with getting settings: ", error);
                     });
 
                 }, (error) => {
-                    console.log("ERROR in settingsPage with getting player: ", error);
+                    // console.log("ERROR in settingsPage with getting player: ", error);
                 });
 
-                //   this.getPurchases();
             }, (error) => {
-                console.log("ERROR in settingsPage on opening db: ", error);
+                // console.log("ERROR in settingsPage on opening db: ", error);
             });
         });
     }
 
     ionViewDidLoad() {
-        console.log('ionViewDidLoad SettingsPage');
+        // console.log('ionViewDidLoad SettingsPage');
     }
 
     save() {
@@ -72,9 +71,9 @@ export class SettingsPage {
             "', cpu_time = '" + this.settings.cpuDecisionTime +
             "' WHERE id = " + this.player.id + "", []).then((data) => {
                 this.toastProvider.showToast("Settings Saved!", 3000, 'bottom', 'toastSuccess');
-                console.log("UPDATED settings table: " + JSON.stringify(this.settings));
+                // console.log("UPDATED settings table: " + JSON.stringify(this.settings));
             }, (error) => {
-                console.log("ERROR: " + JSON.stringify(error.message));
+                // console.log("ERROR: " + JSON.stringify(error.message));
                 this.toastProvider.showToast("Failed: Settings not saved", 3000, 'bottom', 'toastDanger');
             });
     }
@@ -83,7 +82,7 @@ export class SettingsPage {
         this.storeProvider.getPurchases(this.player).then((purchases) => {
             this.purchases = purchases;
         }, (error) => {
-            console.log("ERROR in settingsPage with getting purchases: ", error);
+            // console.log("ERROR in settingsPage with getting purchases: ", error);
         });
     }
 

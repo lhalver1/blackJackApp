@@ -41,9 +41,11 @@ export class Settings {
         switch (this.selectedCardBack) {
             case 'redDiamonds':
                 return 'assets/img/cardBacks/redDiamonds.png';
+            case 'geometric':
+                return 'assets/img/cardBacks/geometric.png';
         
             default:
-                return 'assets/img/cardBack.png';
+                return 'assets/img/redDiamonds.png';
         }
     }
 
@@ -56,6 +58,18 @@ export class Settings {
         
             default:
                 return 'assets/img/cardImages/material/';
+        }
+    }
+    
+    getChipsPath() {
+        switch (this.chips) {
+            case 'vegas':
+                return 'assets/img/chips/vegas/';
+            case 'neon':
+                return 'assets/img/chips/neon/';
+        
+            default:
+                return 'assets/img/chips/vegas/';
         }
     }
 }

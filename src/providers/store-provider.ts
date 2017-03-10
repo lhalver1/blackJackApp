@@ -79,9 +79,9 @@ export class StoreProvider {
                 name: "blackJackDB.db",
                 location: "default"
             }).then(() => {
-                console.log("store-provider constructor();");
+                // console.log("store-provider constructor();");
             }, (error) => {
-                console.error("Unable to open database in store-provider", error);
+                // console.error("Unable to open database in store-provider", error);
             });
         });
     }
@@ -134,7 +134,7 @@ export class StoreProvider {
 
                 this.purchases.backgrounds = [
                     new StoreItem('Green Poker', 'assets/img/backgrounds/greenPoker.png', 'A nice classic table to play some black jack with your friends on!', 8500, 'greenPoker', storeDBItem['greenPoker'] === 'true'),
-                    new StoreItem('Red Poker', 'assets/img/backgrounds/redPoker.png', 'Red is for Warning, because at this table it shows you mean business!', 8500, 'redPoker', storeDBItem['redPoker'] === 'true'),
+                    new StoreItem('Red Poker', 'assets/img/backgrounds/redPoker.png', 'Red is for warning, because at this table it shows you mean business!', 8500, 'redPoker', storeDBItem['redPoker'] === 'true'),
                     new StoreItem('Blue Poker', 'assets/img/backgrounds/bluePoker.png', 'A blue, calming twist on the classic green black jack table.', 8500, 'bluePoker', storeDBItem['bluePoker'] === 'true'),
                     new StoreItem('Green Felt', 'assets/img/backgrounds/greenFelt.png', 'A nice table to play some black jack with your friends on!', 2000, 'greenFelt', true),
                     new StoreItem('Space Night', 'assets/img/storePics/space_night.jpg', 'Nothing like playing cards under the night sky with a full moon!', 8500, 'spaceNight', storeDBItem['spaceNight'] === 'true')
@@ -144,8 +144,8 @@ export class StoreProvider {
                     new StoreItem('Material', 'assets/img/storePics/material.png', 'A spin off of Google\'s material design, these cards are minimalistic and simple but beautiful.', 8000, 'material', storeDBItem['material'] === 'true')
                 ];
                 this.purchases.cardBacks = [
-                    new StoreItem('Red Diamonds', 'assets/img/storePics/redDiamonds.png', 'Can\'t go wrong with the red diamonds, unless the dealer turns them over for BlackJack.', 2000, 'redDiamonds', storeDBItem['redDiamonds'] === 'true'),
-                    new StoreItem('Geometric', 'assets/img/storePics/geometric.png', 'This is a colorful and vibrant card back, almost makes you not want to turn the card over.', 8000, 'geometric', storeDBItem['geometic'] === 'true')
+                    new StoreItem('Red Diamonds', 'assets/img/storePics/redDiamonds.png', 'Can\'t go wrong with the red diamonds, unless the dealer turns them over for Black Jack.', 2000, 'redDiamonds', storeDBItem['redDiamonds'] === 'true'),
+                    new StoreItem('Geometric', 'assets/img/storePics/geometric.png', 'This is a colorful and vibrant card back, almost makes you not want to turn the card over.', 8000, 'geometric', storeDBItem['geometric'] === 'true')
                 ];
                 this.purchases.chips = [
                     new StoreItem('Vegas', 'assets/img/storePics/vegas.png', 'The good ol classic vegas style chips. Certainly would love stacks of the gold chip.', 2000, 'vegas', storeDBItem['vegas'] === 'true'),
@@ -153,7 +153,7 @@ export class StoreProvider {
                 ];
                 resolve(this.purchases);
             }, (error) => {
-                console.log("ERROR getting purchases in store-provider: " + JSON.stringify(error));
+                // console.log("ERROR getting purchases in store-provider: " + JSON.stringify(error));
                 reject(error);
             });
         });
@@ -166,7 +166,7 @@ export class StoreProvider {
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [player.id + "", 'false', 'false', 'false', 'true', 'false', 'true', 'false', 'false', 'true', 'true', 'false']).then((data) => {
                     resolve(data);
                 }, (error) => {
-                    console.log("ERROR store-provider addStoreRow() INSERT INTO store: " + JSON.stringify(error.message));
+                    // console.log("ERROR store-provider addStoreRow() INSERT INTO store: " + JSON.stringify(error.message));
                     reject(error);
                 });
         });
@@ -182,11 +182,11 @@ export class StoreProvider {
                 this.playerProvider.updatePlayer(player).then((result) => {
                     resolve(data);
                 }, (error) => {
-                    console.log("ERROR store-provider updateStoreTable() UPDATE player: ", error);
+                    // console.log("ERROR store-provider updateStoreTable() UPDATE player: ", error);
                     player.addMoney(item.price);
                 });
             }, (error) => {
-                console.log("ERROR store-provider updateStoreTable() UPDATE store: " + JSON.stringify(error.message));
+                // console.log("ERROR store-provider updateStoreTable() UPDATE store: " + JSON.stringify(error.message));
                 reject(error);
             });
         });

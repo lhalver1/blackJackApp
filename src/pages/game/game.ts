@@ -1,7 +1,7 @@
 import { Hand } from '../../models/hand';
 import { Component, trigger, state, style, transition, animate, keyframes } from '@angular/core';
 
-import { NavController, NavParams, ToastController, Platform } from 'ionic-angular';
+import { NavController, NavParams, Platform } from 'ionic-angular';
 import { SQLite } from "ionic-native";
 
 import { ToastProvider } from '../../providers/toast-provider';
@@ -104,28 +104,28 @@ export class GamePage {
             new Player(-1, "Dealer", [ new Hand([]) ], 2000, false, "CPU", 0, 0)
         ];
         this.platform.ready().then(() => {
-            debugger;
+            // debugger;
             this.database = new SQLite();
             this.database.openDatabase({name: "blackJackDB.db", location: "default"}).then(() => {
-                debugger;
+                // debugger;
                 // this.getAllPlayers(); //Get the player from the database
                 this.playerProvider.getPlayer().then((player) => {
                     this.players.push( new Player(player.id, player.name, [ new Hand([]) ], player.money, false, "Human", 0, 0) );
                     this.settingsProvider.getSettings(this.players[1]).then((settings) => {
                         this.settings = settings;
                     }, (error) => {
-                        console.log("ERROR in store.ts with getting player: ", error);
+                        // console.log("ERROR in store.ts with getting player: ", error);
                     });
                 }, (error) => {
-                    console.log("ERROR in store.ts with getting player: ", error);
+                    // console.log("ERROR in store.ts with getting player: ", error);
                 });
 
             }, (error) => {
-                console.log("ERROR: ", error);
+                // console.log("ERROR: ", error);
             });
         });
 
-        debugger;
+        // debugger;
         this.winningPlayers = [];
         this.winnerStr = "";
         this.trash = [];
@@ -150,11 +150,16 @@ export class GamePage {
         //     let currPlayersCard: Card = player.hands[0].cards[0];
         //     for (var deckIndex = 0; deckIndex < this.deck.cards.length; deckIndex++) {
         //         var currDeckCard = this.deck.cards[deckIndex];
-        //         if (currDeckCard.value === currPlayersCard.value) {
-        //             let currCard = this.deck.cards.splice(deckIndex, 1)[0];
-        //             hand.cards.push(currCard);
-        //             break;
-        //         }
+        //         // if(currDeckCard.suit === "Clubs" && currDeckCard.value === "Ace") {
+        //         //     let currCard = this.deck.cards.splice(deckIndex, 1)[0];
+        //         //     hand.cards.push(currCard);
+        //         //     break;
+        //         // }
+        //         // if (currDeckCard.value === currPlayersCard.value) {
+        //         //     let currCard = this.deck.cards.splice(deckIndex, 1)[0];
+        //         //     hand.cards.push(currCard);
+        //         //     break;
+        //         // }
         //     }
         // } else {
             let currCard = this.deck.cards.splice(0, 1)[0];
@@ -172,9 +177,9 @@ export class GamePage {
         this.playerMoneyChange.show = false;
 
         this.playerProvider.updatePlayer(this.players[1]).then((player) => {
-            console.log("Player UPDATED: " + player);
+            // console.log("Player UPDATED: " + player);
         }, (error) => {
-            console.log("ERROR in store.ts with getting perchases");
+            // console.log("ERROR in store.ts with getting perchases");
         }); // update the user
 
         // Pass out cards to each player, each player gets 1 card
@@ -598,9 +603,9 @@ export class GamePage {
         }
         
         this.playerProvider.updatePlayer(this.players[1]).then((player) => {
-            console.log("Player UPDATED: " + player);
+            // console.log("Player UPDATED: " + player);
         }, (error) => {
-            console.log("ERROR in store.ts with getting perchases");
+            // console.log("ERROR in store.ts with getting perchases");
         });
     }
 
@@ -633,20 +638,23 @@ export class GamePage {
         
     }
 
-    // getPlayersBetInfo() {
-    //     let dataObj = {
-    //         playerBetTotal: 0,
-    //         playersChips: []
-    //     };
-    //     for (var index = 0; index < this.pot.length; index++) {
-    //         var currChip = this.pot[index];
-    //         if (currChip.owner === this.players[1]) {
-    //             dataObj.playersChips.push(currChip);
-    //             dataObj.playerBetTotal += currChip.value;
-    //         }
-    //     }
-    //     return dataObj;
-    // }
+    addCash() {
+        let responses = [
+            '',
+            'Maybe you should pump the breaks there High Roller',
+            'It must not be your day...',
+            'Well, good luck this time',
+            'Try not to waste the money this time',
+            'At least you\'re trying',
+            'Don\'t you love not watching ads for cash',
+            'Go get \'em this time',
+            'Might want to work on your poker face',
+            'May the odds be with you'
+        ];
+        this.players[1].addMoney(1000);
+        this.playerProvider.updatePlayer(this.players[1]);
+        this.toastProvider.showToast(responses[Math.floor(Math.random() * responses.length) + 1], 3000, 'bottom', 'toastSuccess');
+    }
 
     /**
      * Goes through the players list and sets the turn flag
@@ -724,81 +732,6 @@ export class GamePage {
     //     if (this.database) {
     //         this.database.close();
     //     }
-    // }
-
-
-
-    // DATABASE CRUDs
-    // getAllPlayers() {
-    //     debugger;
-    //     this.database.executeSql("SELECT * FROM players", []).then((data) => {
-    //         if(data.rows.length > 0) {
-    //             for(var i = 0; i < data.rows.length; i++) {
-    //                 let newPlayer = new Player(data.rows.item(i).id, data.rows.item(i).name, [], data.rows.item(i).money, false, "Human", 0, 0);
-    //                 this.players.push( newPlayer );
-
-    //                 this.database.executeSql("SELECT * FROM store", []).then((data) => {
-    //                     let playerIsIn: boolean = false;
-    //                     if(data.rows.length > 0) {
-    //                         for(var i = 0; i < data.rows.length; i++) {
-    //                             debugger;
-    //                             let playerRowId = data.rows.item(i).player_id;
-    //                             if (playerRowId === newPlayer.id) {
-    //                                 // Player is in there do nothing
-    //                                 playerIsIn = true;
-    //                                 break;
-    //                             }
-    //                         }
-    //                     } else {
-    //                         playerIsIn = false;
-    //                     }
-
-    //                     if (!playerIsIn) {
-    //                         this.addStoreRow(newPlayer);
-    //                     } else {
-    //                         //Player is all set up lets get the game going
-                            
-    //                     }
-    //                 }, (error) => {
-    //                     console.log("ERROR: " + JSON.stringify(error));
-    //                 });
-
-    //             }
-    //         } else {
-    //             let newPlayer = new Player(-1, "Player", [], 2000, false, "Human", 0, 0);
-    //             this.addPlayer(newPlayer);
-    //         }
-    //     }, (error) => {
-    //         console.log("ERROR: " + JSON.stringify(error));
-    //     });
-    // }
-
-    // addPlayer(player: Player) {
-    //     this.database.executeSql("INSERT INTO players (name, money) VALUES ('"+ player.name +"', "+ player.money +")", []).then((data) => {
-    //         console.log("INSERTED into players: " + JSON.stringify(data));
-    //         this.getAllPlayers();
-    //     }, (error) => {
-    //         console.log("ERROR: " + JSON.stringify(error.message));
-    //     });
-    // }
-
-    // addStoreRow(player: Player) {
-    //     this.database.executeSql("INSERT INTO store "+
-    //         "(player_id, greenPoker_back, redPoker_back, bluePoker_back, greenFelt_back, spaceNight_back, redDiamonds_cardBack, material_cardFront, classic_cardFront, vegas_chips) " + 
-    //         "VALUES ("+ player.id + ", 'false', 'false', 'false', 'true', 'false', 'true', 'true', 'false', 'true')", []).then((data) => {
-    //         console.log("INSERTED into store: " + JSON.stringify(data));
-    //         this.getAllPlayers();
-    //     }, (error) => {
-    //         console.log("ERROR: " + JSON.stringify(error.message));
-    //     });
-    // }
-
-    // updatePlayer(player: Player) {
-    //     this.database.executeSql("UPDATE players SET name = '"+ player.name +"', money = "+ player.money +" WHERE id = "+ player.id +"", []).then((data) => {
-    //         console.log("UPDATED: " + JSON.stringify(data));
-    //     }, (error) => {
-    //         console.log("ERROR: " + JSON.stringify(error.message));
-    //     });
     // }
 
 }// End GamePage

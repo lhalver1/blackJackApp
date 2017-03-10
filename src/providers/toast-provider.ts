@@ -1,11 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Platform, ToastController } from 'ionic-angular';
-import { SQLite } from 'ionic-native';
 import 'rxjs/add/operator/map';
-
-import { Settings } from '../models/settings';
-import { Player } from '../models/player';
 
 @Injectable()
 export class ToastProvider {

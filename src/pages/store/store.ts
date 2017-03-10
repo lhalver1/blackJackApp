@@ -51,7 +51,7 @@ export class StorePage {
         this.platform.ready().then(() => {
             this.database = new SQLite();
             this.database.openDatabase({ name: "blackJackDB.db", location: "default" }).then(() => {
-                console.log("getting purchases store.ts");
+                // console.log("getting purchases store.ts");
 
                 this.playerProvider.getPlayer().then((player) => {
                     this.player = player;
@@ -61,21 +61,21 @@ export class StorePage {
                         this.cardBacks = purchases.cardBacks;
                         this.chips = purchases.chips;
                     }, (error) => {
-                        console.log("ERROR in store.ts with getting perchases");
+                        // console.log("ERROR in store.ts with getting perchases");
                     });
                 }, (error) => {
-                    console.log("ERROR in store.ts with getting player: ", error);
+                    // console.log("ERROR in store.ts with getting player: ", error);
                 });
 
             }, (error) => {
-                console.log("ERROR in store.ts on opening db: ", error);
+                // console.log("ERROR in store.ts on opening db: ", error);
             });
         });
         this.storeFilter = 'all';
     }
 
     ionViewDidLoad() {
-        console.log('ionViewDidLoad StorePage');
+        // console.log('ionViewDidLoad StorePage');
     }
 
     buyBackground(backgroundObj: StoreItem) {
@@ -87,7 +87,7 @@ export class StorePage {
                     {
                         text: 'No',
                         handler: () => {
-                            console.log('Disagree clicked');
+                            // console.log('Disagree clicked');
                         }
                     },
                     {
@@ -95,10 +95,10 @@ export class StorePage {
                         handler: () => {
                             let columnName = backgroundObj.name + "_back";
                             this.storeProvider.updateStoreTable(columnName, this.player, backgroundObj).then((purchases) => {
-                                console.log("UPDATE store set " + columnName + " for " + this.player.id + " to true");
+                                // console.log("UPDATE store set " + columnName + " for " + this.player.id + " to true");
                                 backgroundObj.owned = true;
                             }, (error) => {
-                                console.log("ERROR in store.ts with updating store table with background");
+                                // console.log("ERROR in store.ts with updating store table with background");
                             });
                         }
                     }
@@ -119,18 +119,19 @@ export class StorePage {
                     {
                         text: 'No',
                         handler: () => {
-                            console.log('Disagree clicked');
+                            // console.log('Disagree clicked');
                         }
                     },
                     {
                         text: 'Yes',
                         handler: () => {
+                            debugger;
                             let columnName = cardBack.name + "_cardBack";
                             this.storeProvider.updateStoreTable(columnName, this.player, cardBack).then((purchases) => {
-                                console.log("UPDATE store set " + columnName + " for " + this.player.id + " to true");
+                                // console.log("UPDATE store set " + columnName + " for " + this.player.id + " to true");
                                 cardBack.owned = true;
                             }, (error) => {
-                                console.log("ERROR in store.ts with updating store table with card back");
+                                // console.log("ERROR in store.ts with updating store table with card back");
                             });
                         }
                     }
@@ -152,7 +153,7 @@ export class StorePage {
                     {
                         text: 'No',
                         handler: () => {
-                            console.log('Disagree clicked');
+                            // console.log('Disagree clicked');
                         }
                     },
                     {
@@ -160,10 +161,10 @@ export class StorePage {
                         handler: () => {
                             let columnName = cardFront.name + "_cardFront";
                             this.storeProvider.updateStoreTable(columnName, this.player, cardFront).then((purchases) => {
-                                console.log("UPDATE store set " + columnName + " for " + this.player.id + " to true");
+                                // console.log("UPDATE store set " + columnName + " for " + this.player.id + " to true");
                                 cardFront.owned = true;
                             }, (error) => {
-                                console.log("ERROR in store.ts with updating store table with card front");
+                                // console.log("ERROR in store.ts with updating store table with card front");
                             });
                         }
                     }
@@ -185,7 +186,7 @@ export class StorePage {
                     {
                         text: 'No',
                         handler: () => {
-                            console.log('Disagree clicked');
+                            // console.log('Disagree clicked');
                         }
                     },
                     {
@@ -193,10 +194,10 @@ export class StorePage {
                         handler: () => {
                             let columnName = chip.name + "_chips";
                             this.storeProvider.updateStoreTable(columnName, this.player, chip).then((purchases) => {
-                                console.log("UPDATE store set " + columnName + " for " + this.player.id + " to true");
+                                // console.log("UPDATE store set " + columnName + " for " + this.player.id + " to true");
                                 chip.owned = true;
                             }, (error) => {
-                                console.log("ERROR in store.ts with updating store table with chips");
+                                // console.log("ERROR in store.ts with updating store table with chips");
                             });
                         }
                     }

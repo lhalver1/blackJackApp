@@ -20,9 +20,9 @@ export class PlayerProvider {
                 name: "blackJackDB.db",
                 location: "default"
             }).then(() => {
-                console.log("player-provider constructor();");
+                // console.log("player-provider constructor();");
             }, (error) => {
-                console.error("Unable to open database in player-provider", error);
+                // console.error("Unable to open database in player-provider", error);
             });
         });
     }
@@ -38,14 +38,14 @@ export class PlayerProvider {
                     }
                 } else {
                     //No Players in db
-                    console.log("player-provider.ts getPlayer(): No players in player table, adding");
+                    // console.log("player-provider.ts getPlayer(): No players in player table, adding");
                     this.addPlayer(new Player(-1, "Player", [], 2000, false, "Human", 0, 0)).then((data) => {
                         player = data;
                     });
                 }
                 resolve(player);
             }, (error) => {
-                console.log("SQL ERROR player-provider getPlayer(): " + JSON.stringify(error));
+                // console.log("SQL ERROR player-provider getPlayer(): " + JSON.stringify(error));
                 reject(error);
             });
         });
@@ -54,10 +54,10 @@ export class PlayerProvider {
     addPlayer(player: Player): Promise<Player> {
         return new Promise((resolve, reject) => {
             this.database.executeSql("INSERT INTO players (name, money) VALUES (?,?)", [player.name, player.money]).then((resultSet) => {
-                console.log("INSERTED into players: " + JSON.stringify(resultSet));
+                // console.log("INSERTED into players: " + JSON.stringify(resultSet));
                 resolve(resultSet);
             }, (error) => {
-                console.log("ERROR in player-provider addPlayer(player: Player): " + JSON.stringify(error.message));
+                // console.log("ERROR in player-provider addPlayer(player: Player): " + JSON.stringify(error.message));
                 reject(error);
             });
         });
@@ -66,10 +66,10 @@ export class PlayerProvider {
     updatePlayer(player: Player): Promise<Player> {
         return new Promise((resolve, reject) => {
             this.database.executeSql("UPDATE players SET name = ?, money = ? WHERE id = ?", [player.name, player.money, player.id]).then((resultSet) => {
-                console.log("UPDATED player in player-provider: " + JSON.stringify(resultSet));
+                // console.log("UPDATED player in player-provider: " + JSON.stringify(resultSet));
                 resolve(resultSet);
             }, (error) => {
-                console.log("SQL ERROR in player-provider updatePlayer(): " + JSON.stringify(error.message));
+                // console.log("SQL ERROR in player-provider updatePlayer(): " + JSON.stringify(error.message));
                 reject(error);
             });
         });
