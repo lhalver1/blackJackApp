@@ -31,23 +31,20 @@ export class Deck {
     }
 
     /**
-     * Randomly shuffle the items in an array
-     * From: http://stackoverflow.com/a/2450976/2593877
+     * Randomly shuffle the items in an array, work up the array
+     * of cards and grab a random index that is up in the array
+     * and swap the card at the random index with the card at the
+     * current index.
      */
     shuffle() {
-        var currentIndex = this.cards.length, temporaryValue, randomIndex;
 
-        // While there remain elements to shuffle...
-        while (0 !== currentIndex) {
+        for (var index = 0; index < this.cards.length; index++) {
+            let currCard: Card = this.cards[index];
+            let randomIndex: number = Math.floor(Math.random() * index);
 
-            // Pick a remaining element...
-            randomIndex = Math.floor(Math.random() * currentIndex);
-            currentIndex -= 1;
-
-            // And swap it with the current element.
-            temporaryValue = this.cards[currentIndex];
-            this.cards[currentIndex] = this.cards[randomIndex];
-            this.cards[randomIndex] = temporaryValue;
+            this.cards[index] = this.cards[randomIndex];
+            this.cards[randomIndex] = currCard;
+            
         }
     }
 }

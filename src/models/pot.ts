@@ -1,4 +1,5 @@
 import { Chip } from './chip';
+import { Player } from './player';
 
 class PlayerBet {
     public total: number;
@@ -63,9 +64,9 @@ export class Pot {
         return this.playersBet.getPlayersChipTotal();
     }
 
-    getPlayersChipsPerHand(): Chip[] {
+    getPlayersChipsPerHand(player: Player): Chip[] {
         let chips: Chip[] = [];
-        for (var index = 0; index < this.playersBet.chips.length/2; index++) {
+        for (var index = 0; index < this.playersBet.chips.length/player.hands.length; index++) {
             var currPlayersChip = this.playersBet[index];
             chips.push(currPlayersChip);
         }

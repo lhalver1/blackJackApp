@@ -286,6 +286,8 @@ export class GamePage {
                         this.goBeABot(nextPlayer);
                     }
                 }
+            } else {
+                //Do nothing, player has to make decision to hit or stay
             }
         } else {
             this.goBeABot(player);
@@ -627,15 +629,72 @@ export class GamePage {
     }
 
     hasSplit(player: Player) {
-        if (typeof player.hands[0].cards[0] != 'undefined' && typeof player.hands[0].cards[1] != 'undefined') {
-                if (player.hands[0].cards[0].value === player.hands[0].cards[1].value && player.hands.length === 1
-                    && player.hands[0].cards.length === 2) {
-                        return true;
-                } else {
-                        return false;
-                }
+        if (typeof player.hands != 'undefined' && player.hands[0].cards.length > 1) {
+            let card1: Card = player.hands[0].cards[0];
+            let card2: Card = player.hands[0].cards[1];
+
+            if (card1.value === card2.value && player.hands.length === 1
+                && player.hands[0].cards.length === 2) {
+                    return true;
+            } else if (card1.value === "10" || card1.value === "Jack" || card1.value === "Queen" || card1.value === "King" 
+                && card2.value === "10" || card2.value === "Jack" || card2.value === "Queen" || card2.value === "King"
+                && player.hands.length === 1
+                && player.hands[0].cards.length === 2) {
+                    return true;
+            } else {
+                    return false;
+            }
         }
         
+    }
+
+    doubleDown(player: Player) {
+        // Double their bet
+        let playersChips: Chip[] = this.pot.getPlayersChipsPerHand(player);
+        let playersBet: number = this.pot.getPlayersTotal();
+        
+        let newChipArray: Chip[] = [];
+        for (var index = 0; index < playersChips.length; index++) {
+            var currChip = playersChips[index];
+            let newChip: Chip = new Chip(currChip.value, currChip.owner);
+            newChipArray.push(newChip);
+        }
+        for (var j = 0; j < newChipArray.length; j++) {
+            let currChip: Chip = newChipArray[j];
+
+            this.pot.addPlayerChip(currChip);
+            this.pot.addDealerChip(new Chip(currChip.value, this.players[0]));
+            this.potTotal = this.pot.total;
+
+            player.subtractMoney(currChip.value);
+            this.playerMoneyChange.lose(currChip.value);
+            this.playerMoneyChange.show;
+        }
+        
+        //
+        // Deal 1 card and move to the next player
+        //
+        player.hands[player.handIndex].cards.push(this.deck.cards.splice(0, 1)[0]);
+        player.handIndex += 1;//Next Hand
+
+        //Does the player have another hand to play?
+        if (player.handIndex >= player.hands.length) {
+            this.playerTurnIndex -= 1;//Nope next player
+        }
+
+        //If the next players turn is out of index for players array
+        //Reset it back to the beginning
+        if (this.playerTurnIndex < 0) {
+
+            this.endRound();
+
+        } else {
+            var nextPlayer = this.players[this.playerTurnIndex];
+            nextPlayer.turn = true;
+            if (nextPlayer.type == "CPU") {
+                this.goBeABot(nextPlayer);
+            }
+        }
     }
 
     addCash() {
