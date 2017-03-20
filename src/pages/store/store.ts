@@ -4,6 +4,7 @@ import { SQLite } from 'ionic-native';
 
 import { PlayerProvider } from '../../providers/player-provider';
 import { StoreProvider } from '../../providers/store-provider';
+import { SettingsProvider } from '../../providers/settings-provider';
 import { ToastProvider } from '../../providers/toast-provider';
 
 import { Player } from '../../models/player';
@@ -45,6 +46,7 @@ export class StorePage {
         public navParams: NavParams,
         private playerProvider: PlayerProvider,
         private storeProvider: StoreProvider,
+        private settingsProvider: SettingsProvider,
         private toastProvider: ToastProvider,
         public alertCtrl: AlertController) {
 
@@ -97,6 +99,7 @@ export class StorePage {
                             this.storeProvider.updateStoreTable(columnName, this.player, backgroundObj).then((purchases) => {
                                 // console.log("UPDATE store set " + columnName + " for " + this.player.id + " to true");
                                 backgroundObj.owned = true;
+                                this.askToApplySetting(backgroundObj, 'background');
                             }, (error) => {
                                 // console.log("ERROR in store.ts with updating store table with background");
                             });
@@ -130,6 +133,7 @@ export class StorePage {
                             this.storeProvider.updateStoreTable(columnName, this.player, cardBack).then((purchases) => {
                                 // console.log("UPDATE store set " + columnName + " for " + this.player.id + " to true");
                                 cardBack.owned = true;
+                                this.askToApplySetting(cardBack, 'cardBack');
                             }, (error) => {
                                 // console.log("ERROR in store.ts with updating store table with card back");
                             });
@@ -163,6 +167,7 @@ export class StorePage {
                             this.storeProvider.updateStoreTable(columnName, this.player, cardFront).then((purchases) => {
                                 // console.log("UPDATE store set " + columnName + " for " + this.player.id + " to true");
                                 cardFront.owned = true;
+                                this.askToApplySetting(cardFront, 'cardFront');
                             }, (error) => {
                                 // console.log("ERROR in store.ts with updating store table with card front");
                             });
@@ -196,6 +201,7 @@ export class StorePage {
                             this.storeProvider.updateStoreTable(columnName, this.player, chip).then((purchases) => {
                                 // console.log("UPDATE store set " + columnName + " for " + this.player.id + " to true");
                                 chip.owned = true;
+                                this.askToApplySetting(chip, 'chips');
                             }, (error) => {
                                 // console.log("ERROR in store.ts with updating store table with chips");
                             });
@@ -208,6 +214,36 @@ export class StorePage {
         } else {
             this.toastProvider.showToast("Not Enough Funds to buy: " + chip.title, 3000, 'bottom', 'toastDanger');
         }
+    }
+
+    askToApplySetting(purchase: StoreItem, col_name: string) {
+        let confirm = this.alertCtrl.create({
+            title: 'Apply Now?',
+            message: 'Would you like to apply your new ' + purchase.title +'?',
+            buttons: [
+                {
+                    text: 'No',
+                    handler: () => {
+                        // console.log('Disagree clicked');
+                    }
+                },
+                {
+                    text: 'Yes',
+                    handler: () => {
+                        this.applySetting(purchase, col_name);
+                    }
+                }
+            ]
+        });
+        confirm.present();
+    }
+
+    applySetting(storeItem: StoreItem, col_name: String) {
+        this.settingsProvider.updateOneSetting(this.player, col_name, storeItem.name).then((data) => {
+            console.log("hello world");
+        }, (error) => {
+            // console.log("ERROR in store.ts applySetting() updateOneSetting()");
+        });
     }
 
 }

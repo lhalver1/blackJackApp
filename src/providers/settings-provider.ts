@@ -82,4 +82,17 @@ export class SettingsProvider {
         });
     }
 
+    updateOneSetting(player: Player, col_name: String, value: string) {
+        return new Promise((resolve, reject) => {
+            this.database.executeSql("UPDATE settings SET " + col_name +" = ? WHERE id = ?",
+                [value, player.id]).then((resultSet) => {
+                // console.log("UPDATED settings in settings-provider: " + JSON.stringify(resultSet));
+                resolve(resultSet);
+            }, (error) => {
+                // console.log("SQL ERROR in settings-provider updateSettings(): " + JSON.stringify(error.message));
+                reject(error);
+            });
+        });
+    }
+
 }
