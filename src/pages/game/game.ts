@@ -629,23 +629,20 @@ export class GamePage {
     }
 
     hasSplit(player: Player) {
-        if (typeof player.hands != 'undefined' && player.hands[0].cards.length > 1) {
+        if (typeof player.hands != 'undefined' && player.hands.length === 1 && player.hands[0].cards.length === 2) {
             let card1: Card = player.hands[0].cards[0];
             let card2: Card = player.hands[0].cards[1];
 
-            if (card1.value === card2.value && player.hands.length === 1
-                && player.hands[0].cards.length === 2) {
+            if (card1.value === card2.value) {
                     return true;
-            } else if (card1.value === "10" || card1.value === "Jack" || card1.value === "Queen" || card1.value === "King" 
-                && card2.value === "10" || card2.value === "Jack" || card2.value === "Queen" || card2.value === "King"
-                && player.hands.length === 1
-                && player.hands[0].cards.length === 2) {
+            } else if ( (card1.value === "10" || card1.value === "Jack" || card1.value === "Queen" || card1.value === "King")
+                && (card2.value === "10" || card2.value === "Jack" || card2.value === "Queen" || card2.value === "King") ) {
                     return true;
             } else {
                     return false;
             }
         }
-        
+        return false;
     }
 
     doubleDown(player: Player) {
