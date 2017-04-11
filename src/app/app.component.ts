@@ -36,9 +36,9 @@ export class MyApp {
 
         this.pages = [
         // new Page('Welcome', WelcomePage, 'home' ),
-        new Page('Game', GamePage, 'game-controller-b' ),
-        new Page('Store', StorePage, 'cart'),
-        new Page('Settings', SettingsPage, 'settings')
+        new Page('Game', GamePage, 'game-controller-b', "green" ),
+        new Page('Store', StorePage, 'cart', "lightblue"),
+        new Page('Settings', SettingsPage, 'settings', "gray")
         ];
   }
 

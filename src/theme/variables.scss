@@ -37,7 +37,10 @@ $colors: (
   warn:       #f0ad4e,
   light:      #f4f4f4,
   dark:       #222,
-  transparent: rgba(0,0,0,0)
+  transparent: rgba(0,0,0,0),
+  green:     $bs-success,
+  lightblue: $bs-info,
+  gray:      darkgray
 );
 
 

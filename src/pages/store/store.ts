@@ -36,6 +36,7 @@ export class StorePage {
     storeDBItem: any;
     player: Player;
     storeFilter: string;
+    storeSegment: string;
     backgrounds: StoreItem[];
     cardFronts: StoreItem[];
     cardBacks: StoreItem[];
@@ -74,6 +75,7 @@ export class StorePage {
             });
         });
         this.storeFilter = 'all';
+        this.storeSegment = 'store';
     }
 
     ionViewDidLoad() {
