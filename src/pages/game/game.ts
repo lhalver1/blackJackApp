@@ -119,7 +119,7 @@ export class GamePage {
                 };
             } else if(/(ipod|iphone|ipad)/i.test(navigator.userAgent)) {
                 this.admobId = {
-                    interstitial: 'ca-app-pub-8794313592502337/4989819608'
+                    interstitial: 'ca-app-pub-8794313592502337/2675481609'
                 };
             }
 
