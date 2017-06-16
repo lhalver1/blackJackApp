@@ -23,7 +23,7 @@ interface AdMobType {
 
 @Component({
     selector: 'game-page',
-    templateUrl: 'game2.html',
+    templateUrl: 'game.html',
     animations: [
         trigger('winnerState', [
             state('*', style({
