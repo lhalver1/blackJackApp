@@ -1,5 +1,6 @@
 import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
+import { AdMob } from '@ionic-native/admob';
 
 import { SettingsProvider } from '../providers/settings-provider';
 import { PlayerProvider } from '../providers/player-provider';
@@ -41,6 +42,7 @@ import { SettingsPage } from '../pages/settings/settings';
   ],
   providers: [
     {provide: ErrorHandler, useClass: IonicErrorHandler},
+    AdMob,
     PlayerProvider, 
     StoreProvider, 
     SettingsProvider, 

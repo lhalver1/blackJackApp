@@ -16,6 +16,8 @@ import { Pot } from '../../models/pot';
 import { MoneyChange } from '../../models/moneyChange'; 
 import { Settings } from '../../models/settings';
 
+declare var AdMob: any;
+
 @Component({
     selector: 'game-page',
     templateUrl: 'game2.html',
@@ -92,6 +94,8 @@ export class GamePage {
     settings: Settings;
     roundOver: boolean;
 
+    private admobId: any;
+
     constructor(public navCtrl: NavController,
         public navParams: NavParams,
         private toastProvider: ToastProvider,
@@ -104,6 +108,17 @@ export class GamePage {
             new Player(-1, "Dealer", [ new Hand([]) ], 2000, false, "CPU", 0, 0)
         ];
         this.platform.ready().then(() => {
+
+            if(/(android)/i.test(navigator.userAgent)) {
+                this.admobId = {
+                    interstitial: 'ca-app-pub-8794313592502337/2036353207'
+                };
+            } else if(/(ipod|iphone|ipad)/i.test(navigator.userAgent)) {
+                this.admobId = {
+                    interstitial: 'ca-app-pub-8794313592502337/4989819608'
+                };
+            }
+
             // debugger;
             this.database = new SQLite();
             this.database.openDatabase({name: "blackJackDB.db", location: "default"}).then(() => {
@@ -695,6 +710,7 @@ export class GamePage {
     }
 
     addCash() {
+        this.showInterstitialAd();
         let responses = [
             '',
             'Maybe you should pump the breaks there High Roller',
@@ -784,10 +800,20 @@ export class GamePage {
         }
     }
 
-    // ionViewWillLeave() {
-    //     if (this.database) {
-    //         this.database.close();
-    //     }
-    // }
+    /**
+     * Shows a full screen ad
+     * 
+     * @returns void
+     */
+    showInterstitialAd(): void {
+        this.platform.ready().then(() => {
+            if(AdMob) {
+                AdMob.prepareInterstitial({
+                    adId: this.admobId.interstitial,
+                    autoShow: true
+                });
+            }
+        });
+    }
 
 }// End GamePage
