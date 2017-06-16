@@ -37,6 +37,7 @@
     "cordova-plugin-console",
     "cordova-plugin-device",
     "cordova-plugin-splashscreen",
+    "cordova-plugin-admobpro",
     "ionic-plugin-keyboard"
   ],
   "cordovaPlatforms": [],
