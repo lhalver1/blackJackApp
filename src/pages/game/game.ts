@@ -3,6 +3,7 @@ import { Component, trigger, state, style, transition, animate, keyframes } from
 
 import { NavController, NavParams, Platform } from 'ionic-angular';
 import { SQLite } from "ionic-native";
+import { AdMob } from '@ionic-native/admob';
 
 import { ToastProvider } from '../../providers/toast-provider';
 import { SettingsProvider } from '../../providers/settings-provider';
@@ -16,7 +17,9 @@ import { Pot } from '../../models/pot';
 import { MoneyChange } from '../../models/moneyChange'; 
 import { Settings } from '../../models/settings';
 
-declare var AdMob: any;
+interface AdMobType {
+  interstitial: string
+};
 
 @Component({
     selector: 'game-page',
@@ -94,9 +97,10 @@ export class GamePage {
     settings: Settings;
     roundOver: boolean;
 
-    private admobId: any;
+    admobId: AdMobType;
 
-    constructor(public navCtrl: NavController,
+    constructor( private admob: AdMob,
+        public navCtrl: NavController,
         public navParams: NavParams,
         private toastProvider: ToastProvider,
         private platform: Platform,
