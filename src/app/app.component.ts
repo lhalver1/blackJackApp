@@ -13,6 +13,7 @@ import { Player } from '../models/player';
 import { GamePage } from '../pages/game/game';
 import { StorePage } from '../pages/store/store';
 import { SettingsPage } from '../pages/settings/settings';
+import { MultiplayerHomePage } from '../pages/multiplayer-home-page/multiplayer-home-page';
 
 
 @Component({
@@ -38,6 +39,7 @@ export class MyApp {
         // new Page('Welcome', WelcomePage, 'home' ),
         new Page('Game', GamePage, 'game-controller-b', "green" ),
         new Page('Store', StorePage, 'cart', "lightblue"),
+        new Page('Multiplayer', MultiplayerHomePage, 'settings', "gray"),
         new Page('Settings', SettingsPage, 'settings', "gray")
         ];
   }
