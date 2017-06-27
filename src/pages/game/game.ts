@@ -2,8 +2,7 @@ import { Hand } from '../../models/hand';
 import { Component, trigger, state, style, transition, animate, keyframes } from '@angular/core';
 
 import { NavController, NavParams, Platform } from 'ionic-angular';
-import { SQLite } from "ionic-native";
-import { AdMob } from '@ionic-native/admob';
+import { SQLite, AdMob } from "ionic-native";
 
 import { ToastProvider } from '../../providers/toast-provider';
 import { SettingsProvider } from '../../providers/settings-provider';
@@ -80,7 +79,8 @@ interface AdMobType {
               animate('500ms 400ms cubic-bezier(0.4, 0.0, 0.2, 1)', style({transform: 'translateY(100px)'}))
             ])
           ])
-    ]
+    ],
+    providers: [AdMob]
 })
 export class GamePage {
     database: SQLite;
@@ -727,9 +727,10 @@ export class GamePage {
             'Might want to work on your poker face',
             'May the odds be with you'
         ];
+
         this.players[1].addMoney(1000);
         this.playerProvider.updatePlayer(this.players[1]);
-        this.toastProvider.showToast(responses[Math.floor(Math.random() * responses.length) + 1], 3000, 'bottom', 'toastSuccess');
+        // this.toastProvider.showToast(responses[Math.floor(Math.random() * responses.length) + 1], 3000, 'bottom', 'toastSuccess');
     }
 
     /**
@@ -814,7 +815,8 @@ export class GamePage {
             if(AdMob) {
                 AdMob.prepareInterstitial({
                     adId: this.admobId.interstitial,
-                    autoShow: true
+                    autoShow: true,
+                    isTesting: false
                 });
             }
         });

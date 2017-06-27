@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-import { AngularFire, AuthProviders, AuthMethods, FirebaseListObservable } from 'angularfire2';
+// import { AngularFire, AuthProviders, AuthMethods, FirebaseListObservable } from 'angularfire2';
 
 /*
  * table {
@@ -16,13 +16,13 @@ import { AngularFire, AuthProviders, AuthMethods, FirebaseListObservable } from 
   templateUrl: 'multiplayer-home-page.html'
 })
 export class MultiplayerHomePage {
-  tables: FirebaseListObservable<any>;
+  // tables: FirebaseListObservable<any>;
   searchTablesStr: string;
-  players: FirebaseListObservable<any>;
+  // players: FirebaseListObservable<any>;
   name: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public angularfire: AngularFire) {
-    this.tables = this.angularfire.list('/tables');
+  constructor(public navCtrl: NavController, public navParams: NavParams/*, public angularfire: AngularFire*/) {
+    // this.tables = this.angularfire.list('/tables');
   }
 
   ionViewDidLoad() {

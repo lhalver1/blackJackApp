@@ -39,7 +39,7 @@ export class MyApp {
         // new Page('Welcome', WelcomePage, 'home' ),
         new Page('Game', GamePage, 'game-controller-b', "green" ),
         new Page('Store', StorePage, 'cart', "lightblue"),
-        new Page('Multiplayer', MultiplayerHomePage, 'settings', "gray"),
+        // new Page('Multiplayer', MultiplayerHomePage, 'settings', "gray"),
         new Page('Settings', SettingsPage, 'settings', "gray")
         ];
   }
