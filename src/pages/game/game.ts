@@ -2,7 +2,7 @@ import { Hand } from '../../models/hand';
 import { Component, trigger, state, style, transition, animate, keyframes } from '@angular/core';
 
 import { NavController, NavParams, Platform } from 'ionic-angular';
-import { SQLite } from "ionic-native";
+import { SQLite, AdMob } from "ionic-native";
 
 import { ToastProvider } from '../../providers/toast-provider';
 import { SettingsProvider } from '../../providers/settings-provider';
@@ -16,9 +16,13 @@ import { Pot } from '../../models/pot';
 import { MoneyChange } from '../../models/moneyChange'; 
 import { Settings } from '../../models/settings';
 
+interface AdMobType {
+  interstitial: string
+};
+
 @Component({
     selector: 'game-page',
-    templateUrl: 'game2.html',
+    templateUrl: 'game.html',
     animations: [
         trigger('winnerState', [
             state('*', style({
@@ -75,7 +79,8 @@ import { Settings } from '../../models/settings';
               animate('500ms 400ms cubic-bezier(0.4, 0.0, 0.2, 1)', style({transform: 'translateY(100px)'}))
             ])
           ])
-    ]
+    ],
+    providers: [AdMob]
 })
 export class GamePage {
     database: SQLite;
@@ -92,7 +97,10 @@ export class GamePage {
     settings: Settings;
     roundOver: boolean;
 
-    constructor(public navCtrl: NavController,
+    admobId: AdMobType;
+
+    constructor( private admob: AdMob,
+        public navCtrl: NavController,
         public navParams: NavParams,
         private toastProvider: ToastProvider,
         private platform: Platform,
@@ -104,6 +112,17 @@ export class GamePage {
             new Player(-1, "Dealer", [ new Hand([]) ], 2000, false, "CPU", 0, 0)
         ];
         this.platform.ready().then(() => {
+
+            if(/(android)/i.test(navigator.userAgent)) {
+                this.admobId = {
+                    interstitial: 'ca-app-pub-8794313592502337/2036353207'
+                };
+            } else if(/(ipod|iphone|ipad)/i.test(navigator.userAgent)) {
+                this.admobId = {
+                    interstitial: 'ca-app-pub-8794313592502337/2675481609'
+                };
+            }
+
             // debugger;
             this.database = new SQLite();
             this.database.openDatabase({name: "blackJackDB.db", location: "default"}).then(() => {
@@ -695,6 +714,7 @@ export class GamePage {
     }
 
     addCash() {
+        this.showInterstitialAd();
         let responses = [
             '',
             'Maybe you should pump the breaks there High Roller',
@@ -707,9 +727,10 @@ export class GamePage {
             'Might want to work on your poker face',
             'May the odds be with you'
         ];
+
         this.players[1].addMoney(1000);
         this.playerProvider.updatePlayer(this.players[1]);
-        this.toastProvider.showToast(responses[Math.floor(Math.random() * responses.length) + 1], 3000, 'bottom', 'toastSuccess');
+        // this.toastProvider.showToast(responses[Math.floor(Math.random() * responses.length) + 1], 3000, 'bottom', 'toastSuccess');
     }
 
     /**
@@ -784,10 +805,21 @@ export class GamePage {
         }
     }
 
-    // ionViewWillLeave() {
-    //     if (this.database) {
-    //         this.database.close();
-    //     }
-    // }
+    /**
+     * Shows a full screen ad
+     * 
+     * @returns void
+     */
+    showInterstitialAd(): void {
+        this.platform.ready().then(() => {
+            if(AdMob) {
+                AdMob.prepareInterstitial({
+                    adId: this.admobId.interstitial,
+                    autoShow: true,
+                    isTesting: false
+                });
+            }
+        });
+    }
 
 }// End GamePage

@@ -1,114 +1,259 @@
-<!--<ion-header>
-  <ion-navbar>
+<ion-header no-border>
+  <ion-navbar color="transparent">
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Black Jack</ion-title>
-  </ion-navbar>
-</ion-header>-->
-
-  <ion-content class="home" padding>
-    <!--<span class="menuBtn" style="color: white;">
-      <button ion-button outline round menuToggle style="float: left;" color="light">
-        <ion-icon name="menu"></ion-icon>
+    <ion-title>${{ players[1]?.money }}</ion-title>
+    <ion-buttons end *ngIf="players[1]?.money < 100 && roundOver && pot?.chips?.length === 0">
+      <button ion-button solid color="primary" (click)="addCash()">
+        Add Cash
       </button>
-    </span>-->
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+  <ion-content class="home" padding [ngStyle]="{'background': 'url( ' + settings?.getBackgroundPath() + ' ) center center' }">
     <ion-grid>
 
-    <!--<ion-row>
-      <ion-col width-33>
-        <button ion-button block>Deal</button>
-      </ion-col>
-      <ion-col width-33>
-        <button ion-button color="secondary" block>Reshuffle</button>
-      </ion-col>
-      <ion-col width-33>
-        <button ion-button color="danger" block style="float: right;">Quit</button>
-      </ion-col>
-    </ion-row>-->
-    <div>
-      <ion-row>
-          <ion-col class="winner" width-100 text-center [@winnerState]="showWinners">
-              <div>Winner<span *ngIf="winningPlayers.length > 1">s</span>: </div>
-              <div class="bg-success" *ngFor="let winner of winningPlayers">
-                  {{winner?.name}}
-              </div>
-          </ion-col>
-      </ion-row>
-    </div>
+      <!--<ion-row id="headerRow">
+        <ion-col width-25>
+           
+        </ion-col>
+        <ion-col width-75>
+            
+        </ion-col>
+      </ion-row>-->
 
-    <ion-row class="playerRow" *ngFor="let player of players; let i = index;" center>
-      <ion-col width-100>
-        <ion-row>
-          <ion-col width-100 text-center>
-            <div class="playerName">
-              {{ player.name }}<span *ngIf="playerTurnIndex === i || player.turn || player.cardsTotal() == 21">: {{ player.cardsTotal() }}</span>
-            </div>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col width-100 text-center>
-            <div class="hand">
-                <div class="card"
-                  [ngClass]="{'notTopCard': cardIndex+1 != player.hand.length}"
-                  *ngFor="let card of player.hand; let cardIndex = index;"
-                  [@flyIn]="cardIndex > 1 ? 'yes':'no'">
-                    <!--<card *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === i || player.turn || player.cardsTotal() == 21"
-                      [suit]="card.suit" [value]="card.value"></card>-->
+      <ion-row class="playerRow dealerRow">
+        <ion-col width-100>
+          
+          <ion-row id="dealerHandRow">
+            <ion-col width-100 text-center>
+              <div class="hand" [ngClass]="{'handWon': players[0].hands[0]?.won, 'handPush': players[0].hands[0]?.push}" [@growShrink]="playerTurnIndex === 0">
+                  <div class="card"
+                    [ngStyle]="{'transform': calcCardRotation(cardIndex, players[0].hands[0]?.cards.length)}"
+                    [ngClass]="{'bottomCard': cardIndex === 0, 'bottom-right-fly-in': cardIndex > 1 }"
+                    *ngFor="let card of players[0].hands[0]?.cards; let cardIndex = index;">
 
-                      <!--
-                        /assets/... = no
-                      -->
-                      <div *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === i || player.turn || player.cardsTotal() == 21"
+                      <!--<card *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === 0 || players[0].turn || players[0].cardsTotal() == 21"
+                        [suit]="card.suit" [value]="card.value"></card>-->
+                      <div *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === i || players[0].turn || players[0].hands[0]?.handTotal() == 21"
                         [ngStyle]="{
-                          'background-image': 'url(assets/img/cardImages/' +card.suit+ '/' +card.value+ '.png)',
+                          'background-image': 'url(' + this.settings?.getCardFrontPath() + card.suit.toLowerCase() + '/' +card?.value+ '.png)',
+                          'background-size': '71px 93px',
                           'height': '92px',
                           'width': '69px',
                           'margin-top': '-2px',
-                          'margin-left': '-2px'
+                          'margin-left': '-1px'
                           }">
-                        </div>                    
-			            <div class="cardBack" *ngIf="cardIndex+1 != player.hand.length && !player.turn && player.cardsTotal() != 21"></div>
-                </div> <br>
-                <!--<div class="hitStayButtonGroup" *ngIf="playerTurnIndex === i && player?.type === 'Human'">
-                  <button class="stayBtn" ion-button round block small color="danger" (click)="stay(player)">Stay</button>
-                  <button class="hitBtn" ion-button round block small color="primary" (click)="hit(player)">Hit</button>
-                </div>-->
-            </div>
-          </ion-col>
-        </ion-row>
+                        </div> 
 
-          <ion-row *ngIf="playerTurnIndex === i && player?.type === 'Human'">
-            <ion-col width-25 offset-25>
-              <button class="stayBtn" ion-button block color="danger" (click)="stay(player)">Stay</button>
-            </ion-col>
-            <ion-col width-25>
-              <button class="hitBtn" ion-button block color="primary" (click)="hit(player)" [disabled]="player.cardsTotal() === 21 ">Hit</button>
+                      <div class="cardBack" [ngStyle]="{'background': 'url( ' + settings?.getCardBackPath() + ' )', 'background-size': '102px 119px' }" *ngIf="cardIndex+1 != players[0].hands[0]?.cards.length && !players[0].turn && players[0].hands[0].handTotal() != 21"></div>
+                  </div>
+              </div>
             </ion-col>
           </ion-row>
 
-          <!--<ion-row *ngIf="playerTurnIndex === i && player?.type === 'Human'">
-            <ion-col>
-              <ion-fab bottom left>
-                <button ion-fab>Bet</button>
-                <ion-fab-list side="top">
-                  <button ion-fab color="warn">50</button>
-                  <button ion-fab color="secondary">500</button>
-                  <button ion-fab color="primary">1K</button>
-                </ion-fab-list>
-              </ion-fab>
+          <ion-row [@growShrink]="playerTurnIndex === 0" *ngIf="!roundOver && playerTurnIndex === 0 || players[0].turn || players[0].hands[0]?.handTotal() == 21" style="margin-top: -26px;">
+            <ion-col width-100 text-center>
+              <div id="playerCardTotal"><span>{{ players[0].hands[0]?.handTotal() }}</span></div>
             </ion-col>
-          </ion-row>-->
+          </ion-row>
+
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="potDeckRow" center>
+        <ion-col text-center width-100>
+
+          <ion-row style="height: 50px;">
+            <ion-col *ngIf="players[1]?.hands?.length <= 1" width-100 [ngClass]="{'basicFadeUp': winnerStr === 'dealerWins', 'basicFadeDown': winnerStr === 'userWins'}" [ngStyle]="{'display': winningPlayers?.length > 0 ? 'inline-block':'inline-block'}">
+              
+              <div id="dealerChips" [ngStyle]="{'display': winningPlayers?.length > 0 ? 'inline-block':'inline-block'}">
+                <div [ngClass]="{'notBottomChip': i > 0 }" *ngFor="let chip of pot.dealersBet.chips; let i = index">
+                  <img [ngClass]="{ 'bounce': chip === pot.chips[pot.chips.length-1] }" [src]="this.settings?.getChipsPath() +chip.value+ 'chip.png'"
+                    *ngIf="chip.owner === players[0] && winningPlayers.length > 0 && !players[1]?.hands[0].push" style="width: 40px; height: 40px;">
+                </div>
+              </div>
+
+              <div id="userChips" [ngStyle]="{'display': winningPlayers?.length > 0 ? 'inline-block':'inline-block'}">
+                <div [ngClass]="{'notBottomChip': i > 0 }" *ngFor="let chip of pot.playersBet.chips; let i = index">
+                  <img [ngClass]="{ 'bounce': chip === pot.chips[pot.chips.length-2] }" [src]="this.settings?.getChipsPath() +chip.value+ 'chip.png'" *ngIf="chip.owner === players[1]" style="width: 40px; height: 40px;">
+                </div>
+              </div>
+
+            </ion-col>
+            
+            <!--Split pot col1-->
+            <ion-col *ngIf="players[1]?.hands?.length > 1" width-50 [ngClass]="{'basicFadeUp': winnerStr === 'dealerWins' && players[0]?.hands[0]?.won, 'basicFadeDown': winnerStr === 'userWins' && (players[1]?.hands[0]?.won || players[1]?.hands[0]?.push)}">
+              <div id="dealerChips" [ngStyle]="{'display': winningPlayers?.length > 0 ? 'inline-block':'inline-block'}">
+                <div [ngClass]="{'notBottomChip': i > 0 }" *ngFor="let chip of pot.dealersBet.chips; let i = index">
+                  <img [ngClass]="{ 'bounce': chip === pot.chips[pot.chips.length-1] }" [src]="this.settings?.getChipsPath() +chip.value+ 'chip.png'"
+                    *ngIf="chip.owner === players[0] && winningPlayers.length > 0 && i < pot.dealersBet.chips.length/2 && !players[1]?.hands[0].push" style="width: 40px; height: 40px;">
+                </div>
+              </div>
+
+              <div id="userChips" [ngStyle]="{'display': winningPlayers?.length > 0 ? 'inline-block':'inline-block'}">
+                <div [ngClass]="{'notBottomChip': i > 0 }" *ngFor="let chip of pot.playersBet.chips; let i = index">
+                  <!--<img [ngClass]="{ 'bounce': chip === pot.chips[pot.chips.length-2] }" [src]="this.settings?.getChipsPath() +chip.value+ 'chip.png'" *ngIf="chip.owner === players[1]" style="width: 40px; height: 40px;">-->
+                  <img [ngClass]="{ 'bounce': chip === pot.chips[pot.chips.length-2] }" [src]="this.settings?.getChipsPath() +chip.value+ 'chip.png'"
+                    *ngIf="chip.owner === players[1] && i < pot.playersBet.chips.length/2" style="width: 40px; height: 40px;">
+                </div>
+              </div>
+            </ion-col>
+            <!--End split pot col 1-->
+
+            <!--Split pot col 2-->
+            <ion-col *ngIf="players[1]?.hands?.length > 1" width-50 [ngClass]="{'basicFadeUp': winnerStr === 'dealerWins' && players[0]?.hands[0]?.won, 'basicFadeDown': winnerStr === 'userWins' && (players[1]?.hands[1]?.won || players[1]?.hands[1]?.push)}">
+              <div id="dealerChips" [ngStyle]="{'display': winningPlayers?.length > 0 ? 'inline-block':'inline-block'}">
+                <div [ngClass]="{'notBottomChip': i > 0 }" *ngFor="let chip of pot.dealersBet.chips; let i = index">
+                  <img [ngClass]="{ 'bounce': chip === pot.chips[pot.chips.length-1] }" [src]="this.settings?.getChipsPath() +chip.value+ 'chip.png'"
+                    *ngIf="chip.owner === players[0] && winningPlayers.length > 0 && i < pot.dealersBet.chips.length/2 && !players[1]?.hands[1].push" style="width: 40px; height: 40px;">
+                </div>
+              </div>
+
+              <div id="userChips" [ngStyle]="{'display': winningPlayers?.length > 0 ? 'inline-block':'inline-block'}">
+                <div [ngClass]="{'notBottomChip': i > 0 }" *ngFor="let chip of pot.playersBet.chips; let i = index">
+                  <!--<img [ngClass]="{ 'bounce': chip === pot.chips[pot.chips.length-2] }" [src]="this.settings?.getChipsPath() +chip.value+ 'chip.png'" *ngIf="chip.owner === players[1] && i < pot.chips.length/2" style="width: 40px; height: 40px;">-->
+                  <img [ngClass]="{ 'bounce': chip === pot.chips[pot.chips.length-2] && players[1]?.hands[1]?.cards.length >= 2 }" [src]="this.settings?.getChipsPath() +chip.value+ 'chip.png'"
+                    *ngIf="chip.owner === players[1] && players[1]?.hands[1]?.cards.length >= 2 && i < pot.playersBet.chips.length/2" style="width: 40px; height: 40px;">
+                </div>
+              </div>
+            </ion-col>
+            <!--End split pot col 2-->
+            
+
+          </ion-row>
+          <ion-row *ngIf="pot.chips.length > 0">
+            <ion-col width-100 text-ccenter *ngIf="players[1]?.hands?.length <= 1">
+              <div style="color: #ffffff;">
+                <span class="potTotal" [ngStyle]="{'padding-right': roundOver ? '0px':''}">
+                  <span *ngIf="!winningPlayers.length > 0 || players[1].hands[0].push">${{ pot.getPlayersTotal() }}</span>
+                  <span *ngIf="winningPlayers.length > 0 && !players[1].hands[0].push">${{ pot.getPlayersTotal()*2 }}</span>
+                  <span class="cancelBet" (click)="cancelBet()" *ngIf="roundOver">X</span>
+                </span>
+              </div>
+            </ion-col>
+            <ion-col width-50 text-ccenter *ngIf="players[1]?.hands?.length > 1">
+              <div style="color: #ffffff;">
+                <span class="potTotal" [ngStyle]="{'padding-right': roundOver ? '0px':''}">
+                  <span *ngIf="!winningPlayers.length > 0 || players[1].hands[0].push">${{ pot.getPlayersTotal()/2 }}</span>
+                  <span *ngIf="winningPlayers.length > 0 && !players[1].hands[0].push">${{ pot.getPlayersTotal() }}</span>
+                </span>
+              </div>
+            </ion-col>
+            <ion-col width-50 text-ccenter *ngIf="players[1]?.hands?.length > 1 && players[1]?.hands[1]?.cards.length >= 2">
+              <div style="color: #ffffff;">
+                <span class="potTotal" [ngStyle]="{'padding-right': roundOver ? '0px':''}">
+                  <span *ngIf="!winningPlayers.length > 0 || players[1].hands[1].push">${{ pot.getPlayersTotal()/2 }}</span>
+                  <span *ngIf="winningPlayers.length > 0 && !players[1]?.hands[1].push">${{ pot.getPlayersTotal() }}</span>
+                </span>
+              </div>
+            </ion-col>
+          </ion-row>
+
+        </ion-col>
+        <!--<ion-col width-0>
+          
+          <div class="deck" style="display: inline-block; float: right;">
+
+            <div>
+              <div class="deckcardBack" *ngFor="let card of deck.cards; let i = index; let firstCard = first" [hidden]="i > 12"
+                style="border: 1px solid #ffffff;" [ngClass]="{'deckFirstCard': firstCard}"></div>
+            </div>
+          
+          </div>
+
+        </ion-col>-->
+      </ion-row>
+
+      <ion-row class="playerRow userRow" bottom>
+        <ion-col width-100>
+
+          <ion-row id="betDealRow" *ngIf="roundOver">
+            <ion-col width-66>
+              <img class="chipBtn" [src]="this.settings?.getChipsPath() + '100chip.png'" style="width: 50px; height: 50px;" (click)="placeBet(100)">
+              <img class="chipBtn" [src]="this.settings?.getChipsPath() + '500chip.png'" style="width: 50px; height: 50px;" (click)="placeBet(500)">
+              <img class="chipBtn" [src]="this.settings?.getChipsPath() + '1000chip.png'" style="width: 50px; height: 50px;" (click)="placeBet(1000)">
+            </ion-col>
+            <ion-col width-33>
+              <button class="dealBtn" ion-button block round color="primary" (click)="dealOutCards()" [disabled]="pot.chips.length <= 0" >Deal</button>
+            </ion-col>
+          </ion-row>
+          
+          <ion-row id="userHandRow" *ngIf="!roundOver">
+            <ion-col [attr.width-100]="players[1].hands.length === 1 ? 'true':null" [attr.width-50]="players[1].hands.length === 2 ? 'true':null" text-center>
+              <div class="hand" [ngClass]="{'handWon': players[1].hands[0]?.won, 'handPush': players[1].hands[0]?.push}" [@growShrink]="playerTurnIndex === 1 && players[1].handIndex === 0">
+                  <div class="card"
+                    [ngStyle]="{'transform': calcCardRotation(cardIndex, players[1]?.hands[0].cards.length)}"
+                    [ngClass]="{'bottomCard': cardIndex === 0, 'top-right-fly-in': cardIndex > 1 }"
+                    *ngFor="let card of players[1]?.hands[0]?.cards; let cardIndex = index;">
+
+                      <!--<card *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === 1 || players[1].turn || players[1].cardsTotal() == 21"
+                        [suit]="card.suit" [value]="card.value"></card>-->
+                      <div *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === i || players[1]?.turn || players[1]?.hands[0]?.handTotal() == 21"
+                        [ngStyle]="{
+                          'background-image': 'url(' + this.settings?.getCardFrontPath() + card.suit.toLowerCase() + '/' +card?.value+ '.png)',
+                          'background-size': '71px 93px',
+                          'height': '92px',
+                          'width': '69px',
+                          'margin-top': '-2px',
+                          'margin-left': '-1px'
+                          }">
+                        </div> 
+
+                      <div class="cardBack" [ngStyle]="{ 'background': 'url(' + settings?.getCardBackPath() + ')', 'background-size': '102px 119px' }" *ngIf="cardIndex+1 != players[1]?.hands[0]?.cards.length && !players[1]?.turn && players[1]?.hands[0]?.handTotal() != 21"></div>
+                  </div>
+              </div>
+            </ion-col>
+            <ion-col width-50 *ngIf="players[1].hands.length === 2" text-center>
+              <div class="hand" [ngClass]="{'handWon': players[1]?.hands[1]?.won, 'handPush': players[1]?.hands[1]?.push}" [@growShrink]="playerTurnIndex === 1 && players[1].handIndex === 1">
+                  <div class="card"
+                    [ngStyle]="{'transform': calcCardRotation(cardIndex, players[1]?.hands[1]?.cards.length)}"
+                    [ngClass]="{'bottomCard': cardIndex === 0, 'top-right-fly-in': cardIndex > 1 }"
+                    *ngFor="let card of players[1]?.hands[1]?.cards; let cardIndex = index;">
+
+                      <!--<card *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === 1 || players[1].turn || players[1].cardsTotal() == 21"
+                        [suit]="card.suit" [value]="card.value"></card>-->
+                      <div *ngIf="i === players.length || cardIndex != 0 || playerTurnIndex === i || players[1]?.turn || players[1]?.hands[1]?.handTotal() == 21"
+                        [ngStyle]="{
+                          'background-image': 'url(' + this.settings?.getCardFrontPath() + card.suit.toLowerCase() + '/' +card?.value+ '.png)',
+                          'background-size': '71px 93px',
+                          'height': '92px',
+                          'width': '69px',
+                          'margin-top': '-2px',
+                          'margin-left': '-1px'
+                          }">
+                        </div> 
+
+                      <div class="cardBack" [ngStyle]="{ 'background': 'url(' + settings?.getCardBackPath() + ')', 'background-size': '102px 119px' }" *ngIf="cardIndex+1 != players[1]?.hands[1]?.cards.length && !players[1]?.turn && players[1]?.hands[1]?.handTotal() != 21"></div>
+                  </div>
+              </div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row [@growShrink]="playerTurnIndex === 1" *ngIf="!roundOver && playerTurnIndex === 1 || players[1]?.turn" style="margin-top: -26px;">
+            <ion-col [attr.width-100]="players[1].hands.length === 1 ? 'true':null" [attr.width-50]="players[1].hands.length === 2 ? 'true':null" text-center>
+              <div id="playerCardTotal"><span>{{ players[1]?.hands[0]?.handTotal() }}</span></div>
+            </ion-col>
+            <ion-col width-50 text-center *ngIf="players[1].hands.length === 2">
+              <div id="playerCardTotal"><span>{{ players[1]?.hands[1]?.handTotal() }}</span></div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row id="hitStayRow" [@enterFromBottom]="!roundOver && playerTurnIndex === 1" [ngClass]="{'hitStay-enter': !roundOver && playerTurnIndex === 1 }" *ngIf="!roundOver && playerTurnIndex === 1">
+            <ion-col  [attr.width-50]="!hasSplit(players[1]) ? 'true':null" [attr.width-33]="hasSplit(players[1]) ? 'true':null">
+              <button class="stayBtn" ion-button block round color="danger" (click)="stay(players[1])">Stay</button>
+            </ion-col>
+            <ion-col width-33 *ngIf="hasSplit(players[1])">
+              <button class="splitBtn" ion-button block round color="warn" (click)="split(players[1])" [disabled]="pot.playersBet.total > players[1].money">Split</button>
+            </ion-col>
+            <ion-col [attr.width-50]="!hasSplit(players[1]) ? 'true':null" [attr.width-33]="hasSplit(players[1]) ? 'true':null">
+              <button class="hitBtn" ion-button block round color="primary" (click)="hit(players[1])" [disabled]="players[1]?.hands[players[1].handIndex]?.handTotal() === 21 ">Hit</button>
+            </ion-col>
+          </ion-row>
 
         </ion-col>
       </ion-row>
 
     </ion-grid>
   </ion-content>
-
-<!-- align to the bottom of the page -->
-  <!--<div class="bottomPage">
-      <div style="text-align: center">
-        <p style="color: red">Bottom</p>
-      </div>
-  </div>-->
