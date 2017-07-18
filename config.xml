@@ -1,6 +1,7 @@
+<!--<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<widget id="com.ionicframework.blackjackapp510095" version="1.0.3" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">-->
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<!--<widget id="com.ionicframework.blackjackapp510095" version="1.0.3" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">-->
-<widget id="com.ionicframework.blackjackfreeapp510095" version="1.0.3" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.ionicframework.blackjackfreeapp510095" version="1.0.4" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>BlackJack Lite</name>
   <description>An awesome Ionic/Cordova app.</description>
   <icon src="resources\android\icon\drawable-xhdpi-icon.png"/>

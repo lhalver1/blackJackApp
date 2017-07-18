@@ -98,6 +98,7 @@ export class GamePage {
     roundOver: boolean;
 
     admobId: AdMobType;
+    counter: number = 0;
 
     constructor( private admob: AdMob,
         public navCtrl: NavController,
@@ -426,6 +427,15 @@ export class GamePage {
      * then after 4sec dealing out new cards.
      */
     endRound() {
+        // Ad Free show ad remove for paid
+        if(this.players[1].money != 0) {
+            this.counter += 1;
+        }
+        if(this.counter % 5 === 0) {
+            this.showInterstitialAd();
+            this.counter = 0;
+        }
+
         this.determineWinner();
         setTimeout(() => {
             this.roundOver = true;
