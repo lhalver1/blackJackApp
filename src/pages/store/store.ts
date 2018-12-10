@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Platform, NavController, NavParams, AlertController } from 'ionic-angular';
-import { SQLite } from 'ionic-native';
+import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 
 import { PlayerProvider } from '../../providers/player-provider';
 import { StoreProvider } from '../../providers/store-provider';
@@ -33,6 +33,7 @@ class StoreItem {
 })
 export class StorePage {
     database: SQLite;
+    db: SQLiteObject;
     storeDBItem: any;
     player: Player;
     storeFilter: string;
@@ -53,9 +54,9 @@ export class StorePage {
 
         this.platform.ready().then(() => {
             this.database = new SQLite();
-            this.database.openDatabase({ name: "blackJackDB.db", location: "default" }).then(() => {
+            this.database.create({ name: "blackJackDB.db", location: "default" }).then((db: SQLiteObject) => {
                 // console.log("getting purchases store.ts");
-
+                this.db = db;
                 this.playerProvider.getPlayer().then((player) => {
                     this.player = player;
                     this.storeProvider.getPurchases(this.player).then((purchases) => {

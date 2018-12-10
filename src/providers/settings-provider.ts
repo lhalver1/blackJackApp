@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Platform } from 'ionic-angular';
-import { SQLite } from 'ionic-native';
+import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import 'rxjs/add/operator/map';
 
 import { Settings } from '../models/settings';
@@ -11,16 +11,18 @@ import { Player } from '../models/player';
 export class SettingsProvider {
     player: Player;
     database: SQLite;
+    db: SQLiteObject;
     settings: Settings;
 
     constructor(public platform: Platform, public http: Http) {
         // debugger;
         this.platform.ready().then(() => {
             this.database = new SQLite();
-            this.database.openDatabase({
+            this.database.create({
                 name: "blackJackDB.db",
                 location: "default"
-            }).then(() => {
+            }).then((db: SQLiteObject) => {
+                this.db = db;
                 // console.log("settings-provider initSettings();");
             }, (error) => {
                 // console.error("Unable to open database in app.component", error);
@@ -31,7 +33,7 @@ export class SettingsProvider {
     getSettings(player: Player): Promise<Settings> {
         return new Promise((resolve, reject) => {
             let newSettings: Settings;
-            this.database.executeSql("SELECT * FROM settings WHERE player_id = ?", [player.id]).then((settingsData) => {
+            this.db.executeSql("SELECT * FROM settings WHERE player_id = ?", [player.id]).then((settingsData) => {
                 if (settingsData.rows.length > 0) {
                     for (var i = 0; i < settingsData.rows.length; i++) {
                         let settingsRow = settingsData.rows.item(i);
@@ -58,7 +60,7 @@ export class SettingsProvider {
 
     addSettings(settings: Settings, player: Player): Promise<Settings> {
         return new Promise((resolve, reject) => {
-            this.database.executeSql("INSERT INTO settings (player_id, background, cardFront, cardBack, chips, cpu_time) VALUES (?,?,?,?,?,?)",
+            this.db.executeSql("INSERT INTO settings (player_id, background, cardFront, cardBack, chips, cpu_time) VALUES (?,?,?,?,?,?)",
                 [player.id, settings.selectedBackground, settings.selectedCardFront, settings.selectedCardBack, settings.chips, settings.cpuDecisionTime]).then((resultSet) => {
                 // console.log("INSERTED into settings: " + JSON.stringify(resultSet));
                 resolve(resultSet);
@@ -71,7 +73,7 @@ export class SettingsProvider {
 
     updateSettings(player: Player, settings: Settings) {
         return new Promise((resolve, reject) => {
-            this.database.executeSql("UPDATE settings SET background = ?, cardFront = ?, cardBack = ?, chips = ?, cpu_time = ? WHERE id = ?",
+            this.db.executeSql("UPDATE settings SET background = ?, cardFront = ?, cardBack = ?, chips = ?, cpu_time = ? WHERE id = ?",
                 [settings.selectedBackground, settings.selectedCardFront, settings.selectedCardBack, settings.chips, settings.cpuDecisionTime, player.id]).then((resultSet) => {
                 // console.log("UPDATED settings in settings-provider: " + JSON.stringify(resultSet));
                 resolve(resultSet);
@@ -84,7 +86,7 @@ export class SettingsProvider {
 
     updateOneSetting(player: Player, col_name: String, value: string) {
         return new Promise((resolve, reject) => {
-            this.database.executeSql("UPDATE settings SET " + col_name +" = ? WHERE id = ?",
+            this.db.executeSql("UPDATE settings SET " + col_name +" = ? WHERE id = ?",
                 [value, player.id]).then((resultSet) => {
                 // console.log("UPDATED settings in settings-provider: " + JSON.stringify(resultSet));
                 resolve(resultSet);

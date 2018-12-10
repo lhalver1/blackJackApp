@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Platform } from 'ionic-angular';
-import { SQLite } from 'ionic-native';
+import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import 'rxjs/add/operator/map';
 
 import { PlayerProvider } from './player-provider';
@@ -62,6 +62,7 @@ class StoreItem {
 export class StoreProvider {
     player: Player;
     database: SQLite;
+    db: SQLiteObject;
     settings: Settings;
     purchases: any;
     columns: string = "player_id, greenPoker_back, redPoker_back, bluePoker_back, greenFelt_back, spaceNight_back, redDiamonds_cardBack, geometric_cardBack, material_cardFront, classic_cardFront, vegas_chips, neon_chips";
@@ -75,10 +76,11 @@ export class StoreProvider {
         }
         this.platform.ready().then(() => {
             this.database = new SQLite();
-            this.database.openDatabase({
+            this.database.create({
                 name: "blackJackDB.db",
                 location: "default"
-            }).then(() => {
+            }).then((db: SQLiteObject) => {
+                this.db = db;
                 // console.log("store-provider constructor();");
             }, (error) => {
                 // console.error("Unable to open database in store-provider", error);
@@ -88,7 +90,7 @@ export class StoreProvider {
 
     getPurchases(player: Player): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.database.executeSql("SELECT * FROM store WHERE player_id = ?", [player.id]).then((data) => {
+            this.db.executeSql("SELECT * FROM store WHERE player_id = ?", [player.id]).then((data) => {
                 let storeDBItem = {};
                 if (data.rows.length > 0) {
                     for (var i = 0; i < data.rows.length; i++) {
@@ -162,7 +164,7 @@ export class StoreProvider {
 
     addStoreRow(player: Player): Promise<StoreRow> {
         return new Promise((resolve, reject) => {
-            this.database.executeSql("INSERT INTO store (" + this.columns + ") " +
+            this.db.executeSql("INSERT INTO store (" + this.columns + ") " +
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [player.id + "", 'false', 'false', 'false', 'true', 'false', 'true', 'false', 'false', 'true', 'true', 'false']).then((data) => {
                     resolve(data);
                 }, (error) => {
@@ -177,7 +179,7 @@ export class StoreProvider {
             // update db that user bought this background
             this.toastProvider.showToast('You bought: ' + item.title + ' for: $' + item.price, 3000, 'bottom', 'toastSuccess');
     
-            this.database.executeSql("UPDATE store SET " + columnName + " = 'true' WHERE player_id = ?", [player.id]).then((data) => {
+            this.db.executeSql("UPDATE store SET " + columnName + " = 'true' WHERE player_id = ?", [player.id]).then((data) => {
                 player.subtractMoney(item.price);
                 this.playerProvider.updatePlayer(player).then((result) => {
                     resolve(data);

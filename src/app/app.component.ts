@@ -1,6 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { Platform, MenuController, Nav } from 'ionic-angular';
-import { StatusBar, Splashscreen, SQLite } from 'ionic-native';
+import { StatusBar } from '@ionic-native/status-bar';
+import { SplashScreen } from '@ionic-native/splash-screen';
+import { SQLite, SQLiteObject } from "@ionic-native/sqlite"
 
 import { SettingsProvider } from '../providers/settings-provider';
 import { PlayerProvider } from '../providers/player-provider';
@@ -25,11 +27,14 @@ export class MyApp {
 
   rootPage: any;
   pages: Array<Page>;
-  db: SQLite;
+  database: SQLite;
+  db: SQLiteObject;
   player: Player;
 
   constructor(
     public platform: Platform,
+    private statusBar: StatusBar,
+    private splashscreen: SplashScreen,
     public menu: MenuController,
     public settingsService: SettingsProvider
   ) {
@@ -47,12 +52,12 @@ export class MyApp {
   initializeApp() {
       this.platform.ready().then(() => {
         
-        StatusBar.styleDefault();
-        this.db = new SQLite();
-        this.db.openDatabase({
+        this.statusBar.styleDefault();
+        this.database = new SQLite();
+        this.database.create({
           name: "blackJackDB.db",
           location: "default"
-        }).then(() => {
+        }).then((db: SQLiteObject) => {
             this.initTables();
             // this.db.executeSql("DROP TABLE IF EXISTS players", {}).then((data) => {
             //     this.db.executeSql("DROP TABLE IF EXISTS store", {}).then((data) => {
@@ -81,7 +86,7 @@ export class MyApp {
     }
 
     initTables() {
-      this.db.executeSql("CREATE TABLE IF NOT EXISTS players (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, money INTEGER)", {}).then((data) => {
+      this.db.executeSql("CREATE TABLE IF NOT EXISTS players (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, money INTEGER)").then((data) => {
             // console.log("players TABLE CREATED: ", data);
 
             this.db.executeSql("SELECT * FROM players", []).then((data) => {
@@ -131,7 +136,7 @@ export class MyApp {
           "classic_cardFront TEXT, " +
           "vegas_chips TEXT, " +
           "neon_chips TEXT, " +
-          "FOREIGN KEY(player_id) REFERENCES players(id))", {}).then((data) => {
+          "FOREIGN KEY(player_id) REFERENCES players(id))").then((data) => {
             // console.log("store TABLE CREATED: ", data);
 
             this.db.executeSql("SELECT * FROM store", []).then((data) => {
@@ -162,18 +167,18 @@ export class MyApp {
           "cardBack TEXT, " + 
           "chips TEXT, " +
           "cpu_time TEXT, " +
-          "FOREIGN KEY(player_id) REFERENCES players(id))", {}).then((data) => {
+          "FOREIGN KEY(player_id) REFERENCES players(id))").then((data) => {
             // console.log("settings TABLE CREATED: ", data);
 
             this.db.executeSql("SELECT * FROM settings", []).then((data) => {
                 if(data.rows.length > 0) {
                     this.rootPage = GamePage;
-                    Splashscreen.hide();
+                    this.splashscreen.hide();
                 } else {
                     this.db.executeSql("INSERT INTO settings (player_id, background, cardFront, cardBack, chips, cpu_time) " +
                     " VALUES ('"+ this.player.id +"', 'greenFelt', 'classic', 'redDiamonds', 'vegas', '2000')", []).then((data) => {
                         // console.log("INSERTED into settings: VALUES ('"+ this.player.id +"', 'greenFelt', 'classic', 'redDiamonds', 'vegas', '2000')");
-                        Splashscreen.hide();
+                        this.splashscreen.hide();
                         this.rootPage = GamePage;
                     }, (error) => {
                         // console.log("ERROR: " + JSON.stringify(error.message));

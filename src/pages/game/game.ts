@@ -2,7 +2,8 @@ import { Hand } from '../../models/hand';
 import { Component, trigger, state, style, transition, animate, keyframes } from '@angular/core';
 
 import { NavController, NavParams, Platform } from 'ionic-angular';
-import { SQLite, AdMob } from "ionic-native";
+import { AdMobFree, AdMobFreeInterstitialConfig } from "@ionic-native/admob-free";
+import { SQLite, SQLiteObject } from "@ionic-native/sqlite"
 
 import { ToastProvider } from '../../providers/toast-provider';
 import { SettingsProvider } from '../../providers/settings-provider';
@@ -79,11 +80,11 @@ interface AdMobType {
               animate('500ms 400ms cubic-bezier(0.4, 0.0, 0.2, 1)', style({transform: 'translateY(100px)'}))
             ])
           ])
-    ],
-    providers: [AdMob]
+    ]
 })
 export class GamePage {
     database: SQLite;
+    db: SQLiteObject;
     loading: boolean;
     playerTurnIndex: number;
     players: Player[];
@@ -99,8 +100,9 @@ export class GamePage {
 
     admobId: AdMobType;
     counter: number = 0;
+    adReady: boolean = false;
 
-    constructor( private admob: AdMob,
+    constructor( private admob: AdMobFree,
         public navCtrl: NavController,
         public navParams: NavParams,
         private toastProvider: ToastProvider,
@@ -126,7 +128,7 @@ export class GamePage {
 
             // debugger;
             this.database = new SQLite();
-            this.database.openDatabase({name: "blackJackDB.db", location: "default"}).then(() => {
+            this.database.create({name: "blackJackDB.db", location: "default"}).then((db: SQLiteObject) => {
                 // debugger;
                 // this.getAllPlayers(); //Get the player from the database
                 this.playerProvider.getPlayer().then((player) => {
@@ -433,7 +435,11 @@ export class GamePage {
         }
         if(this.counter % 5 === 0) {
             this.showInterstitialAd();
-            this.counter = 0;
+            this.counter = 1;
+        } else {
+            if(this.adReady === false) {
+                this.prepareInterstitialAd();
+            }
         }
 
         this.determineWinner();
@@ -815,21 +821,27 @@ export class GamePage {
         }
     }
 
+    prepareInterstitialAd() {
+        const interstitialConfig: AdMobFreeInterstitialConfig = {
+            isTesting: true,
+            autoShow: false
+        };
+        this.admob.interstitial.config(interstitialConfig);
+
+        this.admob.interstitial.prepare().then(() => {
+            this.adReady = true;
+        });
+    }
+
     /**
      * Shows a full screen ad
      * 
      * @returns void
      */
     showInterstitialAd(): void {
-        this.platform.ready().then(() => {
-            if(AdMob) {
-                AdMob.prepareInterstitial({
-                    adId: this.admobId.interstitial,
-                    autoShow: true,
-                    isTesting: false
-                });
-            }
-        });
+        if (this.adReady) {
+            this.admob.interstitial.show();
+        }
     }
 
 }// End GamePage

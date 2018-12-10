@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Platform, NavController, NavParams } from 'ionic-angular';
-import { SQLite } from 'ionic-native';
+import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 
 import { SettingsProvider } from '../../providers/settings-provider';
 import { PlayerProvider } from '../../providers/player-provider';
@@ -17,6 +17,7 @@ import { Player } from '../../models/player';
 export class SettingsPage {
     settings: Settings;
     database: SQLite;
+    db: SQLiteObject;
     player: Player;
     purchases: any;
 
@@ -30,8 +31,8 @@ export class SettingsPage {
         this.settings = new Settings(2000, false, false, "greenFelt", "redDiamonds", "material", "vegas");//default that gets overriden
         this.platform.ready().then(() => {
             this.database = new SQLite();
-            this.database.openDatabase({ name: "blackJackDB.db", location: "default" }).then(() => {
-
+            this.database.create({ name: "blackJackDB.db", location: "default" }).then((db: SQLiteObject) => {
+                this.db = db;
                 this.playerProvider.getPlayer().then((player) => {
 
                     this.player = new Player(player.id, player.name, [], player.money, false, "Human", 0, 0);
@@ -64,7 +65,7 @@ export class SettingsPage {
     }
 
     save() {
-        this.database.executeSql("UPDATE settings SET background = '" + this.settings.selectedBackground +
+        this.db.executeSql("UPDATE settings SET background = '" + this.settings.selectedBackground +
             "', cardFront = '" + this.settings.selectedCardFront +
             "', cardBack = '" + this.settings.selectedCardBack +
             "', chips = '" + this.settings.chips +

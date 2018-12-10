@@ -1,6 +1,6 @@
 import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
-import { AdMob } from '@ionic-native/admob';
+import { AdMobFree } from '@ionic-native/admob-free';
 // import { AngularFireModule } from 'angularfire2';
 
 import { SettingsProvider } from '../providers/settings-provider';
@@ -56,7 +56,7 @@ export const firebaseConfig = {
   ],
   providers: [
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    AdMob,
+    AdMobFree,
     PlayerProvider, 
     StoreProvider, 
     SettingsProvider, 
